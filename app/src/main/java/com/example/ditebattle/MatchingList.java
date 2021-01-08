@@ -11,6 +11,6 @@ public class MatchingList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matchinglist);
         // 01044122495
-        // 01041959026
+        // 이걸로결정
     }
 }
