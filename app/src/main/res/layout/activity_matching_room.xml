@@ -13,9 +13,8 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:background="@color/black"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
-
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,10 +22,9 @@
             android:text="matching"
             android:textColor="@color/white"
             android:textSize="35sp" />
-
     </LinearLayout>
     //여기까지가 matching
-
+    //여기부터 방번호와 타이트 조건목록
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -46,7 +44,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/roomNumberBack" />
+                    android:src="@drawable/roomnumberback" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -91,7 +89,7 @@
         </LinearLayout>
     </LinearLayout>
     //여기까지가 방번호와 방타이틀 조건 목록
-
+    //여기부터가 캐릭터이미지 , 상대방 정보
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -108,6 +106,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="3">
                 <ImageView
+                    android:id="@+id/matchingRoomMyImg"
                     android:layout_marginTop="10dp"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
@@ -115,6 +114,7 @@
                     android:layout_gravity="center"/>
             </FrameLayout>
             <TextView
+                android:id="@+id/matchingRoomMyName"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:text="나"
@@ -127,9 +127,9 @@
                 android:layout_height="0dp"
                 android:layout_weight="2">
                 <Button
+                    android:id="@+id/matchingRoomMyInfo"
                     android:layout_width="80dp"
                     android:layout_height="50dp"
-                    android:text="정보"
                     android:layout_marginBottom="10dp"
                     android:layout_gravity="center"/>
             </FrameLayout>
@@ -162,13 +162,15 @@
                 android:layout_height="0dp"
                 android:layout_weight="3">
                 <ImageView
+                    android:id="@+id/matchingRoomOtherImg"
                     android:layout_marginTop="10dp"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/man"
+                    android:src="@drawable/woman"
                     android:layout_gravity="center"/>
             </FrameLayout>
             <TextView
+                android:id="@+id/matchingRoomOtherName"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:text="상대방"
@@ -181,6 +183,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="2">
                 <Button
+                    android:id="@+id/matchingRoomOtherInfo"
                     android:layout_width="80dp"
                     android:layout_height="50dp"
                     android:text="정보"
@@ -188,18 +191,58 @@
                     android:layout_gravity="center"/>
             </FrameLayout>
         </LinearLayout>
-        //여기까지가 나랑 상대방 이미지와 정보보기
+        //여기까지가 캐릭터 이미지, 상대방 정보
+        //여기부터가 게임시작 버튼
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:background="@color/black"
+        android:gravity="center_horizontal|center_vertical"
         android:layout_weight="8">
-        
-        <Button
-            android:layout_width=""
-            android:layout_height=""
 
+
+        <Button
+            android:id="@+id/matchingRoomStartBtn"
+            android:background="@drawable/radius_btn"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:text="game Start or Ready"
+
+            />
+        //여기까지가 게임스타트 버튼
+        //여기부터 채팅
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="16">
+        <ScrollView
+            android:background="#ddd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/matchingRoomChatVeiw"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="나 : 안녕하세요\n상대방 안녕하세요 "/>
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout
+        android:background="#777"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <EditText
+            android:id="@+id/matchingRoomChatEdt"
+            android:hint="채팅 입력하기"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+    //여기까찌가 채팅
 </LinearLayout>
