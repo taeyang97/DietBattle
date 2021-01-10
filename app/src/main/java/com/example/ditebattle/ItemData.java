@@ -1,18 +1,18 @@
 package com.example.ditebattle;
 
 public class ItemData {
-    String image, title, memo;
+    String number, title, memo;
 
 
-    public ItemData(String image, String title, String memo) {
-        this.image = image;
+    public ItemData(String number, String title, String memo) {
+        this.number = number;
         this.title = title;
         this.memo = memo;
 
     }
 
     public String getImage() {
-        return image;
+        return number;
     }
 
     public String getTitle() {

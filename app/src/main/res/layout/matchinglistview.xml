@@ -16,19 +16,21 @@
             android:layout_height="match_parent">
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/battleimage"
-                    android:layout_margin="10dp"/>
+                    android:layout_gravity="center"/>
                 <TextView
+                    android:id="@+id/tvNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1"
                     android:textSize="20sp"
-                    android:textColor="#000"/>
+                    android:textColor="#000"
+                    android:layout_gravity="center"/>
             </FrameLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
