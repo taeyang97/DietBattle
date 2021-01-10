@@ -7,16 +7,20 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -58,6 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
     static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
         TextView tvNumber, tvTitle, tvMemo;
+        CardView cvList;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -67,6 +72,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             tvNumber = itemView.findViewById(R.id.tvNumber);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMemo = itemView.findViewById(R.id.tvMemo);
+            cvList = itemView.findViewById(R.id.cvList);
+
+            // 뷰 클릭 시 실행하는 메소드
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition() ;
+                    // 갱신하는 과정에서 뷰홀더가 참조하는 아이템이 어댑터에서 삭제되면 getAdapterPosition() 메서드는 NO_POSITION을 리턴
+                    if (pos != RecyclerView.NO_POSITION) {
+                        cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
+                    }
+                }
+            });
+
         }
     }
 }
