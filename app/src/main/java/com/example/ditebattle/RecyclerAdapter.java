@@ -23,43 +23,45 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
-    private ArrayList<ItemData> mPersons;
-    private LayoutInflater mInflate;
-    private Context mContext;
-    public RecyclerAdapter(Context context, ArrayList<ItemData> persons) {
-        this.mContext = context;
-        this.mInflate = LayoutInflater.from(context);
-        this.mPersons = persons;
+    private ArrayList<ItemData> mData;
+    public RecyclerAdapter(ArrayList<ItemData> dates) {
+        this.mData = dates;
     }
 
+    // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View itemView = mInflate.inflate(R.layout.matchinglistview,parent,false);
-        ViewHolder viewHolder = new ViewHolder(itemView);
+        View view = inflater.inflate(R.layout.matchinglistview,parent,false);
+        ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
 
     }
 
+    // onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvImage.setText(mPersons.get(position).image);
-        holder.tvTitle.setText(mPersons.get(position).image);
-        holder.tvMemo.setText(mPersons.get(position).image);
+        holder.tvTitle.setText(mData.get(position).title);
+        holder.tvMemo.setText(mData.get(position).memo);
     }
 
+    // getItemCount() - 전체 데이터 갯수 리턴.
     @Override
     public int getItemCount() {
-        return mPersons.size();
+        return mData.size();
     }
 
+    // 아이템 뷰를 저장하는 뷰홀더 클래스.
     static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
-        TextView tvImage, tvTitle, tvMemo;
+        TextView tvTitle, tvMemo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvImage = itemView.findViewById(R.id.tvImage);
+
+            // 뷰 객체에 대한 참조. (hold strong reference)
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMemo = itemView.findViewById(R.id.tvMemo);
         }
