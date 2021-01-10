@@ -47,7 +47,6 @@ public class MatchingList extends AppCompatActivity {
 
             }
         });
-
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +64,6 @@ public class MatchingList extends AppCompatActivity {
 
             }
         });
-
         rView1 = (RecyclerView)findViewById(R.id.rView1);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL,false);
