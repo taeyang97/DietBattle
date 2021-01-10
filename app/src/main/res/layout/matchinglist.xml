@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="방만들기"
+                android:fontFamily="@font/font_family"
                 android:textColor="#ffffff"
                 android:layout_margin="10dp"
                 android:background="@drawable/button"/>
@@ -36,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="방찾기"
+                android:fontFamily="@font/font_family"
                 android:textColor="#ffffff"
                 android:layout_margin="10dp"
                 android:background="@drawable/button"/>
@@ -45,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="새로고침"
+                android:fontFamily="@font/font_family"
                 android:textColor="#ffffff"
                 android:layout_margin="10dp"
                 android:background="@drawable/button"/>
@@ -62,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="입장하기"
+                android:fontFamily="@font/font_family"
                 android:textColor="#ffffff"
                 android:layout_weight="1"
                 android:layout_marginHorizontal="50dp"

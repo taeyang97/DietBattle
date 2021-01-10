@@ -12,18 +12,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 public class MatchingList extends AppCompatActivity {
 
-    Button btn1,btn2,btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel;
-    EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight;
-    LinearLayout LayoutmatchingListRoomMakeMan, LayoutmatchingListRoomMakeGirl,
-            LayoutmatchingListRoomMakeTop, LayoutmatchingListRoomMakeMiddle,
-            LayoutmatchingListRoomMakeBottom;
+    Button btn1,btn2,btn3;
     ArrayList<ItemData> items = new ArrayList<>();
     RecyclerView rView1;
     RecyclerAdapter rAdapter;
@@ -40,78 +34,23 @@ public class MatchingList extends AppCompatActivity {
         btn2 = (Button)findViewById(R.id.btn2);
         btn3 = (Button)findViewById(R.id.btn3);
 
-        btn1.setOnClickListener(new OnSingleClickListener() {
+        btn1.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onSingleClick(View v) {
+            public void onClick(View view) {
                 btn1.setBackground(getDrawable(R.drawable.buttonclick));
                 roomMakeDialog = new Dialog(MatchingList.this);
                 roomMakeDialog.setContentView(R.layout.matchinglistroommakedialog);
 
-                btnMatchingListRoomMakeMake = (Button)roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMake);
-                btnMatchingListRoomMakeCancel = (Button)roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeCancle);
-                etMatchingListRoomMakeTitle = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeTitle);
-                etMatchingListRoomMakeWeight = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeWeight);
-                LayoutmatchingListRoomMakeMan = (LinearLayout) roomMakeDialog.findViewById(R.id.LayoutmatchingListRoomMakeMan);
-                LayoutmatchingListRoomMakeGirl = (LinearLayout) roomMakeDialog.findViewById(R.id.LayoutmatchingListRoomMakeGirl);
-                LayoutmatchingListRoomMakeTop= (LinearLayout) roomMakeDialog.findViewById(R.id.LayoutMatchingListRoomMakeTop);
-                LayoutmatchingListRoomMakeMiddle = (LinearLayout) roomMakeDialog.findViewById(R.id.LayoutMatchingListRoomMakeMiddle);
-                LayoutmatchingListRoomMakeBottom = (LinearLayout) roomMakeDialog.findViewById(R.id.LayoutMatchingListRoomMakeBottom);
-
                 roomMakeDialog.show();
                 roomMakeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                btnMatchingListRoomMakeMake.setOnClickListener(new OnSingleClickListener() {
-                    @Override
-                    public void onSingleClick(View v) {
-                        int i=1;
-                        LayoutmatchingListRoomMakeMan.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-
-                            }
-                        });
-                        LayoutmatchingListRoomMakeGirl.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-
-                            }
-                        });
-                        LayoutmatchingListRoomMakeTop.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-
-                            }
-                        });
-                        LayoutmatchingListRoomMakeMiddle.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-
-                            }
-                        });
-                        LayoutmatchingListRoomMakeBottom.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-
-                            }
-                        });
-                        items.add(i,new ItemData(i+1,etMatchingListRoomMakeTitle.getText().toString(),
-                                ));
-                        i++;
-                    }
-                });
-                btnMatchingListRoomMakeCancel.setOnClickListener(new OnSingleClickListener() {
-                    @Override
-                    public void onSingleClick(View v) {
-                        roomMakeDialog.dismiss();
-                    }
-                });
 
             }
         });
 
-        btn2.setOnClickListener(new OnSingleClickListener() {
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSingleClick(View v) {
+            public void onClick(View view) {
                 roomSearchDialog = new Dialog(MatchingList.this);
                 roomSearchDialog.setContentView(R.layout.matchinglistroomsearchdialog);
 
@@ -120,9 +59,9 @@ public class MatchingList extends AppCompatActivity {
             }
         });
 
-        btn3.setOnClickListener(new OnSingleClickListener() {
+        btn3.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSingleClick(View v) {
+            public void onClick(View view) {
 
             }
         });
