@@ -20,6 +20,7 @@
             android:textColor="#fff"
             android:layout_margin="5dp"/>
         <EditText
+            android:id="@+id/etMatchingListRoomMakeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/layoutborderbutton"
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <LinearLayout
+                android:id="@+id/LayoutmatchingListRoomMakeMan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -53,6 +55,7 @@
                     android:textColor="#000" />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/LayoutmatchingListRoomMakeGirl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,6 +81,7 @@
             android:textColor="#fff"
             android:layout_margin="5dp"/>
         <EditText
+            android:id="@+id/etMatchingListRoomMakeWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/layoutborderbutton"
@@ -96,6 +100,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <LinearLayout
+                android:id="@+id/LayoutMatchingListRoomMakeTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -111,6 +116,7 @@
                     android:textColor="#000" />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/LayoutMatchingListRoomMakeMiddle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -126,6 +132,7 @@
                     android:textColor="#000" />
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/LayoutMatchingListRoomMakeBottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -146,6 +153,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <Button
+                android:id="@+id/btnMatchingListRoomMakeMake"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -153,6 +161,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button"/>
             <Button
+                android:id="@+id/btnMatchingListRoomMakeCancle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
