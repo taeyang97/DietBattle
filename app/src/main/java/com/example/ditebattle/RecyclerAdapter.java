@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,7 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스.
-    static class ViewHolder extends RecyclerView.ViewHolder { // 자료를 담고 있는 클래스
+    class ViewHolder extends RecyclerView.ViewHolder{ // 자료를 담고 있는 클래스
         TextView tvNumber, tvTitle, tvMemo;
         CardView cvList;
 
@@ -74,18 +76,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             tvMemo = itemView.findViewById(R.id.tvMemo);
             cvList = itemView.findViewById(R.id.cvList);
 
+            itemView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
+                            v.setPressed(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+                            break;
+                    }  return true;
+                }
+            });
             // 뷰 클릭 시 실행하는 메소드
-            itemView.setOnClickListener(new View.OnClickListener() {
+            /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = getAdapterPosition() ;
+                    int pos = getAdapterPosition();
+
                     // 갱신하는 과정에서 뷰홀더가 참조하는 아이템이 어댑터에서 삭제되면 getAdapterPosition() 메서드는 NO_POSITION을 리턴
                     if (pos != RecyclerView.NO_POSITION) {
                         cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
                     }
                 }
-            });
-
+            });*/
         }
     }
 }
