@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class MatchingList extends AppCompatActivity {
     RecyclerAdapter rAdapter;
     Context context;
     Dialog roomMakeDialog, roomSearchDialog;
-    String gender, grade;
+    String gender=null, grade=null;
     CardView cvList;
     int i=2;
     @Override
@@ -52,20 +53,19 @@ public class MatchingList extends AppCompatActivity {
             public void onSingleClick(View v) {
                 roomMakeDialog = new Dialog(MatchingList.this);
                 roomMakeDialog.setContentView(R.layout.matchinglistroommakedialog);
-
-                btnMatchingListRoomMakeMake = (Button)roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMake);
-                btnMatchingListRoomMakeCancel = (Button)roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeCancle);
-                etMatchingListRoomMakeTitle = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeTitle);
-                etMatchingListRoomMakeWeight = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeWeight);
-                btnMatchingListRoomMakeMan = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMan);
-                btnMatchingListRoomMakeGirl = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeGirl);
-                btnMatchingListRoomMakeTop= (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeTop);
-                btnMatchingListRoomMakeMiddle = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMiddle);
-                btnMatchingListRoomMakeBottom = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeBottom);
-
+                {
+                    btnMatchingListRoomMakeMake = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMake);
+                    btnMatchingListRoomMakeCancel = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeCancle);
+                    etMatchingListRoomMakeTitle = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeTitle);
+                    etMatchingListRoomMakeWeight = (EditText) roomMakeDialog.findViewById(R.id.etMatchingListRoomMakeWeight);
+                    btnMatchingListRoomMakeMan = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMan);
+                    btnMatchingListRoomMakeGirl = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeGirl);
+                    btnMatchingListRoomMakeTop = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeTop);
+                    btnMatchingListRoomMakeMiddle = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMiddle);
+                    btnMatchingListRoomMakeBottom = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeBottom);
+                } // 다이럴로그 버튼 연결
                 roomMakeDialog.show();
                 roomMakeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
                 btnMatchingListRoomMakeMan.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
@@ -114,13 +114,22 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMake.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-
-                        items.add(i,new ItemData(String.valueOf(i+1),etMatchingListRoomMakeTitle.getText().toString(),
-                                gender + "/" + etMatchingListRoomMakeWeight.getText().toString() +
-                                 "/" + grade));
-                        i++;
-                        rAdapter.notifyDataSetChanged();
-                        roomMakeDialog.dismiss();
+                        String title=etMatchingListRoomMakeTitle.getText().toString();
+                        String weight=etMatchingListRoomMakeWeight.getText().toString();
+                        if(title.getBytes().length <= 0){
+                            Toast.makeText(getApplicationContext(),"제목을 입력해주세요",Toast.LENGTH_SHORT).show();
+                        }else if(weight.getBytes().length <=0){
+                            Toast.makeText(getApplicationContext(),"몸무게를 입력해주세요",Toast.LENGTH_SHORT).show();
+                        }else if(grade==null){
+                            Toast.makeText(getApplicationContext(),"난이도를 선택해주세요",Toast.LENGTH_SHORT).show();
+                        }else {
+                            items.add(i, new ItemData(String.valueOf(i + 1), title,
+                                    gender + "/" + weight +
+                                            "/" + grade));
+                            i++;
+                            rAdapter.notifyDataSetChanged();
+                            roomMakeDialog.dismiss();
+                        }
                     }
                 });
                 btnMatchingListRoomMakeCancel.setOnClickListener(new OnSingleClickListener() {
