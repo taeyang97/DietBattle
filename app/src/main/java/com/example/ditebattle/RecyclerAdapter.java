@@ -84,13 +84,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                             cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
                             v.setPressed(true);
                             break;
-
+                        case MotionEvent.ACTION_CANCEL:{
+                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+                            break;
+                        }
                         case MotionEvent.ACTION_UP:
                             cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
                             break;
-                    }  return true;
+                    }
+                    return true;
                 }
             });
+
             // 뷰 클릭 시 실행하는 메소드
             /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
