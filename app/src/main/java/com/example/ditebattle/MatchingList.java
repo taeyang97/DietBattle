@@ -1,6 +1,5 @@
 package com.example.ditebattle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -9,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,9 +24,9 @@ public class MatchingList extends AppCompatActivity {
     Button btn1,btn2,btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel,
             btnMatchingListRoomMakeMan, btnMatchingListRoomMakeGirl,
             btnMatchingListRoomMakeTop, btnMatchingListRoomMakeMiddle,
-            btnMatchingListRoomMakeBottom;
+            btnMatchingListRoomMakeBottom , testBtn;
     EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight;
-    ArrayList<ItemData> items = new ArrayList<>();
+    ArrayList<RecyclerItemData> items = new ArrayList<>();
     RecyclerView rView1;
     RecyclerAdapter rAdapter;
     Context context;
@@ -45,6 +43,7 @@ public class MatchingList extends AppCompatActivity {
         btn1 = (Button)findViewById(R.id.btn1);
         btn2 = (Button)findViewById(R.id.btn2);
         btn3 = (Button)findViewById(R.id.btn3);
+        testBtn =(Button)findViewById(R.id.testBtn);
         cvList = (CardView)findViewById(R.id.cvList);
 
         // 방만들기 버튼
@@ -123,7 +122,7 @@ public class MatchingList extends AppCompatActivity {
                         }else if(grade==null){
                             Toast.makeText(getApplicationContext(),"난이도를 선택해주세요",Toast.LENGTH_SHORT).show();
                         }else {
-                            items.add(i, new ItemData(String.valueOf(i + 1), title,
+                            items.add(i, new RecyclerItemData(String.valueOf(i + 1), title,
                                     gender + "/" + weight +
                                             "/" + grade));
                             i++;
@@ -162,6 +161,13 @@ public class MatchingList extends AppCompatActivity {
             }
         });
 
+        testBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MatchingList.this, BattleRoom.class);
+                startActivity(intent);
+            }
+        });
         //리싸이클러뷰 레이아웃 매니저를 통해 형태 설정
         rView1 = (RecyclerView)findViewById(R.id.rView1);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
@@ -169,8 +175,8 @@ public class MatchingList extends AppCompatActivity {
         rView1.setLayoutManager(layoutManager);
 
         // 아이템 추가 코드
-        items.add(0, new ItemData("1","고수방","여/65kg/고수"));
-        items.add(1, new ItemData("2","초보만 들어오세요","남/88kg/중"));
+        items.add(0, new RecyclerItemData("1","고수방","여/65kg/고수"));
+        items.add(1, new RecyclerItemData("2","초보만 들어오세요","남/88kg/중"));
 
         // 어댑터에 아이템데이터 넣어주고 리싸이클러뷰 장착
         rAdapter = new RecyclerAdapter(items);

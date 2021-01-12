@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiteBattle">
         <activity android:name=".MatchingRoom"></activity>
+        <activity android:name=".BattleRoom"></activity>
         <activity android:name=".MatchingList">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

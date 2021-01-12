@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="50"
+    tools:context=".BattleRoom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@color/black"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Play!"
+            android:textColor="@color/white"
+            android:textSize="35sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:background="@drawable/edgeborderbtn"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/battle_cal_img"
+                android:layout_gravity="center"
+                android:layout_marginRight="50dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="20.02.04"
+                android:textColor="@color/black" />
+        </FrameLayout>
+
+         <FrameLayout
+             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:background="@drawable/edgeborderbtn"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/battle_point_img"
+                android:layout_gravity="center"
+                android:layout_marginRight="50dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="100"
+                android:textColor="@color/black" />
+        </FrameLayout>
+    </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="5"-->
+<!--        android:gravity="center_vertical|center_horizontal">-->
+
+<!--        <Button-->
+<!--            android:id="@+id/battleRoomBattleFragmentBtn"-->
+<!--            android:layout_width="195dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:text="대결화면" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/battleRoomBattleInfoFragmentBtn"-->
+<!--            android:layout_width="195dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:text="대결 그래프" />-->
+<!--    </LinearLayout>-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="35">
+
+        <ImageView
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/battle_container_img"
+            android:scaleType="fitXY"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
+                android:gravity="center_vertical|center_horizontal">
+
+                <Button
+                    android:id="@+id/battleRoomBattleFragmentBtn2"
+                    android:layout_width="157dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:layout_marginBottom="3dp"
+                    android:background="@android:color/transparent"
+                    />
+
+                <Button
+                    android:id="@+id/battleRoomBattleInfoFragmentBtn2"
+                    android:layout_width="170dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:background="@android:color/transparent"
+                    />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_marginTop="59dp"
+                android:id="@+id/battleRoomFragContainer2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="17dp"
+
+                >
+
+            </FrameLayout>
+    </FrameLayout>
+<!--    <FrameLayout-->
+<!--        android:id="@+id/battleRoomFragContainer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="30">-->
+
+<!--    </FrameLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.5"
+        android:background="@color/black"
+        android:gravity="center_vertical|center_horizontal">
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginRight="50dp" >
+
+            <ImageView
+                android:background="@drawable/layoutborderbutton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+                android:text="미션"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/battle_misson_img"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp" >
+
+            <ImageView
+                android:background="@drawable/layoutborderbutton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+                android:text="채팅"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/battle_chat_img"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="50dp" >
+
+            <ImageView
+                android:background="@drawable/layoutborderbutton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+                android:text="포인트"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/battle_point_img"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>

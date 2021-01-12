@@ -1,36 +1,22 @@
 package com.example.ditebattle;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
-    private ArrayList<ItemData> mData;
-    public RecyclerAdapter(ArrayList<ItemData> dates) {
+    private ArrayList<RecyclerItemData> mData;
+    public RecyclerAdapter(ArrayList<RecyclerItemData> dates) {
         this.mData = dates;
     }
 
@@ -109,29 +95,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             });*/
         }
-    }
-}
-class ItemData {
-    String number, title, memo;
-
-
-    public ItemData(String number, String title, String memo) {
-        this.number = number;
-        this.title = title;
-        this.memo = memo;
-
-    }
-
-    public String getImage() {
-        return number;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getMemo() {
-        return memo;
     }
 }
 
