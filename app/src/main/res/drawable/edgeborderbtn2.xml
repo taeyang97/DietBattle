@@ -4,5 +4,10 @@
     <!-- 각 모서리 dip 만큼 코너형식 -->
     <corners android:radius="15dip" />
     <!-- 배경색 -->
-    <solid android:color="#99ffffff" />
+    <solid android:color="#FAECC5" />
+    <stroke
+        android:width="3dp"
+        android:color="@android:color/black" />
+
+
 </shape>

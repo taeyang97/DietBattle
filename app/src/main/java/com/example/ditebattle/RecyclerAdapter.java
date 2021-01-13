@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder{ // 자료를 담고 있는 클래스
         TextView tvNumber, tvTitle, tvMemo;
         CardView cvList;
+        LinearLayout listLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -61,14 +63,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMemo = itemView.findViewById(R.id.tvMemo);
             cvList = itemView.findViewById(R.id.cvList);
+            listLayout = itemView.findViewById(R.id.listLayout);
 
-            itemView.setOnTouchListener(new View.OnTouchListener() {
+            listLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
-                            v.setPressed(true);
                             break;
                         case MotionEvent.ACTION_CANCEL:{
                             cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));

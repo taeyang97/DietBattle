@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 각 모서리 dip 만큼 코너형식 -->
+    <corners android:bottomLeftRadius="15dip"
+            android:bottomRightRadius="15dip"/>
+    <!-- 배경색 -->
+    <solid android:color="#ABABAB" />
+    <stroke
+        android:width="3dp"
+        android:color="@android:color/black" />
+</shape>

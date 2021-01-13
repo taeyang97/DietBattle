@@ -128,7 +128,6 @@
                     android:id="@+id/battleRoomBattleFragmentBtn2"
                     android:layout_width="157dp"
                     android:layout_height="50dp"
-                    android:gravity="center"
                     android:layout_marginBottom="3dp"
                     android:background="@android:color/transparent"
                     />
@@ -139,7 +138,6 @@
                     android:layout_height="50dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="3dp"
-                    android:gravity="center"
                     android:background="@android:color/transparent"
                     />
             </LinearLayout>
@@ -177,6 +175,7 @@
             android:layout_marginRight="50dp" >
 
             <ImageView
+                android:id="@+id/battleRoomIvMission"
                 android:background="@drawable/layoutborderbutton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -201,6 +200,7 @@
             android:layout_height="90dp" >
 
             <ImageView
+                android:id="@+id/battleRoomIvCaht"
                 android:background="@drawable/layoutborderbutton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -226,9 +226,10 @@
             android:layout_marginLeft="50dp" >
 
             <ImageView
-                android:background="@drawable/layoutborderbutton"
+                android:id="@+id/battleRoomIvPoint"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@drawable/layoutborderbutton" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
