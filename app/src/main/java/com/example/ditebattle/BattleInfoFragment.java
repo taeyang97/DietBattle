@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 import com.github.mikephil.charting.animation.Easing;
@@ -31,12 +33,19 @@ import java.util.ArrayList;
 
 public class BattleInfoFragment extends Fragment {
 
+    String[] exercise = {"스쿼트", " 줄넘기", "걷기"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_battle_info, container, false);
 
         LineChart lineChart = (LineChart)view.findViewById(R.id.chart);
+        Spinner spinner = (Spinner)view.findViewById(R.id.spinner);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_dropdown_item,exercise);
+        spinner.setPrompt("어떤 운동을 하시나요?");
+        spinner.setAdapter(adapter);
 
         LineDataSet lineDataSet = new LineDataSet(dataValues(), "나");
         LineDataSet lineDataSetEnermy = new LineDataSet(dataValuesEnermy(), "적");

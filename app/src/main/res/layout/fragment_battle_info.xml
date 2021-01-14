@@ -16,7 +16,8 @@
        android:layout_height="wrap_content"
        android:layout_gravity="right"
        android:layout_margin="20dp"
-
+       android:spinnerMode="dialog"
+       android:theme="@style/SpinnerTheme"
        />
 
 
