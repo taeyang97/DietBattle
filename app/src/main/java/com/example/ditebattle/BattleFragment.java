@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 
 
 public class BattleFragment extends Fragment {
-    ProgressBar progressBar;
+    ProgressBar battleFragProgressLeft , battleFragProgressRight;
     ImageView battleFragPlayerLeft;
     ImageView battleFragPlayerRight;
     public BattleFragment() {
@@ -37,6 +37,10 @@ public class BattleFragment extends Fragment {
         // Inflate the layout for this fragment
         battleFragPlayerLeft=view.findViewById(R.id.battleFragPlayerLeft);
         battleFragPlayerRight=view.findViewById(R.id.battleFragPlayerRight);
+        battleFragProgressLeft=view.findViewById(R.id.battleFragProgressLeft);
+        battleFragProgressRight=view.findViewById(R.id.battleFragProgressRight);
+        battleFragProgressRight.setRotation(180);
+
         Glide.with(this).load(R.drawable.battle_player_left).into(battleFragPlayerLeft);
         Glide.with(this).load(R.drawable.battle_player_right).into(battleFragPlayerRight);
 

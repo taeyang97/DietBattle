@@ -110,7 +110,7 @@
             android:scaleType="fitXY"
 
             android:layout_height="match_parent"
-            android:src="@drawable/battlgrapbtn"/>
+            android:src="@drawable/battlgrapbtn2"/>
 
 
     </LinearLayout>
@@ -131,7 +131,6 @@
             android:layout_gravity="center_horizontal"
             app:layout_widthPercent="95%"
             app:layout_heightPercent="99%">
-
 
         </FrameLayout>
 

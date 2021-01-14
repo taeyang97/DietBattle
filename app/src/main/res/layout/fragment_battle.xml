@@ -32,6 +32,27 @@
                     android:text="HP"
                     android:textSize="20sp" />
 
+                <ProgressBar
+                    android:progressTint="#EB694C"
+                    android:id="@+id/battleFragProgressLeft"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/battleFragHeadLeft"
+                    android:max="500"
+                    android:progress="250" />
+
+                <TextView
+                    android:layout_marginLeft="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:layout_toRightOf="@+id/battleFragHeadLeft"
+                    android:text="250/500"
+                    android:textSize="15sp" />
+
                 <ImageView
                     android:id="@+id/battleFragHeadLeft"
                     android:layout_width="50dp"
@@ -69,6 +90,27 @@
                     android:layout_marginTop="10dp"
                     android:text="HP"
                     android:textSize="20sp" />
+
+                <ProgressBar
+                    android:progressTint="#EB694C"
+                    android:id="@+id/battleFragProgressRight"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/battleFragHeadRight"
+                    android:max="500"
+                    android:progress="250" />
+
+                <TextView
+                    android:layout_marginRight="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"
+                    android:layout_toLeftOf="@+id/battleFragHeadRight"
+                    android:text="250/500"
+                    android:textSize="15sp" />
 
                 <ImageView
                     android:id="@+id/battleFragHeadRight"

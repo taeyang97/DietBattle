@@ -256,7 +256,7 @@ public class BattleRoom extends AppCompatActivity {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                 battleRoomBattleFragmentBtn2.setImageResource(R.drawable.battlefragbtnclick);
-                battleRoomBattleInfoFragmentBtn2.setImageResource(R.drawable.battlgrapbtn);
+                battleRoomBattleInfoFragmentBtn2.setImageResource(R.drawable.battlgrapbtn2);
             }
         });
         battleRoomBattleInfoFragmentBtn2.setOnClickListener(new View.OnClickListener() {
