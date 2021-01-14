@@ -18,6 +18,7 @@
        android:layout_margin="20dp"
        android:spinnerMode="dialog"
        android:theme="@style/SpinnerTheme"
+
        />
 
 

@@ -40,6 +40,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
-    compile "com.android.support:percent:25.2.0"
+    implementation "androidx.percentlayout:percentlayout:1.0.0"
 
 }
