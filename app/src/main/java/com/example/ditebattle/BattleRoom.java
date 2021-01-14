@@ -47,6 +47,7 @@ public class BattleRoom extends AppCompatActivity {
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
 
+        // 미션 버튼 클릭 시
         battleRoomIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -127,15 +128,13 @@ public class BattleRoom extends AppCompatActivity {
             }
         });
 
+        // 채팅 버튼 클릭 시
         battleRoomIvCaht.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbuttonclick);
-
-                    case MotionEvent.ACTION_CANCEL:
-
                         break;
                     case MotionEvent.ACTION_UP:
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbutton);
@@ -213,6 +212,7 @@ public class BattleRoom extends AppCompatActivity {
             }
         });
 
+        // 포인트 버튼 클릭 시
         battleRoomIvPoint.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

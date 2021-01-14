@@ -187,14 +187,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:textStyle="bold"
-                android:text="채팅"
+                android:text="포인트"
                 android:layout_gravity="center"/>
             <ImageView
                 android:layout_marginTop="15dp"
                 android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/battle_chat_img"/>
+                android:src="@drawable/battle_point_img"/>
 
         </FrameLayout>
 
@@ -213,14 +213,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:textStyle="bold"
-                android:text="포인트"
+                android:text="채팅"
                 android:layout_gravity="center"/>
             <ImageView
                 android:layout_marginTop="15dp"
                 android:layout_gravity="center"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/battle_point_img"/>
+                android:src="@drawable/battle_chat_img"/>
 
         </FrameLayout>
 

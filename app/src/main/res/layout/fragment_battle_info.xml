@@ -5,11 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".BattleInfoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Battle_info" />
+   <com.github.mikephil.charting.charts.LineChart
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+       android:id="@+id/chart"/>
+
+   <Spinner
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_gravity="right"
+       android:layout_margin="20dp"
+       />
 
 
 </FrameLayout>
