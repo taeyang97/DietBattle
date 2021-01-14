@@ -90,6 +90,7 @@ public class BattleInfoFragment extends Fragment {
         legend.setEnabled(true);
         legend.setTextColor(Color.BLACK);
         legend.setTextSize(10);
+        legend.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));
         legend.setForm(Legend.LegendForm.LINE);
         legend.setFormSize(20);
         legend.setXEntrySpace(20);
@@ -111,6 +112,9 @@ public class BattleInfoFragment extends Fragment {
         Description description = new Description();
         description.setText("스쿼트");
         description.setTextSize(20);
+        description.setXOffset(20);
+        description.setYOffset(20);
+        description.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));
 
         //차트의 설정
         lineChart.setBackgroundColor(Color.parseColor("#ffffff"));
