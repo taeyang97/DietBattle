@@ -8,8 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +22,7 @@ public class BattleRoom extends AppCompatActivity {
             ivMissionCheckBox3, ivMissionCheckBox4, ivMissionCheckBox5,
             ivChatingExit , ivChatingBuy1, ivChatingBuy2, ivChatingBuy3,
             ivPointExit;
-    Button battleRoomBattleFragmentBtn2 , battleRoomBattleInfoFragmentBtn2;
+    ImageView battleRoomBattleFragmentBtn2 , battleRoomBattleInfoFragmentBtn2;
     FrameLayout battleRoomFragContainer2;
     BattleFragment battleFragment;
     BattleInfoFragment battleInfoFragment;
@@ -38,9 +38,9 @@ public class BattleRoom extends AppCompatActivity {
         battleRoomIvMission = (ImageView) findViewById(R.id.battleRoomIvMission);
         battleRoomIvCaht = (ImageView) findViewById(R.id.battleRoomIvCaht);
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
-        battleRoomBattleFragmentBtn2 = (Button)findViewById(R.id.battleRoomBattleFragmentBtn2);
-        battleRoomBattleInfoFragmentBtn2 = (Button)findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
-        battleRoomFragContainer2 = (FrameLayout)findViewById(R.id.battleRoomFragContainer2);
+        battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
+        battleRoomBattleInfoFragmentBtn2 = (ImageView)findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
+
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
 
@@ -126,12 +126,16 @@ public class BattleRoom extends AppCompatActivity {
                 return true;
             }
         });
+
         battleRoomIvCaht.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbuttonclick);
+
+                    case MotionEvent.ACTION_CANCEL:
+
                         break;
                     case MotionEvent.ACTION_UP:
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbutton);
@@ -208,6 +212,7 @@ public class BattleRoom extends AppCompatActivity {
                 return true;
             }
         });
+
         battleRoomIvPoint.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -244,11 +249,14 @@ public class BattleRoom extends AppCompatActivity {
                 return true;
             }
         });
+
         battleRoomBattleFragmentBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
+                battleRoomBattleFragmentBtn2.setImageResource(R.drawable.battlefragbtnclick);
+                battleRoomBattleInfoFragmentBtn2.setImageResource(R.drawable.battlgrapbtn);
             }
         });
         battleRoomBattleInfoFragmentBtn2.setOnClickListener(new View.OnClickListener() {
@@ -256,7 +264,11 @@ public class BattleRoom extends AppCompatActivity {
             public void onClick(View view) {
                 fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleInfoFragment, "myFrag").commit();
+                battleRoomBattleFragmentBtn2.setImageResource(R.drawable.battlfragbtn);
+                battleRoomBattleInfoFragmentBtn2.setImageResource(R.drawable.battlegrapbtnclick);
             }
         });
+
+
     }
 }

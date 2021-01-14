@@ -63,6 +63,8 @@ public class MatchingList extends AppCompatActivity {
                     btnMatchingListRoomMakeMiddle = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeMiddle);
                     btnMatchingListRoomMakeBottom = (Button) roomMakeDialog.findViewById(R.id.btnMatchingListRoomMakeBottom);
                 } // 다이럴로그 버튼 연결
+
+
                 roomMakeDialog.show();
                 roomMakeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 btnMatchingListRoomMakeMan.setOnClickListener(new OnSingleClickListener() {
