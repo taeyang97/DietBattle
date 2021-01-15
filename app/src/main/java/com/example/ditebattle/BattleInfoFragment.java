@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 
 import com.github.mikephil.charting.animation.Easing;
@@ -41,10 +43,12 @@ public class BattleInfoFragment extends Fragment {
 
         LineChart lineChart = (LineChart)view.findViewById(R.id.chart);
         Spinner spinner = (Spinner)view.findViewById(R.id.spinner);
+
+        //스피너 어댑터 장착
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.spiner_font,exercise);
-        spinner.setPrompt("어떤 운동을 하시나요?");
         spinner.setAdapter(adapter);
+
         LineDataSet lineDataSet = new LineDataSet(dataValues(), "나");
         LineDataSet lineDataSetEnermy = new LineDataSet(dataValuesEnermy(), "적");
 
@@ -116,18 +120,19 @@ public class BattleInfoFragment extends Fragment {
         legend.setCustom(legendEntry);
 
         //오른쪽 하단 설명 글씨
-        Description description = new Description();
+
+        /*Description description = new Description();
         description.setText("스쿼트");
         description.setTextSize(20);
         description.setXOffset(20);
         description.setYOffset(20);
-        description.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));
+        description.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));*/
 
         //차트의 설정
         lineChart.setBackgroundColor(Color.parseColor("#ffffff"));
         lineChart.setDoubleTapToZoomEnabled(false);
         lineChart.setDrawGridBackground(true);
-        lineChart.setDescription(description);
+//        lineChart.setDescription(description);
         lineChart.setNoDataText("데이터가 없습니다.");
         lineChart.setDrawBorders(true);
         lineChart.setBorderColor(Color.BLACK);
