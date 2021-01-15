@@ -236,6 +236,7 @@
         android:layout_height="0dp"
         android:layout_weight="4">
         <EditText
+            android:focusable="false"
             android:id="@+id/matchingRoomChatEdt"
             android:hint="채팅 입력하기"
             android:layout_width="match_parent"

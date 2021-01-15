@@ -183,5 +183,11 @@ public class MatchingList extends AppCompatActivity {
         // 어댑터에 아이템데이터 넣어주고 리싸이클러뷰 장착
         rAdapter = new RecyclerAdapter(items);
         rView1.setAdapter(rAdapter);
+
+
+    }
+    public void enterChatRoom(){
+        Intent intent = new Intent(MatchingList.this, MatchingRoom.class);
+        startActivity(intent);
     }
 }
