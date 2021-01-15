@@ -1,6 +1,7 @@
 package com.example.ditebattle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -78,6 +80,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                         case MotionEvent.ACTION_UP:
                             cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+
+                            Intent intent = new Intent(listLayout.getContext(), MatchingRoom.class);
+                            ContextCompat.startActivity(listLayout.getContext(),intent,null);
                             break;
                     }
                     return true;
