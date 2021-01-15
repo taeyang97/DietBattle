@@ -62,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="7"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <LinearLayout
@@ -113,25 +114,31 @@
                     android:src="@drawable/man"
                     android:layout_gravity="center"/>
             </FrameLayout>
-            <TextView
-                android:id="@+id/matchingRoomMyName"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:text="나"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
+                android:layout_weight="1">
+            <ImageView
+                android:src="@drawable/battle_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/matchingRoomMyName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="나"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2">
-                <Button
-                    android:id="@+id/matchingRoomMyInfo"
-                    android:layout_width="80dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_gravity="center"/>
+
+
             </FrameLayout>
         </LinearLayout>
 
@@ -166,18 +173,31 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/woman"
+                    android:src="@drawable/waman"
                     android:layout_gravity="center"/>
             </FrameLayout>
-            <TextView
-                android:id="@+id/matchingRoomOtherName"
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:text="상대방"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
+                android:layout_weight="1">
+                <ImageView
+
+                    android:src="@drawable/battle_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/matchingRoomOtherName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="상대방"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -198,6 +218,31 @@
         //여기부터가 게임시작 버튼
     </LinearLayout>
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="16">
+        <ListView
+            android:background="#ddd"
+            android:id="@+id/matchingRoomChatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:background="#777"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+        <EditText
+            android:id="@+id/matchingRoomChatEdt"
+            android:hint="채팅 입력하기"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+    //여기까찌가 채팅
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -218,34 +263,4 @@
         //여기까지가 게임스타트 버튼
         //여기부터 채팅
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="16">
-        <ScrollView
-            android:background="#ddd"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/matchingRoomChatVeiw"
-                android:layout_marginLeft="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="나 : 안녕하세요\n상대방 안녕하세요 "/>
-        </ScrollView>
-    </LinearLayout>
-    <LinearLayout
-        android:background="#777"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
-        <EditText
-            android:id="@+id/matchingRoomChatEdt"
-            android:hint="채팅 입력하기"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"/>
-    </LinearLayout>
-    //여기까찌가 채팅
 </LinearLayout>
