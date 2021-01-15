@@ -1,7 +1,9 @@
 plugins {
     id 'com.android.application'
 }
-
+//firebase
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -31,6 +33,10 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
+    //firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    //add the dependency for the firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'

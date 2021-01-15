@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "507045646796",
+    "project_id": "diet-battle",
+    "storage_bucket": "diet-battle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507045646796:android:d03f65660c62b98280cd69",
+        "android_client_info": {
+          "package_name": "com.example.ditebattle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507045646796-u5bitcfmna2jkqmlrh9116ngke6d11b7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT737bX0RQxhooj0y678MWu9MOxcYaIKE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507045646796-u5bitcfmna2jkqmlrh9116ngke6d11b7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
