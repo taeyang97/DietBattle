@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:background="#000000">
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:text="팔굽혀 펴기 50회!"
+        android:textColor="#000000"
+        android:background="#ffffff"
+        android:fontFamily="@font/dalmoorifont"
+        android:gravity="center"/>
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
+        android:paddingLeft="30dp"
+        android:text="플랭크 1분!"
+        android:textColor="#000000"
+        android:background="#ffffff"
+        android:fontFamily="@font/dalmoorifont"
+        android:gravity="center"/>
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
+        android:paddingLeft="30dp"
+        android:text="윗몸 일으키기 - 30초 안에 10회!"
+        android:textColor="#000000"
+        android:background="#ffffff"
+        android:fontFamily="@font/dalmoorifont"
+        android:gravity="center"/>
+
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="12dp"
+        android:paddingLeft="30dp"
+        android:text="앉았다 일어서기 100회!"
+        android:textColor="#000000"
+        android:background="#ffffff"
+        android:fontFamily="@font/dalmoorifont"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/btnMissonSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="미션 입력하기!"
+        android:fontFamily="@font/dalmoorifont"
+        android:background="@drawable/buttoncustom"/>
+</LinearLayout>

@@ -18,7 +18,6 @@ public class Matching extends AppCompatActivity {
         ac.hide();
 
         matchingPlay = (Button)findViewById(R.id.matchingPlay);
-
         matchingPlay.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -26,5 +25,6 @@ public class Matching extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 }
