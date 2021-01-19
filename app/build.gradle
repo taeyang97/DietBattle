@@ -33,6 +33,21 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
+    
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth'
+
+    //네이버 로그인
+    implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.6'   // import from jcenter
+
+    // naveridlogin dependencies
+    def android_x_version = "1.0.0"
+    implementation "androidx.appcompat:appcompat:$android_x_version"
+    implementation "androidx.legacy:legacy-support-core-utils:$android_x_version"
+    implementation "androidx.browser:browser:$android_x_version"
+    implementation "androidx.legacy:legacy-support-v4:$android_x_version"
+
     //firebase BoM
     implementation platform('com.google.firebase:firebase-bom:26.2.0')
     //add the dependency for the firebase SDK for Google Analytics

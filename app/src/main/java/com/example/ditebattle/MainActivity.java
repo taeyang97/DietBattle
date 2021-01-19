@@ -27,7 +27,7 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity  {
 
 
-    TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board;
+    TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board,nav_logout;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawerLayout;
     private View drawerView;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity  {
         main_nav_btn_battle=(TextView)headerView.findViewById(R.id.main_nav_btn_battle);
         main_nav_btn_kal=(TextView)headerView.findViewById(R.id.main_nav_btn_kal);
         main_nav_btn_board=(TextView)headerView.findViewById(R.id.main_nav_btn_board);
+        nav_logout=(TextView)headerView.findViewById(R.id.nav_logout);
         mainHomeIvCheck=(ImageView)findViewById(R.id.mainHomeIvCheck);
         mainHomeIvMyInfo=(ImageView)findViewById(R.id.mainHomeIvMyInfo);
         mainHomeIvMission=(ImageView)findViewById(R.id.mainHomeIvMission);
@@ -76,7 +77,16 @@ public class MainActivity extends AppCompatActivity  {
                 Toast.makeText(getApplicationContext(),"미왼성",Toast.LENGTH_SHORT).show();
             }
         });
-
+        nav_logout.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                nav_logout.setTextColor(Color.parseColor("#99ffffff"));
+                LoginActivity loginActivity = new LoginActivity();
+                loginActivity.mOAuthLoginModule.logout(getApplicationContext());
+                Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
 
         mainHomeIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
