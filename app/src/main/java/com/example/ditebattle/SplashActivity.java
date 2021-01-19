@@ -1,22 +1,37 @@
 package com.example.ditebattle;
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SplashActivity  extends AppCompatActivity {
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+
+public class SplashActivity extends AppCompatActivity {
+    ImageView splash_logo;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            Thread.sleep(2000);
-        }catch (Exception e){
+        setContentView(R.layout.activity_splash2);
+        splash_logo=(ImageView)findViewById(R.id.splash_logo3);
+        Glide.with(this).load(R.raw.splash).into(splash_logo);
 
-        }
 
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        finish();
+
+        startLoading();
+    }
+
+    private void startLoading() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run(){
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 2000);
     }
 }

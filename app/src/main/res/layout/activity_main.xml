@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="#000000"
+        android:background="#dddddd"
         app:itemTextColor="#ffffff"
 
        />
