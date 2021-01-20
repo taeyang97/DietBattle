@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             Toast.makeText(LoginActivity.this, "로그인 되었습니다.", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
                         } else {
                             //로그인 인증 실패
                             String errorCode = mOAuthLoginModule.getLastErrorCode(mContext).getCode();

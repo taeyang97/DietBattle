@@ -30,7 +30,6 @@ public class User {
         this.total_point = total_point;
         this.current_point = current_point;
         this.gender = gender;
-
     }
 
     public Map<String, Object> toMap(){
