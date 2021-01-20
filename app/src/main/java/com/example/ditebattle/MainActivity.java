@@ -1,9 +1,14 @@
 package com.example.ditebattle;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,19 +24,15 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity  {
 
-    Button btnUserDaily, btnUserMission, btnUserInfo;
-    FragmentManager fm;
-    FragmentTransaction tran;
-    Frag_daily frag1;
-    Frag_mission frag2;
-    Frag_user frag3;
-    TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board;
+
+    TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board,nav_logout;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawerLayout;
     private View drawerView;
-
+    ImageView mainHomeIvCheck,mainHomeIvMission,mainHomeIvMyInfo,home_iv_Mission_Exit;
+    Dialog missionDialog,checkDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +53,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         main_nav_btn_battle=(TextView)headerView.findViewById(R.id.main_nav_btn_battle);
         main_nav_btn_kal=(TextView)headerView.findViewById(R.id.main_nav_btn_kal);
         main_nav_btn_board=(TextView)headerView.findViewById(R.id.main_nav_btn_board);
-        btnUserDaily = (Button) findViewById(R.id.btnUserDaily);
-        btnUserMission = (Button) findViewById(R.id.btnUserMission);
-        btnUserInfo = (Button) findViewById(R.id.btnUserInfo);
-        btnUserDaily.setOnClickListener(this);
-        btnUserMission.setOnClickListener(this);
-        btnUserInfo.setOnClickListener(this);
-        frag1 = new Frag_daily();
-        frag2 = new Frag_mission();
-        frag3 = new Frag_user();
+        nav_logout=(TextView)headerView.findViewById(R.id.nav_logout);
+        mainHomeIvCheck=(ImageView)findViewById(R.id.mainHomeIvCheck);
+        mainHomeIvMyInfo=(ImageView)findViewById(R.id.mainHomeIvMyInfo);
+        mainHomeIvMission=(ImageView)findViewById(R.id.mainHomeIvMission);
 
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +77,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(),"미왼성",Toast.LENGTH_SHORT).show();
             }
         });
-        fm = getSupportFragmentManager();
-        tran = fm.beginTransaction();
-        tran.replace(R.id.frame_main, frag1).commitAllowingStateLoss();
+        nav_logout.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                nav_logout.setTextColor(Color.parseColor("#99ffffff"));
+                LoginActivity loginActivity = new LoginActivity();
+                loginActivity.mOAuthLoginModule.logout(getApplicationContext());
+                Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+
+        mainHomeIvMission.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbuttonclick);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                        missionDialog = new Dialog(MainActivity.this);
+                        missionDialog.setContentView(R.layout.activity_main_homemissiondialog);
+
+                        missionDialog.show();
+                        missionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+                        home_iv_Mission_Exit = (ImageView) missionDialog.findViewById(R.id.home_iv_Mission_Exit);
+
+                        home_iv_Mission_Exit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                missionDialog.dismiss();
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -93,19 +129,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    public void onClick(View view) {
-        tran = fm.beginTransaction();
-        switch (view.getId()) {
-            case R.id.btnUserDaily:
-                tran.replace(R.id.frame_main, frag1).commitAllowingStateLoss();
-                break;
-            case R.id.btnUserMission:
-                tran.replace(R.id.frame_main, frag2).commitAllowingStateLoss();
-                break;
-            case R.id.btnUserInfo:
-                tran.replace(R.id.frame_main, frag3).commitAllowingStateLoss();
-                break;
-        }
-    }
+
 }

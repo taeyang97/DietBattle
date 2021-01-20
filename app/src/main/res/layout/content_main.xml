@@ -1,116 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/app_bar_main">
+    android:weightSum="50"
+    android:background="@color/white"
+    tools:context=".BattleRoom">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#ffffff">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="20dp"
-            android:src="@drawable/navlogo"/>
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:background="@color/black"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvUserID"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="닉네임"
-            android:textSize="17dp"
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:layout_margin="20dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:text="Lv."
-                android:textSize="20dp"
-                android:textColor="#000000"
-                android:fontFamily="@font/dalmoorifont"
-                android:gravity="right"/>
-
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="4"
-                android:isIndicator="true"
-                android:rating="0.5"
-                android:stepSize="0.5"
-                style="?android:attr/ratingBarStyleIndicator"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="20dp">
-
-            <Button
-                android:id="@+id/btnUserDaily"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="출석"
-                android:background="@drawable/buttoncustom2"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/dalmoorifont"/>
-
-            <Button
-                android:id="@+id/btnUserMission"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="미션"
-                android:background="@drawable/buttoncustom2"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/dalmoorifont"/>
-
-            <Button
-                android:id="@+id/btnUserInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="내 정보"
-                android:background="@drawable/buttoncustom2"
-                android:textColor="#ffffff"
-                android:fontFamily="@font/dalmoorifont"/>
-        </LinearLayout>
+            android:text="Play!"
+            android:textColor="@color/white"
+            android:textSize="35sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <FrameLayout
-            android:id="@+id/frame_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_weight="1">
+
+            <ImageView
+                android:background="@drawable/edgeborderbtn"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginLeft="8dp"
+                />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="4dp"
+                android:src="@drawable/rainbowstar" />
+            <TextView
+                android:id="@+id/main_Lv_Tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/font_family"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="LV.2"
+                android:textColor="@color/black" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:background="@drawable/edgeborderbtn"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginRight="8dp"
+                />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginRight="50dp"
+                android:layout_marginBottom="3dp"
+                android:src="@drawable/battle_point_img" />
+
+            <TextView
+                android:id="@+id/main_Point_Tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/font_family"
+                android:text="100"
+                android:textColor="@color/black" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:layout_weight="4">
+
+        <TextView
+            android:id="@+id/main_Exp_Tv"
+            android:background="@drawable/edgeborderbtn4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4.4"
+            android:text="EXP 0/500"
+            android:textColor="#000000"
+            android:gravity="center"
+            android:layout_margin="10dp"/>
+
+
+
+    </LinearLayout>
+
+    <androidx.percentlayout.widget.PercentFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30">
+
+        <ImageView
+            android:background="@drawable/battleframe"
+            android:layout_gravity="center_horizontal"
+            app:layout_widthPercent="97%"
+            app:layout_heightPercent="100%"/>
+
+        <FrameLayout
+            android:background="@drawable/homeback"
+            android:id="@+id/battleRoomFragContainer2"
+            android:layout_gravity="center_horizontal"
+            app:layout_widthPercent="95%"
+            app:layout_heightPercent="99%">
+
+            <ImageView
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/home_player"/>
+        </FrameLayout>
+
+
+    </androidx.percentlayout.widget.PercentFrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.5"
+        android:background="@color/black"
+        android:gravity="center_vertical|center_horizontal">
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginRight="50dp" >
+
+            <ImageView
+                android:id="@+id/mainHomeIvMission"
+                android:background="@drawable/layoutborderbutton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:fontFamily="@font/font_family"
+                android:text="미션"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/battle_misson_img"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp" >
+
+            <ImageView
+                android:id="@+id/mainHomeIvCheck"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/layoutborderbutton" />
+            <TextView
+                android:fontFamily="@font/font_family"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:text="출석"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/rainbowstar"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="50dp" >
+
+            <ImageView
+                android:id="@+id/mainHomeIvMyInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/layoutborderbutton" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="@font/font_family"
+                android:text="내정보"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/homemyinfobtn"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="0">
 
         <fragment
             android:id="@+id/nav_host_fragment"
@@ -121,8 +258,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/mobile_navigation"
-        />
+            app:navGraph="@navigation/mobile_navigation" />
 
     </LinearLayout>
 </LinearLayout>
