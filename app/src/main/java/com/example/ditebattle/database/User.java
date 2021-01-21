@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    public String id;
-    public String password;
-    public String name;
-    public String nickname;
-    public Integer age;
-    public String phone;
-    public Double weight;
-    public Double height;
-    public Double bmi;
-    public Integer total_point;
-    public Integer current_point;
-    public String gender;
+    private String id;
+    private String password;
+    private String name;
+    private String nickname;
+    private Integer age;
+    private String phone;
+    private Double weight;
+    private Double height;
+    private Double bmi;
+    private Integer total_point;
+    private Integer current_point;
+    private String gender;
 
     public User(String id, String password, String name, String nickname, Integer age, String phone, Double weight ,Double height,
                 Double bmi, Integer total_point, Integer current_point, String gender){
