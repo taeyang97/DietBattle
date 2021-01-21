@@ -1,4 +1,4 @@
-package com.example.ditebattle;
+package com.example.ditebattle.database;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,8 @@ public class User {
     public Integer current_point;
     public String gender;
 
-    public User(String id, String password, String name, String nickname, int age, String phone, double weight ,double height, double bmi, int total_point, int current_point, String gender){
+    public User(String id, String password, String name, String nickname, Integer age, String phone, Double weight ,Double height,
+                Double bmi, Integer total_point, Integer current_point, String gender){
         this.id= id;
         this.password = password;
         this.name = name;

@@ -26,7 +26,6 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity  {
 
-
     TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board,nav_logout;
     private AppBarConfiguration mAppBarConfiguration;
     private DrawerLayout drawerLayout;
