@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
 
     static OAuthLogin mOAuthLoginModule;
     Context mContext;
-
+    //커밋테스트 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
