@@ -32,6 +32,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BattleRoom" />
         <activity android:name=".MatchingList" />
+
     </application>
+
+
 
 </manifest>

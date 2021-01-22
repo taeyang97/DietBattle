@@ -166,8 +166,7 @@ public class MatchingList extends AppCompatActivity {
         testBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MatchingList.this, BattleRoom.class);
-                startActivity(intent);
+
             }
         });
         //리싸이클러뷰 레이아웃 매니저를 통해 형태 설정

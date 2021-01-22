@@ -39,8 +39,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         // Set the dimensions of the sign-in button.
@@ -93,28 +95,33 @@ public class GoogleLoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try{
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Toast.makeText(getApplicationContext(), "onActivityResult", Toast.LENGTH_SHORT).show();
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "캐치되버림"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
             //handleSignInResult(task);
         }
     }
-    private void firebaseAuthWithGoogle(String idToken){
+    private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    //로그인 성공, 사용자의 정보로 UI 업데이트
-                    FirebaseUser user= mAuth.getCurrentUser();
-                    updateUI(user);
-                } else {
-                    updateUI(null);
-                }
-            }
-        });
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(GoogleLoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            Log.e("여기가문제",""+task.getException());
+
+                            // If sign in fails, display a message to the user.
+                            updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
     }
 //    private void handleSignInResult(Task<GoogleSignInAccount> completedTask){
 //        try{
