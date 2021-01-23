@@ -22,16 +22,32 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.ditebattle.database.User;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity  {
 
     TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board,nav_logout;
     private AppBarConfiguration mAppBarConfiguration;
-    private DrawerLayout drawerLayout;
-    private View drawerView;
     ImageView mainHomeIvCheck,mainHomeIvMission,mainHomeIvMyInfo,home_iv_Mission_Exit;
-    Dialog missionDialog,checkDialog;
+    Dialog missionDialog;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseDatabase database;
+    DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("user");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +72,7 @@ public class MainActivity extends AppCompatActivity  {
         mainHomeIvCheck=(ImageView)findViewById(R.id.mainHomeIvCheck);
         mainHomeIvMyInfo=(ImageView)findViewById(R.id.mainHomeIvMyInfo);
         mainHomeIvMission=(ImageView)findViewById(R.id.mainHomeIvMission);
-
+        database = FirebaseDatabase.getInstance();
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,16 +89,22 @@ public class MainActivity extends AppCompatActivity  {
         main_nav_btn_board.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"미왼성",Toast.LENGTH_SHORT).show();
+                DatabaseReference myRef = ref.child("users1");
+
+                myRef.setValue(user.getEmail());
+
+                Toast.makeText(getApplicationContext(),user.getEmail(),Toast.LENGTH_LONG).show();
             }
         });
         nav_logout.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 nav_logout.setTextColor(Color.parseColor("#99ffffff"));
-                LoginActivity loginActivity = new LoginActivity();
-                loginActivity.mOAuthLoginModule.logout(getApplicationContext());
+                GoogleLoginActivity activity = new GoogleLoginActivity();
+                activity.signOut();
                 Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

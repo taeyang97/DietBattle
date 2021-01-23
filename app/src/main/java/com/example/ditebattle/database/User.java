@@ -17,7 +17,13 @@ public class User {
     private Integer current_point;
     private String gender;
 
-    public User(String id, String password, String name, String nickname, Integer age, String phone, Double weight ,Double height,
+    public User() { }
+
+    public User(String id){
+        this.id= id;
+    }
+
+    public User(String id, String password, String name, String nickname, Integer age, String phone, Double weight , Double height,
                 Double bmi, Integer total_point, Integer current_point, String gender){
         this.id= id;
         this.password = password;

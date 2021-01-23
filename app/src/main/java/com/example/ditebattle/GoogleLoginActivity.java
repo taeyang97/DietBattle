@@ -140,12 +140,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            Toast.makeText(getApplicationContext(), "failed to sign in ", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void signOut(){
+    public void signOut(){
         FirebaseAuth.getInstance().signOut();
-        Toast.makeText(getApplicationContext(), "로그아웃됨", Toast.LENGTH_SHORT).show();
     }
 }
