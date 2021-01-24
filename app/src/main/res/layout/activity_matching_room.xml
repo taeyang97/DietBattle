@@ -48,6 +48,7 @@
                     android:src="@drawable/roomnumberback" />
 
                 <TextView
+                    android:id="@+id/matchingRoomNum"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -71,6 +72,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/matchingRoomTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="초보만 들어오세요"
@@ -83,6 +85,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/matchingRoomOption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="남 / 80kg / 중수"
@@ -225,8 +228,8 @@
         android:layout_height="0dp"
         android:layout_weight="16">
         <ListView
-            android:background="#ddd"
             android:id="@+id/matchingRoomChatList"
+            android:background="#ddd"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />
@@ -237,13 +240,22 @@
         android:layout_height="0dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_weight="4">
+        android:layout_weight="4"
+        android:orientation="horizontal">
         <EditText
             android:id="@+id/matchingRoomChatEdt"
             android:hint="채팅 입력하기"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"/>
+            android:maxLines="2"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/matchingRoomChatBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⬆"
+            android:textSize="25sp"/>
     </LinearLayout>
     //여기까찌가 채팅
     <LinearLayout

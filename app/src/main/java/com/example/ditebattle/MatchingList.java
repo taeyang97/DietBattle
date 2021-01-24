@@ -1,5 +1,7 @@
 package com.example.ditebattle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -12,10 +14,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,7 +43,10 @@ public class MatchingList extends AppCompatActivity {
     Dialog roomMakeDialog, roomSearchDialog;
     String gender=null, grade=null;
     CardView cvList;
-    int i=2;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
+    private DatabaseReference databaseReference = firebaseDatabase.getReference(); // DB 테이블 연결
+
+//    int i=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,15 +132,25 @@ public class MatchingList extends AppCompatActivity {
                         String weight=etMatchingListRoomMakeWeight.getText().toString();
                         if(title.getBytes().length <= 0){
                             Toast.makeText(getApplicationContext(),"제목을 입력해주세요",Toast.LENGTH_SHORT).show();
+                        }else if(gender==null){
+                            Toast.makeText(getApplicationContext(),"성별을 선택해주세요",Toast.LENGTH_SHORT).show();
                         }else if(weight.getBytes().length <=0){
                             Toast.makeText(getApplicationContext(),"몸무게를 입력해주세요",Toast.LENGTH_SHORT).show();
                         }else if(grade==null){
                             Toast.makeText(getApplicationContext(),"난이도를 선택해주세요",Toast.LENGTH_SHORT).show();
                         }else {
-                            items.add(i, new RecyclerItemData(String.valueOf(i + 1), title,
-                                    gender + "/" + weight +
-                                            "/" + grade));
-                            i++;
+//                            items.add(i, new RecyclerItemData(String.valueOf(i + 1), title,
+//                                    gender + "/" + weight +
+//                                            "/" + grade));
+//                            i++;
+                            String memo = gender + weight + grade;
+
+                            Intent intent = new Intent(MatchingList.this, MatchingRoom.class);
+//                            intent.putExtra("roomnum", String.valueOf(i));
+                            intent.putExtra("title", title);
+                            intent.putExtra("memo", memo);
+                            startActivity(intent);
+
                             rAdapter.notifyDataSetChanged();
                             roomMakeDialog.dismiss();
                         }
@@ -171,6 +194,7 @@ public class MatchingList extends AppCompatActivity {
         });
         //리싸이클러뷰 레이아웃 매니저를 통해 형태 설정
         rView1 = (RecyclerView)findViewById(R.id.rView1);
+        rView1.setHasFixedSize(true); // 리사이클러뷰 기존성능 강화
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
                 LinearLayoutManager.VERTICAL,false);
         rView1.setLayoutManager(layoutManager);
@@ -179,14 +203,32 @@ public class MatchingList extends AppCompatActivity {
         items.add(0, new RecyclerItemData("1","고수방","여/65kg/고수"));
         items.add(1, new RecyclerItemData("2","초보만 들어오세요","남/88kg/중"));
 
-        // 어댑터에 아이템데이터 넣어주고 리싸이클러뷰 장착
-        rAdapter = new RecyclerAdapter(items);
-        rView1.setAdapter(rAdapter);
-
+        // 데이터베이스 가져와 리싸이클러뷰 방 만들기
+        showChatList();
 
     }
-    public void enterChatRoom(){
-        Intent intent = new Intent(MatchingList.this, MatchingRoom.class);
-        startActivity(intent);
+    private void showChatList() {
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
+                items.clear(); // 기존 배열리스트가 존재하지않게 초기화
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
+                    RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 User 객체에 데이터를 담는다.
+                    items.add(roomList); // 담은 데이터들을 배열리스트에 넣고 리사이클러뷰로 보낼 준비
+                }
+                rAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침해야 반영이 됨
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // 디비를 가져오던중 에러 발생 시
+                Log.e("Fraglike", String.valueOf(error.toException())); // 에러문 출력
+            }
+        });
+
+        rAdapter = new RecyclerAdapter(items);
+        rView1.setAdapter(rAdapter);
     }
 }
