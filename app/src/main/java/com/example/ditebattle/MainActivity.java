@@ -45,8 +45,11 @@ public class MainActivity extends AppCompatActivity  {
     ImageView mainHomeIvCheck,mainHomeIvMission,mainHomeIvMyInfo,home_iv_Mission_Exit;
     Dialog missionDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    FirebaseDatabase database;
-    DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("user");
+
+    DatabaseReference mDBReference = null;
+    HashMap<String, Object> childUpdates = null;
+    Map<String, Object> userValue = null;
+    User userInfo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,6 @@ public class MainActivity extends AppCompatActivity  {
         mainHomeIvCheck=(ImageView)findViewById(R.id.mainHomeIvCheck);
         mainHomeIvMyInfo=(ImageView)findViewById(R.id.mainHomeIvMyInfo);
         mainHomeIvMission=(ImageView)findViewById(R.id.mainHomeIvMission);
-        database = FirebaseDatabase.getInstance();
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,9 +91,12 @@ public class MainActivity extends AppCompatActivity  {
         main_nav_btn_board.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference myRef = ref.child("users1");
-
-                myRef.setValue(user.getEmail());
+                mDBReference = FirebaseDatabase.getInstance().getReference();
+                childUpdates = new HashMap<>();
+                userInfo = new User(26,user.getEmail());
+                userValue = userInfo.toMap();
+                childUpdates.put("/User_info/" + user.getUid(), userValue);
+                mDBReference.updateChildren(childUpdates);
 
                 Toast.makeText(getApplicationContext(),user.getEmail(),Toast.LENGTH_LONG).show();
             }

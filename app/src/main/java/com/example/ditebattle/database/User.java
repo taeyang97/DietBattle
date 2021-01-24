@@ -1,15 +1,14 @@
 package com.example.ditebattle.database;
 
+import android.content.Intent;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String id;
-    private String password;
-    private String name;
+    private String email;
     private String nickname;
     private Integer age;
-    private String phone;
     private Double weight;
     private Double height;
     private Double bmi;
@@ -19,18 +18,20 @@ public class User {
 
     public User() { }
 
-    public User(String id){
-        this.id= id;
+    public User(String email){
+        this.email= email;
     }
 
-    public User(String id, String password, String name, String nickname, Integer age, String phone, Double weight , Double height,
+    public User(Integer age, String email){
+        this.age= age;
+        this.email=email;
+    }
+
+    public User(String id, String nickname, Integer age, Double weight , Double height,
                 Double bmi, Integer total_point, Integer current_point, String gender){
-        this.id= id;
-        this.password = password;
-        this.name = name;
+        this.email= id;
         this.nickname = nickname;
         this.age = age;
-        this.phone = phone;
         this.weight = weight;
         this.height = height;
         this.bmi = bmi;
@@ -41,12 +42,9 @@ public class User {
 
     public Map<String, Object> toMap(){
         Map<String, Object> result = new HashMap<>();
-        result.put("id", id);
-        result.put("password", password);
-        result.put("name",name);
+        result.put("email", email);
         result.put("nickname",nickname);
         result.put("age",age);
-        result.put("phone",phone);
         result.put("weight",weight);
         result.put("height",height);
         result.put("bmi", bmi);
