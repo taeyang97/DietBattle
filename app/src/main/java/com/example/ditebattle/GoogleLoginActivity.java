@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.ditebattle.database.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,6 +26,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GoogleLoginActivity extends AppCompatActivity {
     private SignInButton googleSignInBtn;
@@ -32,28 +42,32 @@ public class GoogleLoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth = null;
     private Button btn_logout;
+    int firstLogin=0;
+    FirebaseUser user;
+    DatabaseReference mDBReference = FirebaseDatabase.getInstance().getReference();
+    HashMap<String, Object> childUpdates = new HashMap<>();
+    Map<String, Object> userValue = null;
+    User userInfo = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_login);
-
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
+                mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         // Set the dimensions of the sign-in button.
         googleSignInBtn = findViewById(R.id.googleSignInBtn);
         googleSignInBtn.setSize(SignInButton.SIZE_STANDARD);
+
+
         googleSignInBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 switch(v.getId()){
                     case R.id.googleSignInBtn:
-
                         signIn();
                 }
             }
@@ -73,11 +87,8 @@ public class GoogleLoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e("test","실험");
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        readUser(currentUser);
         updateUI(currentUser);
     }
 
@@ -110,40 +121,79 @@ public class GoogleLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
+
+                            readUser(user);
+//                            updateUI(user);
+
                             updateUI(user);
+
                         } else {
                             Log.e("여기가문제",""+task.getException());
-
                             // If sign in fails, display a message to the user.
                             updateUI(null);
+
                         }
 
                         // ...
                     }
                 });
     }
-//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask){
-//        try{
-//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            updateUI(account);
-//        } catch(ApiException e){
-//            Log.w("signIn","signInResult:failed code=" + e.getStatusCode());
-//            updateUI(null);
-//        }
-//    }
+
 
     private void updateUI(FirebaseUser account){
         if (account !=null){
-            Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(GoogleLoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            if(firstLogin==1){
+                jumpMain();
+            }
+            if(firstLogin==2){
+                jumpJoin();
+            }
         } else {
         }
     }
 
     public void signOut(){
         FirebaseAuth.getInstance().signOut();
+    }
+
+    private void readUser(FirebaseUser user){
+        if(user!=null) {
+            FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Log.d("MainActivity", "ValueEventListener : " + snapshot.getValue());
+                        if (snapshot.getValue().toString().contains(user.getEmail())) {
+                            firstLogin=1;
+                        } else {
+                            firstLogin=2;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+
+    public void jumpJoin(){
+
+        Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(GoogleLoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void jumpMain(){
+
+        Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(GoogleLoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

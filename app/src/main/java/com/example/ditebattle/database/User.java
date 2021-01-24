@@ -6,26 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String email;
-    private String nickname;
-    private Integer age;
-    private Double weight;
-    private Double height;
-    private Double bmi;
-    private Integer total_point;
-    private Integer current_point;
-    private String gender;
+    public String email;
+    public String nickname;
+    public Integer age;
+    public Double weight;
+    public Double height;
+    public Double bmi;
+    public Integer total_point;
+    public Integer current_point;
+    public String gender;
 
     public User() { }
-
-    public User(String email){
-        this.email= email;
-    }
-
-    public User(Integer age, String email){
-        this.age= age;
-        this.email=email;
-    }
 
     public User(String id, String nickname, Integer age, Double weight , Double height,
                 Double bmi, Integer total_point, Integer current_point, String gender){
@@ -52,5 +43,9 @@ public class User {
         result.put("current_point",current_point);
         result.put("gender",gender);
         return result;
+    }
+
+    public String getEmail(){
+        return email;
     }
 }

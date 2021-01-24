@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DiteBattle">
-        <activity android:name=".GoogleLoginActivity"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".GoogleLoginActivity" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -32,9 +33,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BattleRoom" />
         <activity android:name=".MatchingList" />
-
     </application>
-
-
 
 </manifest>

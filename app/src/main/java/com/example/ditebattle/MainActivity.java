@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -32,22 +34,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
-    TextView main_nav_btn_kal,main_nav_btn_battle,main_nav_btn_board,nav_logout;
+    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, NavTvUserID, NavTvUserLV;
     private AppBarConfiguration mAppBarConfiguration;
-    ImageView mainHomeIvCheck,mainHomeIvMission,mainHomeIvMyInfo,home_iv_Mission_Exit;
+    ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit, NavTvUserIcon;
     Dialog missionDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-    DatabaseReference mDBReference = null;
-    HashMap<String, Object> childUpdates = null;
+    DatabaseReference mDBReference = FirebaseDatabase.getInstance().getReference();
+    HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> userValue = null;
     User userInfo = null;
 
@@ -68,37 +70,36 @@ public class MainActivity extends AppCompatActivity  {
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.inflateHeaderView(R.layout.nav_header_main);
         View headerView = navigationView.getHeaderView(0);
-        main_nav_btn_battle=(TextView)headerView.findViewById(R.id.main_nav_btn_battle);
-        main_nav_btn_kal=(TextView)headerView.findViewById(R.id.main_nav_btn_kal);
-        main_nav_btn_board=(TextView)headerView.findViewById(R.id.main_nav_btn_board);
-        nav_logout=(TextView)headerView.findViewById(R.id.nav_logout);
-        mainHomeIvCheck=(ImageView)findViewById(R.id.mainHomeIvCheck);
-        mainHomeIvMyInfo=(ImageView)findViewById(R.id.mainHomeIvMyInfo);
-        mainHomeIvMission=(ImageView)findViewById(R.id.mainHomeIvMission);
+        main_nav_btn_battle = (TextView) headerView.findViewById(R.id.main_nav_btn_battle);
+        main_nav_btn_kal = (TextView) headerView.findViewById(R.id.main_nav_btn_kal);
+        main_nav_btn_board = (TextView) headerView.findViewById(R.id.main_nav_btn_board);
+        nav_logout = (TextView) headerView.findViewById(R.id.nav_logout);
+        NavTvUserLV = (TextView) headerView.findViewById(R.id.NavTvUserLV);
+        NavTvUserID = (TextView) headerView.findViewById(R.id.NavTvUserID);
+        NavTvUserIcon = (ImageView) headerView.findViewById(R.id.NavTvUserIcon);
+        mainHomeIvCheck = (ImageView) findViewById(R.id.mainHomeIvCheck);
+        mainHomeIvMyInfo = (ImageView) findViewById(R.id.mainHomeIvMyInfo);
+        mainHomeIvMission = (ImageView) findViewById(R.id.mainHomeIvMission);
+        readDB();
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Matching.class);
-                startActivity(intent);;
+                startActivity(intent);
+                ;
             }
         });
         main_nav_btn_kal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"미왼성",Toast.LENGTH_SHORT).show();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User/" + user.getUid());
+                ref.child("current_point").setValue(500);
+                ref.child("total_point").setValue(500);
             }
         });
         main_nav_btn_board.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDBReference = FirebaseDatabase.getInstance().getReference();
-                childUpdates = new HashMap<>();
-                userInfo = new User(26,user.getEmail());
-                userValue = userInfo.toMap();
-                childUpdates.put("/User_info/" + user.getUid(), userValue);
-                mDBReference.updateChildren(childUpdates);
-
-                Toast.makeText(getApplicationContext(),user.getEmail(),Toast.LENGTH_LONG).show();
             }
         });
         nav_logout.setOnClickListener(new OnSingleClickListener() {
@@ -156,4 +157,29 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
+    private void readDB() {
+        String sort_column_name = "age";
+        Query sortbyAge = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+        sortbyAge.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+//                    String key = postSnapshot.getKey();
+//                    User get = postSnapshot.getValue(User.class);
+//                    String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
+//                    NavTvUserID.setText(info[1]);
+//                }
+                
+                String key = snapshot.getKey();
+                User get = snapshot.getValue(User.class);
+                String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
+                NavTvUserID.setText(info[0]);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
