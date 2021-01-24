@@ -98,20 +98,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="20dp">
-
-            <Button
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <RadioButton
                 android:id="@+id/reg_Man_Btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/dalmoorifont"
+                android:checked="true"
                 android:text="남"/>
-            <Button
+            <RadioButton
+                android:id="@+id/reg_Woman_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/dalmoorifont"
                 android:text="여"/>
+        </RadioGroup>
         </LinearLayout>
     </LinearLayout>
 
@@ -121,6 +128,7 @@
         android:orientation="vertical"
         android:gravity="center">
         <Button
+            android:id="@+id/NavStartBtn"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:gravity="center"

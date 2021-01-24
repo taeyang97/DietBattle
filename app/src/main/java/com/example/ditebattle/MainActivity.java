@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-
     private void readDB() {
         String sort_column_name = "age";
         Query sortbyUid = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
@@ -169,12 +168,11 @@ public class MainActivity extends AppCompatActivity {
 //                    String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
 //                    NavTvUserID.setText(info[1]);
 //                }
-
                 String key = snapshot.getKey();
                 User get = snapshot.getValue(User.class);
                 String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
                 NavTvUserID.setText(info[0]);
-                NavTvUserLV.setText("Lv : "+Integer.parseInt(info[6])/500);
+                NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
             }
 
             @Override
