@@ -32,6 +32,7 @@ public class MatchingRoom extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo;
+    boolean master;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,46 +46,23 @@ public class MatchingRoom extends AppCompatActivity {
         matchingRoomOption = (TextView) findViewById(R.id.matchingRoomOption);
         matchingRoomChatList = (ListView)findViewById(R.id.matchingRoomChatList);
 
-        number="1";
-
         // 로그인 화면에서 받아온 제목, 성별, 무게, 학년 저장
         Intent intent = getIntent();
+        number = intent.getStringExtra("number");
         title = intent.getStringExtra("title");
         memo = intent.getStringExtra("memo");
+        master = intent.getBooleanExtra("master",false);
 
+        matchingRoomNum.setText(number);
+        matchingRoomTitle.setText(title);
+        matchingRoomOption.setText(memo);
 
         // 받아온 데이터 저장
-        RecyclerItemData roomName = new RecyclerItemData(number, title,
-                memo); // RecyclerItemData를 이용하여 데이터를 묶는다.
-        databaseReference.child("chat").child(title).push().setValue(title);
-
-        //
-//        databaseReference.child("chat").child(title).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                RecyclerItemData chat = snapshot.getValue(RecyclerItemData.class);
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        })
+        if(master == true){
+            RecyclerItemData roomName = new RecyclerItemData(number, title,
+                    memo); // RecyclerItemData를 이용하여 데이터를 묶는다.
+            databaseReference.child("chat").child(title).setValue(roomName);
+        }
 
         // 채팅 방 입장
         openChat(title);
@@ -95,7 +73,7 @@ public class MatchingRoom extends AppCompatActivity {
             public void onSingleClick(View v) {
                 RecyclerItemData chat = new RecyclerItemData(user.getEmail(),
                         matchingRoomChatEdt.getText().toString()); // RecyclerItemData를 이용하여 데이터를 묶는다.
-                databaseReference.child("chat").child(title).child(title).push().setValue(chat); // 데이터 푸쉬
+                databaseReference.child("chat").child(title).child("chating").push().setValue(chat); // 데이터 푸쉬
                 matchingRoomChatEdt.setText(""); //입력창 초기화
             }
         });
@@ -127,7 +105,7 @@ public class MatchingRoom extends AppCompatActivity {
         matchingRoomChatList.setAdapter(adapter);
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
-        databaseReference.child("chat").child(chatName).child(chatName).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("chat").child(chatName).child("chating").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 addMessage(dataSnapshot, adapter);

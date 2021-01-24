@@ -16,7 +16,7 @@ public class RecyclerItemData {
         this.message = message;
     }
 
-    public String getImage() {
+    public String getNumber() {
         return number;
     }
 

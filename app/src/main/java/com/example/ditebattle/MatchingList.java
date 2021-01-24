@@ -41,12 +41,11 @@ public class MatchingList extends AppCompatActivity {
     RecyclerAdapter rAdapter;
     Context context;
     Dialog roomMakeDialog, roomSearchDialog;
-    String gender=null, grade=null;
+    String gender=null, grade=null, title, weight;
     CardView cvList;
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
-    private DatabaseReference databaseReference = firebaseDatabase.getReference(); // DB 테이블 연결
 
-//    int i=0;
+    int i=1;
+    boolean master = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,8 +127,8 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMake.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        String title=etMatchingListRoomMakeTitle.getText().toString();
-                        String weight=etMatchingListRoomMakeWeight.getText().toString();
+                        title=etMatchingListRoomMakeTitle.getText().toString();
+                        weight=etMatchingListRoomMakeWeight.getText().toString();
                         if(title.getBytes().length <= 0){
                             Toast.makeText(getApplicationContext(),"제목을 입력해주세요",Toast.LENGTH_SHORT).show();
                         }else if(gender==null){
@@ -143,15 +142,15 @@ public class MatchingList extends AppCompatActivity {
 //                                    gender + "/" + weight +
 //                                            "/" + grade));
 //                            i++;
-                            String memo = gender + weight + grade;
+                            String memo = gender + "/" + weight + "/" + grade;
 
                             Intent intent = new Intent(MatchingList.this, MatchingRoom.class);
-//                            intent.putExtra("roomnum", String.valueOf(i));
+                            intent.putExtra("number", String.valueOf(i));
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
+                            intent.putExtra("master",master);
                             startActivity(intent);
 
-                            rAdapter.notifyDataSetChanged();
                             roomMakeDialog.dismiss();
                         }
                     }
@@ -200,22 +199,23 @@ public class MatchingList extends AppCompatActivity {
         rView1.setLayoutManager(layoutManager);
 
         // 아이템 추가 코드
-        items.add(0, new RecyclerItemData("1","고수방","여/65kg/고수"));
-        items.add(1, new RecyclerItemData("2","초보만 들어오세요","남/88kg/중"));
+//        items.add(0, new RecyclerItemData("1","고수방","여/65kg/고수"));
+//        items.add(1, new RecyclerItemData("2","초보만 들어오세요","남/88kg/중"));
 
         // 데이터베이스 가져와 리싸이클러뷰 방 만들기
         showChatList();
 
     }
     private void showChatList() {
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
+        DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
                 items.clear(); // 기존 배열리스트가 존재하지않게 초기화
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
-                    RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 User 객체에 데이터를 담는다.
+                    RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 RecyclerItemData 객체에 데이터를 담는다.
                     items.add(roomList); // 담은 데이터들을 배열리스트에 넣고 리사이클러뷰로 보낼 준비
                 }
                 rAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침해야 반영이 됨

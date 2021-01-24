@@ -3,12 +3,14 @@ package com.example.ditebattle;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -67,9 +69,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             cvList = itemView.findViewById(R.id.cvList);
             listLayout = itemView.findViewById(R.id.listLayout);
 
-            listLayout.setOnTouchListener(new View.OnTouchListener() {
+            itemView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public boolean onTouch(View v, MotionEvent motionEvent) {
+                public boolean onTouch(View view, MotionEvent motionEvent) {
                     switch (motionEvent.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
@@ -80,14 +82,52 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                         case MotionEvent.ACTION_UP:
                             cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+                            int pos = getAdapterPosition() ;
+                            if (pos != RecyclerView.NO_POSITION) {
+                                // 데이터 리스트로부터 아이템 데이터 참조.
+                                String number = mData.get(pos).number;
+                                String title = mData.get(pos).title;
+                                String memo = mData.get(pos).memo;
 
-                            Intent intent = new Intent(listLayout.getContext(), MatchingRoom.class);
-                            ContextCompat.startActivity(listLayout.getContext(),intent,null);
+                                Intent intent = new Intent(listLayout.getContext(), MatchingRoom.class);
+                                intent.putExtra("number",number);
+                                intent.putExtra("title",title);
+                                intent.putExtra("memo",memo);
+                                ContextCompat.startActivity(listLayout.getContext(),intent,null);
+                            }
                             break;
                     }
                     return true;
                 }
             });
+//            listLayout.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent motionEvent) {
+//                    switch (motionEvent.getAction()) {
+//                        case MotionEvent.ACTION_DOWN:
+//                            cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
+//                            break;
+//                        case MotionEvent.ACTION_CANCEL:{
+//                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+//                            break;
+//                        }
+//                        case MotionEvent.ACTION_UP:
+//                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
+//                            int pos = getAdapterPosition() ;
+//                            if (pos != RecyclerView.NO_POSITION) {
+//                                // 데이터 리스트로부터 아이템 데이터 참조.
+//                                RecyclerItemData item = mData.get(pos) ;
+//                                Log.i("pos", String.valueOf(item));
+//                                // TODO : use item.
+//                            }
+//
+////                            Intent intent = new Intent(listLayout.getContext(), MatchingRoom.class);
+////                            ContextCompat.startActivity(listLayout.getContext(),intent,null);
+//                            break;
+//                    }
+//                    return true;
+//                }
+//            });
 
             // 뷰 클릭 시 실행하는 메소드
             /*itemView.setOnClickListener(new View.OnClickListener() {
