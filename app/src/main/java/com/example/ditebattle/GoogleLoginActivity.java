@@ -88,8 +88,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref=FirebaseDatabase.getInstance().getReference("User").child(currentUser.getUid()).child("flag");
-        ref.setValue(0);
+        if(currentUser!=null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(currentUser.getUid()).child("flag");
+            ref.setValue(0);
+        }
 //        updateUI(currentUser);
     }
 
@@ -123,9 +125,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             user = mAuth.getCurrentUser();
-
-//                            updateUI(user);
-
+                            if(user!=null) {
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).child("flag");
+                                ref.setValue(1);
+                            }
                         } else {
                             Log.e("여기가문제",""+task.getException());
                             // If sign in fails, display a message to the user.
@@ -155,8 +158,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
     }
 
     private void readUser(FirebaseUser user){
-
-            FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (user != null) {
