@@ -20,43 +20,47 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class MatchingList extends AppCompatActivity {
 
-    Button btn1,btn2,btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel,
+    Button btn1, btn2, btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel,
             btnMatchingListRoomMakeMan, btnMatchingListRoomMakeGirl,
             btnMatchingListRoomMakeTop, btnMatchingListRoomMakeMiddle,
-            btnMatchingListRoomMakeBottom , testBtn;
+            btnMatchingListRoomMakeBottom, testBtn;
     EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight;
     ArrayList<RecyclerItemData> items = new ArrayList<>();
     RecyclerView rView1;
     RecyclerAdapter rAdapter;
     Context context;
     Dialog roomMakeDialog, roomSearchDialog;
-    String gender=null, grade=null, title, weight;
+    String gender = null, grade = null, title, weight;
     CardView cvList;
-
-    int i=1;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    int i = 1;
     boolean master = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.matchinglist);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-        btn1 = (Button)findViewById(R.id.btn1);
-        btn2 = (Button)findViewById(R.id.btn2);
-        btn3 = (Button)findViewById(R.id.btn3);
-        testBtn =(Button)findViewById(R.id.testBtn);
-        cvList = (CardView)findViewById(R.id.cvList);
+        btn1 = (Button) findViewById(R.id.btn1);
+        btn2 = (Button) findViewById(R.id.btn2);
+        btn3 = (Button) findViewById(R.id.btn3);
+        testBtn = (Button) findViewById(R.id.testBtn);
+        cvList = (CardView) findViewById(R.id.cvList);
 
         // 방만들기 버튼
         btn1.setOnClickListener(new OnSingleClickListener() {
@@ -82,7 +86,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMan.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        gender="남";
+                        gender = "남";
                         btnMatchingListRoomMakeMan.setSelected(true);
                         btnMatchingListRoomMakeGirl.setSelected(false);
                     }
@@ -90,7 +94,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeGirl.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        gender="여";
+                        gender = "여";
                         btnMatchingListRoomMakeMan.setSelected(false);
                         btnMatchingListRoomMakeGirl.setSelected(true);
                     }
@@ -98,7 +102,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeTop.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade="상";
+                        grade = "상";
                         btnMatchingListRoomMakeTop.setSelected(true);
                         btnMatchingListRoomMakeMiddle.setSelected(false);
                         btnMatchingListRoomMakeBottom.setSelected(false);
@@ -107,7 +111,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMiddle.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade="중";
+                        grade = "중";
                         btnMatchingListRoomMakeTop.setSelected(false);
                         btnMatchingListRoomMakeMiddle.setSelected(true);
                         btnMatchingListRoomMakeBottom.setSelected(false);
@@ -116,7 +120,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeBottom.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade="하";
+                        grade = "하";
                         btnMatchingListRoomMakeTop.setSelected(false);
                         btnMatchingListRoomMakeMiddle.setSelected(false);
                         btnMatchingListRoomMakeBottom.setSelected(true);
@@ -127,31 +131,31 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMake.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        title=etMatchingListRoomMakeTitle.getText().toString();
-                        weight=etMatchingListRoomMakeWeight.getText().toString();
-                        if(title.getBytes().length <= 0){
-                            Toast.makeText(getApplicationContext(),"제목을 입력해주세요",Toast.LENGTH_SHORT).show();
-                        }else if(gender==null){
-                            Toast.makeText(getApplicationContext(),"성별을 선택해주세요",Toast.LENGTH_SHORT).show();
-                        }else if(weight.getBytes().length <=0){
-                            Toast.makeText(getApplicationContext(),"몸무게를 입력해주세요",Toast.LENGTH_SHORT).show();
-                        }else if(grade==null){
-                            Toast.makeText(getApplicationContext(),"난이도를 선택해주세요",Toast.LENGTH_SHORT).show();
-                        }else {
+                        title = etMatchingListRoomMakeTitle.getText().toString();
+                        weight = etMatchingListRoomMakeWeight.getText().toString();
+                        if (title.getBytes().length <= 0) {
+                            Toast.makeText(getApplicationContext(), "제목을 입력해주세요", Toast.LENGTH_SHORT).show();
+                        } else if (gender == null) {
+                            Toast.makeText(getApplicationContext(), "성별을 선택해주세요", Toast.LENGTH_SHORT).show();
+                        } else if (weight.getBytes().length <= 0) {
+                            Toast.makeText(getApplicationContext(), "몸무게를 입력해주세요", Toast.LENGTH_SHORT).show();
+                        } else if (grade == null) {
+                            Toast.makeText(getApplicationContext(), "난이도를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        } else {
 //                            items.add(i, new RecyclerItemData(String.valueOf(i + 1), title,
 //                                    gender + "/" + weight +
 //                                            "/" + grade));
 //                            i++;
                             String memo = gender + "/" + weight + "/" + grade;
-
                             Intent intent = new Intent(MatchingList.this, MatchingRoom.class);
                             intent.putExtra("number", String.valueOf(i));
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
-                            intent.putExtra("master",master);
+                            intent.putExtra("master", user.getUid());
+                            i=1;
                             startActivity(intent);
-
                             roomMakeDialog.dismiss();
+
                         }
                     }
                 });
@@ -192,10 +196,10 @@ public class MatchingList extends AppCompatActivity {
             }
         });
         //리싸이클러뷰 레이아웃 매니저를 통해 형태 설정
-        rView1 = (RecyclerView)findViewById(R.id.rView1);
+        rView1 = (RecyclerView) findViewById(R.id.rView1);
         rView1.setHasFixedSize(true); // 리사이클러뷰 기존성능 강화
         LinearLayoutManager layoutManager = new LinearLayoutManager(context,
-                LinearLayoutManager.VERTICAL,false);
+                LinearLayoutManager.VERTICAL, false);
         rView1.setLayoutManager(layoutManager);
 
         // 아이템 추가 코드
@@ -206,6 +210,39 @@ public class MatchingList extends AppCompatActivity {
         showChatList();
 
     }
+
+//    private void showChatList() {
+//
+//        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
+//        DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
+//        Query numQ = databaseReference.orderByChild("number");
+//        numQ.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
+//                items.clear(); // 기존 배열리스트가 존재하지않게 초기화
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
+//                    RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 RecyclerItemData 객체에 데이터를 담는다.
+//                    if (Integer.parseInt(roomList.number) == i) {
+//                        i++;
+//                    } else {
+//                    }
+//                    // 담은 데이터들을 배열리스트에 넣고 리사이클러뷰로 보낼 준비
+//                    items.add(roomList);
+//                }
+//                rAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침해야 반영이 됨
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                // 디비를 가져오던중 에러 발생 시
+//                Log.e("Fraglike", String.valueOf(error.toException())); // 에러문 출력
+//            }
+//        });
+//        rAdapter = new RecyclerAdapter(items);
+//        rView1.setAdapter(rAdapter);
+//    }
+
     private void showChatList() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
         DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결

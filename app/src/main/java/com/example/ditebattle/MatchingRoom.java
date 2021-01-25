@@ -2,8 +2,10 @@ package com.example.ditebattle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,7 +35,7 @@ public class MatchingRoom extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo;
-    boolean master;
+    String master;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +54,23 @@ public class MatchingRoom extends AppCompatActivity {
         number = intent.getStringExtra("number");
         title = intent.getStringExtra("title");
         memo = intent.getStringExtra("memo");
-        master = intent.getBooleanExtra("master",false);
+        master = intent.getStringExtra("master");
+
+        readDB();
 
         matchingRoomNum.setText(number);
         matchingRoomTitle.setText(title);
         matchingRoomOption.setText(memo);
 
         // 받아온 데이터 저장
-        if(master == true){
+
+        if(master.equals(user.getUid())){
             RecyclerItemData roomName = new RecyclerItemData(number, title,
                     memo); // RecyclerItemData를 이용하여 데이터를 묶는다.
             databaseReference.child("chat").child(title).setValue(roomName);
+            matchingRoomStartBtn.setText("Start");
+        }else{
+            matchingRoomStartBtn.setText("Ready");
         }
 
         // 채팅 방 입장
@@ -129,6 +138,70 @@ public class MatchingRoom extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("나가기알림").setMessage("채팅방을 나가시겠습니까?");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                 if(master.equals(user.getUid())){
+                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+                     ref.removeValue();
+                     finish();
+                 }else{
+                     Toast.makeText(getApplicationContext(),"여기로감?",Toast.LENGTH_SHORT).show();
+                     finish();
+                 }
+
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+    void readDB(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if(master.equals("false")) {
+                    Toast.makeText(getApplicationContext(),"방장이 방을 나갔습니다.", Toast.LENGTH_LONG).show();
+                }
+                finish();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });

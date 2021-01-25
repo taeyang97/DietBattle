@@ -72,16 +72,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 }
             }
         });
-        btn_logout = (Button)findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(new OnSingleClickListener() {
-            @Override
-            public void onSingleClick(View v) {
-                switch(v.getId()){
-                    case R.id.btn_logout:
-                        signOut();
-                }
-            }
-        });
+
     }
 
     @Override
