@@ -37,8 +37,8 @@ public class MatchingList extends AppCompatActivity {
     Button btn1, btn2, btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel,
             btnMatchingListRoomMakeMan, btnMatchingListRoomMakeGirl,
             btnMatchingListRoomMakeTop, btnMatchingListRoomMakeMiddle,
-            btnMatchingListRoomMakeBottom, testBtn;
-    EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight;
+            btnMatchingListRoomMakeBottom, testBtn, matchingRoomSerchBtn;
+    EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight, matchingRoomSerchEdt;
     ArrayList<RecyclerItemData> items = new ArrayList<>();
     RecyclerView rView1;
     RecyclerAdapter rAdapter;
@@ -46,7 +46,9 @@ public class MatchingList extends AppCompatActivity {
     Dialog roomMakeDialog, roomSearchDialog;
     String gender = null, grade = null, title, weight;
     CardView cvList;
-    Boolean master=true;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
+    DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
+    Boolean master=true, customer=true;
     int i = 1;
 
     @Override
@@ -151,6 +153,7 @@ public class MatchingList extends AppCompatActivity {
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
                             intent.putExtra("master", master);
+                            intent.putExtra("customer",customer);
                             i=1;
                             startActivity(intent);
                             roomMakeDialog.dismiss();
@@ -174,9 +177,18 @@ public class MatchingList extends AppCompatActivity {
             public void onSingleClick(View v) {
                 roomSearchDialog = new Dialog(MatchingList.this);
                 roomSearchDialog.setContentView(R.layout.matchinglistroomsearchdialog);
-
+                matchingRoomSerchBtn = (Button) roomSearchDialog.findViewById(R.id.matchingRoomSerchBtn);
+                matchingRoomSerchEdt = (EditText) roomSearchDialog.findViewById(R.id.matchingRoomSerchEdt);
                 roomSearchDialog.show();
                 roomSearchDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                matchingRoomSerchBtn.setOnClickListener(new OnSingleClickListener() {
+                    @Override
+                    public void onSingleClick(View v) {
+                        showCahtSerch();
+                        Toast.makeText(getApplicationContext(), "검색 되었습니다.", Toast.LENGTH_SHORT).show();
+                        roomSearchDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -184,14 +196,7 @@ public class MatchingList extends AppCompatActivity {
         btn3.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-
-            }
-        });
-
-        testBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+                showChatList();
             }
         });
         //리싸이클러뷰 레이아웃 매니저를 통해 형태 설정
@@ -243,8 +248,7 @@ public class MatchingList extends AppCompatActivity {
 //    }
 
     private void showChatList() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
-        DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -253,6 +257,33 @@ public class MatchingList extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
                     RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 RecyclerItemData 객체에 데이터를 담는다.
                     items.add(roomList); // 담은 데이터들을 배열리스트에 넣고 리사이클러뷰로 보낼 준비
+                }
+                rAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침해야 반영이 됨
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // 디비를 가져오던중 에러 발생 시
+                Log.e("Fraglike", String.valueOf(error.toException())); // 에러문 출력
+            }
+        });
+
+        rAdapter = new RecyclerAdapter(items);
+        rView1.setAdapter(rAdapter);
+    }
+
+    private void showCahtSerch() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 파이어베이스 데이터베이스의 데이터를 받아오는 곳
+                items.clear(); // 기존 배열리스트가 존재하지않게 초기화
+                String str = matchingRoomSerchEdt.getText().toString();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
+                    RecyclerItemData roomList = snapshot.getValue(RecyclerItemData.class); // 만들어뒀던 RecyclerItemData 객체에 데이터를 담는다.
+                    if(roomList.getTitle().contains(str)){
+                        items.add(roomList); // 담은 데이터들을 배열리스트에 넣고 리사이클러뷰로 보낼 준비
+                    }
                 }
                 rAdapter.notifyDataSetChanged(); // 리스트 저장 및 새로고침해야 반영이 됨
             }
