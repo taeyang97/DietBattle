@@ -61,8 +61,8 @@ public class GoogleLoginActivity extends AppCompatActivity {
         // Set the dimensions of the sign-in button.
         googleSignInBtn = findViewById(R.id.googleSignInBtn);
         googleSignInBtn.setSize(SignInButton.SIZE_STANDARD);
-
-
+        FirebaseUser onuser = FirebaseAuth.getInstance().getCurrentUser();
+        readUser(onuser);
         googleSignInBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -88,8 +88,9 @@ public class GoogleLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        readUser(currentUser);
-        updateUI(currentUser);
+        DatabaseReference ref=FirebaseDatabase.getInstance().getReference("User").child(currentUser.getUid()).child("flag");
+        ref.setValue(0);
+//        updateUI(currentUser);
     }
 
     public void signIn(){
@@ -123,15 +124,11 @@ public class GoogleLoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             user = mAuth.getCurrentUser();
 
-                            readUser(user);
 //                            updateUI(user);
-
-                            updateUI(user);
 
                         } else {
                             Log.e("여기가문제",""+task.getException());
                             // If sign in fails, display a message to the user.
-                            updateUI(null);
 
                         }
 
@@ -158,26 +155,26 @@ public class GoogleLoginActivity extends AppCompatActivity {
     }
 
     private void readUser(FirebaseUser user){
-        if(user!=null) {
-            FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
+
+            FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Log.d("MainActivity", "ValueEventListener : " + snapshot.getValue());
-                        if (snapshot.getValue().toString().contains(user.getEmail())) {
-                            firstLogin=1;
+                    if (user != null) {
+                        Log.w("MainActivity", "ValueEventListener : " + dataSnapshot.getValue());
+                        if (dataSnapshot.getValue().toString().contains(user.getEmail())) {
+                            jumpMain();
+                            firstLogin = 1;
                         } else {
-                            firstLogin=2;
+                            jumpJoin();
+                            firstLogin = 2;
                         }
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             });
-        }
+
     }
 
 

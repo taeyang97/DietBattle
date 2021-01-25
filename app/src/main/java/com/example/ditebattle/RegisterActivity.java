@@ -66,7 +66,8 @@ public class RegisterActivity extends AppCompatActivity {
                             33.4,
                             0,
                             0,
-                            gender
+                            "남자",
+                            1
                     );
                     userValue = userInfo.toMap();
                     childUpdates.put("/User/" + user.getUid(), userValue);

@@ -15,11 +15,12 @@ public class User {
     public Integer total_point;
     public Integer current_point;
     public String gender;
+    public Integer flag;
 
     public User() { }
 
     public User(String id, String nickname, Integer age, Double weight , Double height,
-                Double bmi, Integer total_point, Integer current_point, String gender){
+                Double bmi, Integer total_point, Integer current_point, String gender, Integer flag){
         this.email= id;
         this.nickname = nickname;
         this.age = age;
@@ -29,6 +30,7 @@ public class User {
         this.total_point = total_point;
         this.current_point = current_point;
         this.gender = gender;
+        this.flag = flag;
     }
 
     public Map<String, Object> toMap(){
@@ -42,10 +44,8 @@ public class User {
         result.put("total_point",total_point);
         result.put("current_point",current_point);
         result.put("gender",gender);
+        result.put("flag",flag);
         return result;
     }
 
-    public String getEmail(){
-        return email;
-    }
 }
