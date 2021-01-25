@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     Map<String, Object> userValue = null;
     User userInfo = null;
     RadioGroup radioGroup;
-    String gender;
+    String gender="남자";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,19 @@ public class RegisterActivity extends AppCompatActivity {
         height = (EditText) findViewById(R.id.reg_Height_Edt);
         age = (EditText) findViewById(R.id.reg_Age_Edt);
         NavStartBtn = (Button) findViewById(R.id.NavStartBtn);
-        radioGroup.setOnCheckedChangeListener(radioGroupButtonChangeListener);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i){
+                    case R.id.reg_Man_Btn :
+                        gender="남자";
+                        break;
+                    case R.id.reg_Woman_btn :
+                        gender="여자";
+                        break;
+                }
+            }
+        });
 
         NavStartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
                             33.4,
                             0,
                             0,
-                            "남자",
+                            gender,
                             1
                     );
                     userValue = userInfo.toMap();
@@ -82,14 +94,4 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
-    RadioGroup.OnCheckedChangeListener radioGroupButtonChangeListener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
-            if (i == R.id.reg_Man_Btn) {
-                gender="남자";
-            } else if (i == R.id.reg_Woman_btn) {
-                gender="여자";
-            };
-        }
-    };
 }
