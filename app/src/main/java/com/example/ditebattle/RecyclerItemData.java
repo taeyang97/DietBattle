@@ -1,10 +1,14 @@
 package com.example.ditebattle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RecyclerItemData {
     String number, title, memo, userName, message;
     Boolean master;
 
-    public RecyclerItemData() {}
+    public RecyclerItemData() {
+    }
 
     public RecyclerItemData(Boolean master) {
         this.master = master;
@@ -52,5 +56,24 @@ public class RecyclerItemData {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setNumber(String number) { this.number = number; }
+
+    public void setTitle(String title) { this.title = title; }
+
+    public void setMemo(String memo) { this.memo = memo; }
+
+    public void setMaster(Boolean master) { this.master = master; }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("number", number);
+        result.put("title", title);
+        result.put("memo", memo);
+        result.put("userName", userName);
+        result.put("message", message);
+        result.put("master",master);
+        return result;
     }
 }
