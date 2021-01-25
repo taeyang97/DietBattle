@@ -35,7 +35,7 @@ public class MatchingRoom extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo;
-    Boolean master;
+    Boolean master, customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,7 @@ public class MatchingRoom extends AppCompatActivity {
         title = intent.getStringExtra("title");
         memo = intent.getStringExtra("memo");
         master = intent.getBooleanExtra("master", false);
+        customer = intent.getBooleanExtra("customer",false);
 
         readDB();
 
@@ -66,7 +67,7 @@ public class MatchingRoom extends AppCompatActivity {
 
         if(master == true){
             RecyclerItemData roomName = new RecyclerItemData(number, title,
-                    memo, master); // RecyclerItemData를 이용하여 데이터를 묶는다.
+                    memo, master, customer); // RecyclerItemData를 이용하여 데이터를 묶는다.
             databaseReference.child("chat").child(title).setValue(roomName);
             matchingRoomStartBtn.setText("시작");
         }else{
@@ -95,10 +96,18 @@ public class MatchingRoom extends AppCompatActivity {
                     Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
                     startActivity(intent);
                 } else {
-                    if(matchingRoomChatBtn.getText().toString().equals("준비")){
-                        matchingRoomChatBtn.setText("준비완료");
+                    if(matchingRoomStartBtn.getText().toString().equals("준비")){
+                        customer = true;
+                        matchingRoomStartBtn.setText("준비완료");
+                        RecyclerItemData roomName = new RecyclerItemData(number, title,
+                                memo, master, customer);
+                        databaseReference.child("chat").child(title).setValue(roomName);
                     } else {
-                        matchingRoomChatBtn.setText("준비");
+                        customer = false;
+                        matchingRoomStartBtn.setText("준비");
+                        RecyclerItemData roomName = new RecyclerItemData(number, title,
+                                memo, master, customer);
+                        databaseReference.child("chat").child(title).setValue(roomName);
                     }
                 }
             }
@@ -127,6 +136,11 @@ public class MatchingRoom extends AppCompatActivity {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 addMessage(dataSnapshot, adapter);
                 Log.e("LOG", "s:"+s);
+                if(customer == false){
+                    matchingRoomStartBtn.setText("시작");
+                } else {
+                    matchingRoomStartBtn.setText("준비완료");
+                }
             }
 
             @Override
@@ -195,10 +209,10 @@ public class MatchingRoom extends AppCompatActivity {
                 if(master == true){
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                     ref.removeValue();
-                    Toast.makeText(getApplicationContext(),"방을 나갔습니다.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"방장이 방을 나갔습니다.",Toast.LENGTH_LONG).show();
                     finish();
                 }else{
-                    Toast.makeText(getApplicationContext(),"방장이 방을 나갔습니다.",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"방을 나갔습니다.",Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
