@@ -125,10 +125,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             user = mAuth.getCurrentUser();
-                            if(user!=null) {
-                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).child("flag");
-                                ref.setValue(1);
-                            }
+                            readUser(user);
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).child("flag");
+                            ref.setValue(1);
+
                         } else {
                             Log.e("여기가문제",""+task.getException());
                             // If sign in fails, display a message to the user.
@@ -158,17 +158,21 @@ public class GoogleLoginActivity extends AppCompatActivity {
     }
 
     private void readUser(FirebaseUser user){
-            FirebaseDatabase.getInstance().getReference("User").addListenerForSingleValueEvent(new ValueEventListener() {
+            FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (user != null) {
                         Log.w("MainActivity", "ValueEventListener : " + dataSnapshot.getValue());
                         if (dataSnapshot.getValue().toString().contains(user.getEmail())) {
-                            jumpMain();
-                            firstLogin = 1;
+                            if(firstLogin==0) {
+                                jumpMain();
+                                firstLogin = 1;
+                            }
                         } else {
-                            jumpJoin();
-                            firstLogin = 2;
+                            if(firstLogin==0) {
+                                jumpJoin();
+                                firstLogin = 2;
+                            }
                         }
                     }
                 }
