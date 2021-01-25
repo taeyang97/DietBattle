@@ -5,17 +5,16 @@ import java.util.Map;
 
 public class RecyclerItemData {
     String number, title, memo, userName, message;
-    Boolean master, customer;
+    Boolean master;
 
     public RecyclerItemData() {
     }
 
-    public RecyclerItemData(String number, String title, String memo, Boolean master, Boolean customer) {
+    public RecyclerItemData(String number, String title, String memo, Boolean master) {
         this.number = number;
         this.title = title;
         this.memo = memo;
         this.master = master;
-        this.customer = customer;
     }
 
     public RecyclerItemData(String userName, String message) {
@@ -23,9 +22,6 @@ public class RecyclerItemData {
         this.message = message;
     }
 
-    public Boolean getCustomer() {
-        return customer;
-    }
 
     public Boolean getMaster() {
         return master;

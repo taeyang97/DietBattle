@@ -37,7 +37,8 @@ public class MatchingRoom extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo;
     Boolean master;
-    Boolean flag=false;
+    Boolean flag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +98,12 @@ public class MatchingRoom extends AppCompatActivity {
                     Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
                     startActivity(intent);
                 } else {
-                    if(!flag){
-                        flag=true;
+                    if (!flag) {
+                        flag = true;
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
                         ref.setValue(flag);
-                    }else{
-                        flag=false;
+                    } else {
+                        flag = false;
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
                         ref.setValue(flag);
                     }
@@ -190,23 +191,22 @@ public class MatchingRoom extends AppCompatActivity {
         });
     }
 
-    void readMaster(){
+    void readMaster() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean ready = Boolean.parseBoolean(String.valueOf(snapshot.getValue()));
-                Toast.makeText(getApplicationContext(),String.valueOf(ready),Toast.LENGTH_SHORT).show();
-                                if(ready){
-                    if(master){
+                if (ready) {
+                    if (master) {
                         matchingRoomStartBtn.setEnabled(true);
-                    }else{
+                    } else {
                         matchingRoomStartBtn.setText("준비완료");
                     }
-                }else{
-                    if(master){
+                } else {
+                    if (master) {
                         matchingRoomStartBtn.setEnabled(false);
-                    }else{
+                    } else {
                         matchingRoomStartBtn.setText("준비대기");
                     }
                 }
@@ -219,6 +219,7 @@ public class MatchingRoom extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
