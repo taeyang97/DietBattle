@@ -95,7 +95,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 intent.putExtra("number",number);
                                 intent.putExtra("title",title);
                                 intent.putExtra("memo",memo);
-                                intent.putExtra("master","false");
+                                intent.putExtra("master",false);
                                 ContextCompat.startActivity(listLayout.getContext(),intent,null);
                             }
                             break;

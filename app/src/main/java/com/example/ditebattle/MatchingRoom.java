@@ -35,7 +35,7 @@ public class MatchingRoom extends AppCompatActivity {
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo;
-    String master;
+    Boolean master;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class MatchingRoom extends AppCompatActivity {
         number = intent.getStringExtra("number");
         title = intent.getStringExtra("title");
         memo = intent.getStringExtra("memo");
-        master = intent.getStringExtra("master");
+        master = intent.getBooleanExtra("master", false);
 
         readDB();
 
@@ -64,13 +64,13 @@ public class MatchingRoom extends AppCompatActivity {
 
         // 받아온 데이터 저장
 
-        if(master.equals(user.getUid())){
+        if(master == true){
             RecyclerItemData roomName = new RecyclerItemData(number, title,
-                    memo); // RecyclerItemData를 이용하여 데이터를 묶는다.
+                    memo, master); // RecyclerItemData를 이용하여 데이터를 묶는다.
             databaseReference.child("chat").child(title).setValue(roomName);
-            matchingRoomStartBtn.setText("Start");
+            matchingRoomStartBtn.setText("시작");
         }else{
-            matchingRoomStartBtn.setText("Ready");
+            matchingRoomStartBtn.setText("준비");
         }
 
         // 채팅 방 입장
@@ -87,12 +87,20 @@ public class MatchingRoom extends AppCompatActivity {
             }
         });
 
-        // 대결 시작 버튼
-        matchingRoomStartBtn.setOnClickListener(new View.OnClickListener() {
+        // 대결 시작 버튼 누를 시 방장과 다르게 눌리는 버튼
+        matchingRoomStartBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
-                startActivity(intent);
+            public void onSingleClick(View v) {
+                if(master == true){
+                    Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                    startActivity(intent);
+                } else {
+                    if(matchingRoomChatBtn.getText().toString().equals("준비")){
+                        matchingRoomChatBtn.setText("준비완료");
+                    } else {
+                        matchingRoomChatBtn.setText("준비");
+                    }
+                }
             }
         });
     }
@@ -143,37 +151,6 @@ public class MatchingRoom extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("나가기알림").setMessage("채팅방을 나가시겠습니까?");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                 if(master.equals(user.getUid())){
-                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
-                     ref.removeValue();
-                     finish();
-                 }else{
-                     Toast.makeText(getApplicationContext(),"여기로감?",Toast.LENGTH_SHORT).show();
-                     finish();
-                 }
-
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
-    }
     void readDB(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
         ref.addChildEventListener(new ChildEventListener() {
@@ -189,7 +166,7 @@ public class MatchingRoom extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if(master.equals("false")) {
+                if(master == false) {
                     Toast.makeText(getApplicationContext(),"방장이 방을 나갔습니다.", Toast.LENGTH_LONG).show();
                 }
                 finish();
@@ -205,5 +182,29 @@ public class MatchingRoom extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("채팅방을 나가시겠습니까?");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                if(master == true){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+                    ref.removeValue();
+                    Toast.makeText(getApplicationContext(),"방을 나갔습니다.",Toast.LENGTH_LONG).show();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(),"방장이 방을 나갔습니다.",Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

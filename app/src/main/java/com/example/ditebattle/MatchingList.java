@@ -46,9 +46,8 @@ public class MatchingList extends AppCompatActivity {
     Dialog roomMakeDialog, roomSearchDialog;
     String gender = null, grade = null, title, weight;
     CardView cvList;
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    Boolean master=true;
     int i = 1;
-    boolean master = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +150,7 @@ public class MatchingList extends AppCompatActivity {
                             intent.putExtra("number", String.valueOf(i));
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
-                            intent.putExtra("master", user.getUid());
+                            intent.putExtra("master", master);
                             i=1;
                             startActivity(intent);
                             roomMakeDialog.dismiss();
