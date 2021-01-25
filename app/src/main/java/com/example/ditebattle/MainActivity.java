@@ -105,10 +105,6 @@ public class MainActivity extends AppCompatActivity {
         nav_logout.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                if(user!=null) {
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(user.getUid()).child("flag");
-                    ref.setValue(0);
-                }
                 nav_logout.setTextColor(Color.parseColor("#99ffffff"));
                 GoogleLoginActivity activity = new GoogleLoginActivity();
                 activity.signOut();
