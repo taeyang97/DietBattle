@@ -1,5 +1,6 @@
 package com.example.ditebattle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -15,20 +16,43 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.example.ditebattle.database.Battle;
+import com.example.ditebattle.database.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class BattleRoom extends AppCompatActivity {
     ImageView battleRoomIvMission, battleRoomIvCaht, battleRoomIvPoint,
             ivMissionExit, ivMissionCheckBox1, ivMissionCheckBox2,
             ivMissionCheckBox3, ivMissionCheckBox4, ivMissionCheckBox5,
-            ivChatingExit , ivChatingBuy1, ivChatingBuy2, ivChatingBuy3,
+            ivChatingExit, ivChatingBuy1, ivChatingBuy2, ivChatingBuy3,
             ivPointExit;
-    ImageView battleRoomBattleFragmentBtn2 , battleRoomBattleInfoFragmentBtn2;
-    FrameLayout battleRoomFragContainer2;
+    ImageView battleRoomBattleFragmentBtn2, battleRoomBattleInfoFragmentBtn2;
+    //    FrameLayout battleRoomFragContainer2;
     BattleFragment battleFragment;
     BattleInfoFragment battleInfoFragment;
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction;
     Dialog missiondialog, chatingdialog, pointdialog;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = firebaseDatabase.getReference();
+    ValueEventListener userValueEventListener, battleValueEventListener;
+//    Query userbyUid = databaseReference.child("User").child(user.getUid());
+    ArrayList<String> myUserDb = new ArrayList<String>();
+    ArrayList<String> myBattleDb = new ArrayList<String>();
+    Boolean firstLogin = true;
+    DatabaseReference ref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +63,13 @@ public class BattleRoom extends AppCompatActivity {
         battleRoomIvCaht = (ImageView) findViewById(R.id.battleRoomIvCaht);
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
         battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
-        battleRoomBattleInfoFragmentBtn2 = (ImageView)findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
-
+        battleRoomBattleInfoFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
-
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
 
+        ReadUserDB();
         // 미션 버튼 클릭 시
         battleRoomIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -140,12 +163,10 @@ public class BattleRoom extends AppCompatActivity {
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbutton);
                         chatingdialog = new Dialog(BattleRoom.this);
                         chatingdialog.setContentView(R.layout.activity_battle_roomchatingdialog);
-
-                        ivChatingExit = (ImageView)chatingdialog.findViewById(R.id.ivChatingExit);
-                        ivChatingBuy1 = (ImageView)chatingdialog.findViewById(R.id.ivChatingBuy1);
-                        ivChatingBuy2 = (ImageView)chatingdialog.findViewById(R.id.ivChatingBuy2);
-                        ivChatingBuy3 = (ImageView)chatingdialog.findViewById(R.id.ivChatingBuy3);
-
+                        ivChatingExit = (ImageView) chatingdialog.findViewById(R.id.ivChatingExit);
+                        ivChatingBuy1 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy1);
+                        ivChatingBuy2 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy2);
+                        ivChatingBuy3 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy3);
                         chatingdialog.show();
                         chatingdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -225,7 +246,7 @@ public class BattleRoom extends AppCompatActivity {
                         pointdialog = new Dialog(BattleRoom.this);
                         pointdialog.setContentView(R.layout.activity_battle_roompointdialog);
 
-                        ivPointExit = (ImageView)pointdialog.findViewById(R.id.ivPointExit);
+                        ivPointExit = (ImageView) pointdialog.findViewById(R.id.ivPointExit);
 
                         pointdialog.show();
                         pointdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -268,7 +289,58 @@ public class BattleRoom extends AppCompatActivity {
                 battleRoomBattleInfoFragmentBtn2.setImageResource(R.drawable.battlegrapbtnclick);
             }
         });
-
-
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        databaseReference.removeEventListener(userValueEventListener);
+//        ref.removeEventListener(battleValueEventListener);
+    }
+
+    void ReadUserDB() {
+        userValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (firstLogin) {
+                    firstLogin = false;
+                    User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
+                    String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
+                            String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
+                    for (int i=0; i < user.length; i++) {
+                        myUserDb.add(user[i]);
+                    }
+                }
+                    Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                    String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP)};
+                    for (int i = 1; i < battle.length; i++) {
+                        myBattleDb.add(battle[i]);
+                    }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        };
+        databaseReference.addValueEventListener(userValueEventListener);
+    }
+
+//    void ReadBattleDB() {
+//        battleValueEventListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Battle get = snapshot.getValue(Battle.class);
+//                String[] info = {get.master, get.guest, String.valueOf(get.finish_time), String.valueOf(get.masterHP), String.valueOf(get.guestHP)};
+//                for (int i = 1; i < info.length; i++) {
+//                    myBattleDb.add(info[i]);
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//            }
+//        };
+//        if(myUserDb.get(11)!=null) {
+//            ref = databaseReference.child("Battle").child(myUserDb.get(11));
+//            ref.addValueEventListener(battleValueEventListener);
+//        }
+//    }
 }
