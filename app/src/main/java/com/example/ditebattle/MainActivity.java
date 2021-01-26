@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> userValue = null;
     User userInfo = null;
-
+    String battle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,9 +84,14 @@ public class MainActivity extends AppCompatActivity {
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Matching.class);
+                Intent intent;
+                if(battle.equals("false")) {
+                    intent = new Intent(MainActivity.this, Matching.class);
+                }else{
+                    intent = new Intent(MainActivity.this, BattleRoom.class);
+                }
                 startActivity(intent);
-                ;
+
             }
         });
         main_nav_btn_kal.setOnClickListener(new View.OnClickListener() {
@@ -170,9 +175,10 @@ public class MainActivity extends AppCompatActivity {
 //                }
                 String key = snapshot.getKey();
                 User get = snapshot.getValue(User.class);
-                String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
+                String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender,get.battle};
                 NavTvUserID.setText(info[0]);
                 NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
+                battle = get.battle;
             }
 
             @Override

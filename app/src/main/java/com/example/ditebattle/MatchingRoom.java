@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ditebattle.database.Battle;
+import com.example.ditebattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -26,6 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MatchingRoom extends AppCompatActivity {
 
     Button matchingRoomStartBtn, matchingRoomChatBtn;
@@ -34,10 +39,13 @@ public class MatchingRoom extends AppCompatActivity {
     ListView matchingRoomChatList;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    HashMap<String, Object> childUpdates = new HashMap<>();
+    Map<String, Object> battleValue = null;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String number, title, memo;
+    String number, title, memo, masterUid , guestUid, battletitle;
     Boolean master;
-    Boolean flag = false;
+    Boolean flag = false , onBattle=false;
+    Battle battle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,7 @@ public class MatchingRoom extends AppCompatActivity {
 
         readDB();
         readMaster();
+        readBattle();
         matchingRoomNum.setText(number);
         matchingRoomTitle.setText(title);
         matchingRoomOption.setText(memo);
@@ -67,12 +76,16 @@ public class MatchingRoom extends AppCompatActivity {
         // 받아온 데이터 저장
 
         if (master == true) {
+
             RecyclerItemData roomName = new RecyclerItemData(number, title,
                     memo, flag); // RecyclerItemData를 이용하여 데이터를 묶는다.
             databaseReference.child("chat").child(title).setValue(roomName);
+            masterUid = user.getUid();
+            battletitle = (""+title+memo+number);
             matchingRoomStartBtn.setText("시작");
             matchingRoomStartBtn.setEnabled(false);
         } else {
+            guestUid=user.getUid();
             matchingRoomStartBtn.setText("준비대기");
         }
 
@@ -95,8 +108,18 @@ public class MatchingRoom extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 if (master == true) {
-                    Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
-                    startActivity(intent);
+                    long t = System.currentTimeMillis();
+                    onBattle=true;
+                    battle = new Battle(
+                            title,
+                            "GuestUID",
+                            (t+604800),
+                            500,
+                            500
+                    );
+                    battleValue = battle.toMap();
+                    childUpdates.put("/Battle/" +title,battleValue);
+                    databaseReference.updateChildren(childUpdates);
                 } else {
                     if (!flag) {
                         flag = true;
@@ -191,6 +214,30 @@ public class MatchingRoom extends AppCompatActivity {
         });
     }
 
+    void readBattle(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("Battle").child(title).getValue()!=null){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid()).child("battle");
+                    ref.setValue(title);
+                    if(!master) {
+                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(title).child("guest");
+                        ref2.setValue(guestUid);
+                    }
+                    Toast.makeText(getApplicationContext(),"배틀이 시작됩니다",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                    startActivity(intent);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
     void readMaster() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
         ref.addValueEventListener(new ValueEventListener() {
