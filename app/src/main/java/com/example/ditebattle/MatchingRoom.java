@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,14 +40,15 @@ public class MatchingRoom extends AppCompatActivity {
     ListView matchingRoomChatList;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    DatabaseReference battleRef = databaseReference.child("Battle");
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> battleValue = null;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String number, title, memo, masterUid , guestUid, battletitle;
-    Boolean master;
+    Boolean master,Login=true;
     Boolean flag = false , onBattle=false;
     Battle battle;
-
+    ValueEventListener battleValueEventListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +137,13 @@ public class MatchingRoom extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e("test","onStop");
+        battleRef.removeEventListener(battleValueEventListener);
+    }
+
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         RecyclerItemData chat = dataSnapshot.getValue(RecyclerItemData.class);
         adapter.add(chat.getUserName() + " : " + chat.getMessage());
@@ -215,28 +224,34 @@ public class MatchingRoom extends AppCompatActivity {
     }
 
     void readBattle(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.addValueEventListener(new ValueEventListener() {
+        battleValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("Battle").child(title).getValue()!=null){
+                if(snapshot.child(title).getValue()!=null){
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid()).child("battle");
                     ref.setValue(title);
                     if(!master) {
                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(title).child("guest");
                         ref2.setValue(guestUid);
                     }
-                    Toast.makeText(getApplicationContext(),"배틀이 시작됩니다",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
-                    startActivity(intent);
+                        if(Login) {
+                            Login=false;
+                            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+                            ref3.removeValue();
+                            Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                            startActivity(intent);
+                            finish();
+                        }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
-
+        };
+        battleRef.addValueEventListener(battleValueEventListener);
     }
     void readMaster() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
