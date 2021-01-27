@@ -51,9 +51,11 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="50dp"/>
             <TextView
+                android:id="@+id/battleRoomDateTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
                 android:text="20.02.04"
                 android:textColor="@color/black" />
         </FrameLayout>
@@ -78,6 +80,7 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="50dp"/>
             <TextView
+                android:id="@+id/battleRoomPointTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.Chating;
@@ -33,7 +34,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BattleRoom extends AppCompatActivity {
@@ -46,6 +49,7 @@ public class BattleRoom extends AppCompatActivity {
     //    FrameLayout battleRoomFragContainer2;
     ListView lvChating;
     EditText edtChating;
+    TextView battleRoomPointTv, battleRoomDateTv;
     Button btnChating;
     BattleFragment battleFragment;
     BattleInfoFragment battleInfoFragment;
@@ -61,18 +65,25 @@ public class BattleRoom extends AppCompatActivity {
     ArrayList<Object> secondBattle = new ArrayList<Object>();
     Boolean firstLogin = true;
     DatabaseReference ref;
-
+    long now = System.currentTimeMillis();
+    Date mDate = new Date(now);
+    SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+    String getTime = simpleDate.format(mDate);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle_room);
         ActionBar ac = getSupportActionBar();
         ac.hide();
+        battleRoomDateTv = (TextView) findViewById(R.id.battleRoomDateTv);
+        battleRoomPointTv = (TextView) findViewById(R.id.battleRoomPointTv);
         battleRoomIvMission = (ImageView) findViewById(R.id.battleRoomIvMission);
         battleRoomIvChat = (ImageView) findViewById(R.id.battleRoomIvChat);
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
         battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
         battleRoomBattleInfoFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
+
+        battleRoomDateTv.setText(getTime);
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -342,10 +353,12 @@ public class BattleRoom extends AppCompatActivity {
                     myBattleDb.add(battle[i]);
                 }
                 if(firstLogin) {
+                    battleRoomPointTv.setText(myUserDb.get(7));
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;
                     readBattle();
                 }
+
             }
 
             @Override

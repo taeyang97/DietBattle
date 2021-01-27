@@ -89,7 +89,9 @@ public class BattleFragment extends Fragment {
                                 battleFragHpTvGuest.setText((battle.get(4))+"/500");
                                 if (!uid.getUid().equals(battle.get(1))) {
                                     battleFragLeftName.setText(user.get(1));
+                                    battleFragRightName.setText("상대방");
                                 }else{
+                                    battleFragLeftName.setText("상대방");
                                     battleFragRightName.setText(user.get(1));
                                 }
                                 if(totalSec<=0){

@@ -44,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         heightEdt = (EditText) findViewById(R.id.reg_Height_Edt);
         ageEdt = (EditText) findViewById(R.id.reg_Age_Edt);
         NavStartBtn = (Button) findViewById(R.id.NavStartBtn);
+
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {

@@ -1,143 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splashBackground"
+    android:background="#12015B"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:background="#ffffff"
         android:padding="10dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="닉네임을 정해주세요."
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:paddingTop="30dp"
-            android:textSize="20dp"/>
 
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo3"/>
         <EditText
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:id="@+id/reg_Id_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="띄어쓰기 포함 20글자 이내"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/layoutbackground"
             android:fontFamily="@font/dalmoorifont"
-            android:layout_marginTop="10dp"
-            android:maxLength="20"/>
+            android:hint="닉네임을 입력해주세요"
+            android:maxLength="20" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="당신의 키를 입력해주세요."
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:paddingTop="30dp"
-            android:textSize="20dp"/>
 
         <EditText
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:id="@+id/reg_Height_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/layoutbackground"
             android:fontFamily="@font/dalmoorifont"
-            android:hint="cm"/>
+            android:gravity="center"
+            android:hint="당신의 키를 입력해주세요" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="당신의 몸무게를 입력해주세요."
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:paddingTop="30dp"
-            android:textSize="20dp"/>
 
         <EditText
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:id="@+id/reg_Weight_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/layoutbackground"
             android:fontFamily="@font/dalmoorifont"
-            android:hint="kg"/>
+            android:hint="당신의 몸무게를 입력해주세요" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="당신의 나이를 입력해주세요."
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:paddingTop="30dp"
-            android:textSize="20dp"/>
 
         <EditText
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:id="@+id/reg_Age_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/layoutbackground"
             android:fontFamily="@font/dalmoorifont"
-            android:hint="cm"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="당신의 성별을 선택해주세요."
-            android:textColor="#000000"
-            android:fontFamily="@font/dalmoorifont"
-            android:paddingTop="30dp"
-            android:textSize="20dp"/>
+            android:hint="당신의 나이를 입력해주세요" />
+
 
         <LinearLayout
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <RadioButton
-                android:id="@+id/reg_Man_Btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/dalmoorifont"
-                android:checked="true"
-                android:text="남"/>
-            <RadioButton
-                android:id="@+id/reg_Woman_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/dalmoorifont"
-                android:text="여"/>
-        </RadioGroup>
-        </LinearLayout>
-    </LinearLayout>
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:layout_marginRight="40dp"
+                    android:id="@+id/reg_Man_Btn"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layoutbackground"
+                    android:checked="true"
+                    android:fontFamily="@font/dalmoorifont"
+                    android:text="남" />
+
+                <RadioButton
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:id="@+id/reg_Woman_btn"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layoutbackground"
+                    android:fontFamily="@font/dalmoorifont"
+                    android:text="여" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+
+
         <Button
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:id="@+id/NavStartBtn"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/buttonclick"
             android:fontFamily="@font/dalmoorifont"
+            android:gravity="center"
+            android:background="@drawable/layoutbackground"
             android:text="START"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
+
     </LinearLayout>
+
 
 </LinearLayout>

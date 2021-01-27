@@ -63,21 +63,21 @@
                     android:id="@+id/battleFragHeadLeft"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerVertical="true"
+                    android:layout_above="@+id/battleFragLeftName"
                     android:src="@drawable/battle_head_left" />
 
 
                 <ImageView
-                    android:layout_width="75dp"
+                    android:layout_width="80dp"
                     android:layout_height="25dp"
-                    android:layout_below="@+id/battleFragHeadLeft"
+                    android:layout_below="@+id/battleFragProgressLeft"
                     android:src="@drawable/battle_name" />
 
                 <TextView
                     android:id="@+id/battleFragLeftName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/battleFragHeadLeft"
+                    android:layout_below="@+id/battleFragProgressLeft"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="5dp"
                     android:text="닉네임" />
@@ -117,13 +117,13 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
+                    android:layout_above="@+id/battleFragRightName"
                     android:src="@drawable/battle_head_right" />
 
                 <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="20dp"
-                    android:layout_below="@+id/battleFragHeadRight"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:layout_below="@+id/battleFragProgressRight"
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/battle_name" />
 
@@ -131,10 +131,10 @@
                     android:id="@+id/battleFragRightName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/battleFragHeadRight"
+                    android:layout_below="@+id/battleFragProgressRight"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="20dp"
                     android:text="닉네임" />
             </RelativeLayout>
 

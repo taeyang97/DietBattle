@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     Map<String, Object> userValue = null;
     User userInfo = null;
     String battle;
+    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
         mainHomeIvCheck = (ImageView) findViewById(R.id.mainHomeIvCheck);
         mainHomeIvMyInfo = (ImageView) findViewById(R.id.mainHomeIvMyInfo);
         mainHomeIvMission = (ImageView) findViewById(R.id.mainHomeIvMission);
+        main_Lv_Tv = (TextView)findViewById(R.id.main_Lv_Tv);
+        main_Point_Tv = (TextView)findViewById(R.id.main_Point_Tv);
+        main_Exp_Tv = (TextView)findViewById(R.id.main_Exp_Tv);
+
         readDB();
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
                 NavTvUserID.setText(info[0]);
                 NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
                 battle = get.battle;
+                main_Lv_Tv.setText("LV " +(Integer.parseInt(info[6]) / 500));
+                main_Exp_Tv.setText((Integer.parseInt(info[6]) % 500)+"/500");
+                main_Point_Tv.setText(info[7]);
             }
 
             @Override

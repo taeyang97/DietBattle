@@ -16,7 +16,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash2);
         splash_logo=(ImageView)findViewById(R.id.splash_logo3);
-        Glide.with(this).load(R.raw.splash).into(splash_logo);
 
         startLoading();
     }
