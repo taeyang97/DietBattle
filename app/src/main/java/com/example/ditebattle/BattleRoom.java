@@ -327,7 +327,6 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
-                    firstLogin = false;
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -343,7 +342,7 @@ public class BattleRoom extends AppCompatActivity {
                 if(firstLogin) {
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;
-                    readBattle();
+//                    readBattle();
                 }
             }
 
@@ -387,6 +386,7 @@ public class BattleRoom extends AppCompatActivity {
             }
         });
     }
+
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         Chating chat = dataSnapshot.getValue(Chating.class);
         adapter.add(chat.getUserName() + " : " + chat.getMessage());

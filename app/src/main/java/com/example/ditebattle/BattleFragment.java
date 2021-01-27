@@ -100,7 +100,7 @@ public class BattleFragment extends Fragment {
                         });
                     }
                 } catch (InterruptedException e) {
-                    Log.v("InterruptedException", e.getMessage());
+
                 }
             }
         };
