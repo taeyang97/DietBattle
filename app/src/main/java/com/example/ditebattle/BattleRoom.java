@@ -14,12 +14,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.example.ditebattle.database.Battle;
+import com.example.ditebattle.database.Chating;
 import com.example.ditebattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,23 +34,28 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BattleRoom extends AppCompatActivity {
-    ImageView battleRoomIvMission, battleRoomIvCaht, battleRoomIvPoint,
+    ImageView battleRoomIvMission, battleRoomIvChat, battleRoomIvPoint,
             ivMissionExit, ivMissionCheckBox1, ivMissionCheckBox2,
             ivMissionCheckBox3, ivMissionCheckBox4, ivMissionCheckBox5,
-            ivChatingExit, ivChatingBuy1, ivChatingBuy2, ivChatingBuy3,
-            ivPointExit;
+            ivPointExit, ivPointBuy1, ivPointBuy2, ivPointBuy3,
+            ivChatingExit;
     ImageView battleRoomBattleFragmentBtn2, battleRoomBattleInfoFragmentBtn2;
     //    FrameLayout battleRoomFragContainer2;
+    ListView lvChating;
+    EditText edtChating;
+    Button btnChating;
     BattleFragment battleFragment;
     BattleInfoFragment battleInfoFragment;
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction;
-    Dialog missiondialog, chatingdialog, pointdialog;
+    Dialog missiondialog, pointdialog, chatdialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
+    ValueEventListener userValueEventListener, battleValueEventListener;
 //    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
@@ -62,7 +69,7 @@ public class BattleRoom extends AppCompatActivity {
         ActionBar ac = getSupportActionBar();
         ac.hide();
         battleRoomIvMission = (ImageView) findViewById(R.id.battleRoomIvMission);
-        battleRoomIvCaht = (ImageView) findViewById(R.id.battleRoomIvCaht);
+        battleRoomIvChat = (ImageView) findViewById(R.id.battleRoomIvChat);
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
         battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
         battleRoomBattleInfoFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
@@ -152,89 +159,6 @@ public class BattleRoom extends AppCompatActivity {
             }
         });
 
-        // 채팅 버튼 클릭 시
-        battleRoomIvCaht.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbuttonclick);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    
-                        battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbutton);
-                        chatingdialog = new Dialog(BattleRoom.this);
-                        chatingdialog.setContentView(R.layout.activity_battle_roomchatingdialog);
-                        ivChatingExit = (ImageView) chatingdialog.findViewById(R.id.ivChatingExit);
-                        ivChatingBuy1 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy1);
-                        ivChatingBuy2 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy2);
-                        ivChatingBuy3 = (ImageView) chatingdialog.findViewById(R.id.ivChatingBuy3);
-                        chatingdialog.show();
-                        chatingdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                        ivChatingExit.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        ivChatingExit.setImageResource(R.drawable.exit2);
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        ivChatingExit.setImageResource(R.drawable.exit);
-                                        chatingdialog.dismiss();
-                                        break;
-                                }
-                                return true;
-                            }
-                        });
-                        ivChatingBuy1.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        ivChatingBuy1.setImageResource(R.drawable.buyimage2);
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        ivChatingBuy1.setImageResource(R.drawable.buyimage);
-                                        break;
-                                }
-                                return true;
-                            }
-                        });
-                        ivChatingBuy2.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        ivChatingBuy2.setImageResource(R.drawable.buyimage2);
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        ivChatingBuy2.setImageResource(R.drawable.buyimage);
-                                        break;
-                                }
-                                return true;
-                            }
-                        });
-                        ivChatingBuy3.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()) {
-                                    case MotionEvent.ACTION_DOWN:
-                                        ivChatingBuy3.setImageResource(R.drawable.buyimage2);
-                                        break;
-                                    case MotionEvent.ACTION_UP:
-                                        ivChatingBuy3.setImageResource(R.drawable.buyimage);
-                                        break;
-                                }
-                                return true;
-                            }
-                        });
-                        break;
-                }
-                return true;
-            }
-        });
-
         // 포인트 버튼 클릭 시
         battleRoomIvPoint.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -247,11 +171,13 @@ public class BattleRoom extends AppCompatActivity {
                         battleRoomIvPoint.setBackgroundResource(R.drawable.layoutborderbutton);
                         pointdialog = new Dialog(BattleRoom.this);
                         pointdialog.setContentView(R.layout.activity_battle_roompointdialog);
-
                         ivPointExit = (ImageView) pointdialog.findViewById(R.id.ivPointExit);
-
+                        ivPointBuy1 = (ImageView) pointdialog.findViewById(R.id.ivPointBuy1);
+                        ivPointBuy2 = (ImageView) pointdialog.findViewById(R.id.ivPointBuy2);
+                        ivPointBuy3 = (ImageView) pointdialog.findViewById(R.id.ivPointBuy3);
                         pointdialog.show();
                         pointdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                         ivPointExit.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -262,6 +188,102 @@ public class BattleRoom extends AppCompatActivity {
                                     case MotionEvent.ACTION_UP:
                                         ivPointExit.setImageResource(R.drawable.exit);
                                         pointdialog.dismiss();
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        ivPointBuy1.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        ivPointBuy1.setImageResource(R.drawable.buyimage2);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        ivPointBuy1.setImageResource(R.drawable.buyimage);
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        ivPointBuy2.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        ivPointBuy2.setImageResource(R.drawable.buyimage2);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        ivPointBuy2.setImageResource(R.drawable.buyimage);
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        ivPointBuy3.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        ivPointBuy3.setImageResource(R.drawable.buyimage2);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        ivPointBuy3.setImageResource(R.drawable.buyimage);
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // 채팅 버튼 클릭 시
+        battleRoomIvChat.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        battleRoomIvChat.setBackgroundResource(R.drawable.layoutborderbuttonclick);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        battleRoomIvChat.setBackgroundResource(R.drawable.layoutborderbutton);
+                        chatdialog = new Dialog(BattleRoom.this);
+                        chatdialog.setContentView(R.layout.activity_battle_roomchatdialog);
+
+                        ivChatingExit = (ImageView) chatdialog.findViewById(R.id.ivChatingExit);
+                        lvChating = (ListView) chatdialog.findViewById(R.id.lvChating);
+                        edtChating = (EditText) chatdialog.findViewById(R.id.edtChating);
+                        btnChating = (Button)chatdialog.findViewById(R.id.btnChating);
+
+                        openChat();
+
+                        chatdialog.show();
+                        chatdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                        btnChating.setOnClickListener(new OnSingleClickListener() {
+                            @Override
+                            public void onSingleClick(View v) {
+                                Chating chat = new Chating(user.getEmail(),
+                                        edtChating.getText().toString()); // RecyclerItemData를 이용하여 데이터를 묶는다.
+                                databaseReference.child("Battle").child(myUserDb.get(10)).child("chating").push().setValue(chat); // 데이터 푸쉬
+                                edtChating.setText(""); //입력창 초기화
+                            }
+                        });
+
+                        ivChatingExit.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        ivChatingExit.setImageResource(R.drawable.exit2);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        ivChatingExit.setImageResource(R.drawable.exit);
+                                        chatdialog.dismiss();
                                         break;
                                 }
                                 return true;
@@ -296,6 +318,7 @@ public class BattleRoom extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        databaseReference.removeEventListener(userValueEventListener);
 //        ref.removeEventListener(battleValueEventListener);
     }
 
@@ -304,6 +327,7 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
+                    firstLogin = false;
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -359,6 +383,51 @@ public class BattleRoom extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
+        Chating chat = dataSnapshot.getValue(Chating.class);
+        adapter.add(chat.getUserName() + " : " + chat.getMessage());
+    }
+
+    private void removeMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
+        Chating chat = dataSnapshot.getValue(Chating.class);
+        adapter.remove(chat.getUserName() + " : " + chat.getMessage());
+    }
+
+    private void openChat() {
+        // 리스트 어댑터 생성 및 세팅
+        final ArrayAdapter<String> adapter
+                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        lvChating.setAdapter(adapter);
+
+        // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리
+        databaseReference.child("Battle").child(myUserDb.get(10)).child("chating").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                addMessage(dataSnapshot, adapter);
+                Log.e("LOG", "s:" + s);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                removeMessage(dataSnapshot, adapter);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });

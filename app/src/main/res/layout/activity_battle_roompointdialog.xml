@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="채팅"
+                android:text="코인샵"
                 android:textSize="30sp"
                 android:gravity="center"
                 android:layout_margin="20dp"
@@ -32,22 +32,86 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@drawable/edgeborderbtn4"
+            android:background="@drawable/edgeborderbtn3"
             android:layout_margin="15dp">
-            <ListView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <EditText
+                android:background="@drawable/edgeborderbtn"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/coin1"
+                    android:layout_marginHorizontal="15dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="코인 100"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="20dp"/>
+                <ImageView
+                    android:id="@+id/ivPointBuy1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/buyimage"
+                    android:layout_marginHorizontal="20dp"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_weight="8"
-                android:background="@drawable/edgeborderchating"
-                android:hint="내용을 입력해주세요"
-                android:maxLines="2"
-                android:textColorHint="#fff"
-                android:paddingHorizontal="20dp"/>
+                android:background="@drawable/edgeborderbtn"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/coin2"
+                    android:layout_marginHorizontal="15dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="코인 200"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="20dp"/>
+                <ImageView
+                    android:id="@+id/ivPointBuy2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/buyimage"
+                    android:layout_marginHorizontal="20dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/edgeborderbtn"
+                android:layout_weight="1"
+                android:layout_margin="20dp"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/coin3"
+                    android:layout_marginHorizontal="15dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="코인 200"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="20dp"/>
+                <ImageView
+                    android:id="@+id/ivPointBuy3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/buyimage"
+                    android:layout_marginHorizontal="20dp"/>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

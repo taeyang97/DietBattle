@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="350dp"
+    android:layout_height="520dp"
+    android:layout_gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/edgeborderbtn">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="채팅"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:layout_margin="20dp"
+                android:layout_weight="1"/>
+            <ImageView
+                android:id="@+id/ivChatingExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/exit"
+                android:layout_margin="20dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/edgeborderbtn4"
+            android:layout_margin="15dp"
+            >
+            <ListView
+                android:id="@+id/lvChating"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="7">
+                <EditText
+                    android:id="@+id/edtChating"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="8"
+                    android:background="@drawable/edgeborderchating"
+                    android:hint="내용을 입력해주세요"
+                    android:maxLines="2"
+                    android:maxWidth="300dp"
+                    android:textColorHint="#fff"
+                    android:paddingHorizontal="20dp"/>
+                <Button
+                    android:id="@+id/btnChating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="⬆"
+                    android:layout_marginRight="10dp"
+                    android:backgroundTint="@color/black"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

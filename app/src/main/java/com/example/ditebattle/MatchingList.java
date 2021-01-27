@@ -48,7 +48,7 @@ public class MatchingList extends AppCompatActivity {
     CardView cvList;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
     DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
-    Boolean master=true, customer=true;
+    Boolean master=true;
     int i = 1;
 
     @Override
@@ -153,7 +153,6 @@ public class MatchingList extends AppCompatActivity {
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
                             intent.putExtra("master", master);
-                            intent.putExtra("customer",customer);
                             i=1;
                             startActivity(intent);
                             roomMakeDialog.dismiss();
