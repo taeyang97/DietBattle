@@ -1,6 +1,7 @@
 package com.example.ditebattle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -22,6 +23,7 @@ import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,12 +49,12 @@ public class BattleRoom extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    ValueEventListener userValueEventListener, battleValueEventListener;
 //    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
     Boolean firstLogin = true;
     DatabaseReference ref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +69,8 @@ public class BattleRoom extends AppCompatActivity {
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
 
-        ReadUserDB();
+        firstReadDB();
         // 미션 버튼 클릭 시
         battleRoomIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -160,6 +161,7 @@ public class BattleRoom extends AppCompatActivity {
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbuttonclick);
                         break;
                     case MotionEvent.ACTION_UP:
+                    
                         battleRoomIvCaht.setBackgroundResource(R.drawable.layoutborderbutton);
                         chatingdialog = new Dialog(BattleRoom.this);
                         chatingdialog.setContentView(R.layout.activity_battle_roomchatingdialog);
@@ -294,16 +296,14 @@ public class BattleRoom extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        databaseReference.removeEventListener(userValueEventListener);
 //        ref.removeEventListener(battleValueEventListener);
     }
 
-    void ReadUserDB() {
-        userValueEventListener = new ValueEventListener() {
+    void firstReadDB() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
-                    firstLogin = false;
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -311,19 +311,64 @@ public class BattleRoom extends AppCompatActivity {
                         myUserDb.add(user[i]);
                     }
                 }
-                    Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
-                    String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP)};
-                    for (int i = 1; i < battle.length; i++) {
-                        myBattleDb.add(battle[i]);
-                    }
+                Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP)};
+                for (int i = 0; i < battle.length; i++) {
+                    myBattleDb.add(battle[i]);
+                }
+                if(firstLogin) {
+                    fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
+                    firstLogin = false;
+                    readBattle();
+                }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
             }
-        };
-        databaseReference.addValueEventListener(userValueEventListener);
+        });
     }
 
+    void readBattle(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Battle get3 = snapshot.getValue(Battle.class);
+                String[] battle_get = {get3.master, get3.guest, String.valueOf(get3.finish_time), String.valueOf(get3.masterHP), String.valueOf(get3.guestHP)};
+                for (int i = 0; i < battle_get.length; i++) {
+                    myBattleDb.add(battle_get[i]);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+   ArrayList<String> deliverUser(){
+      return myUserDb;
+    };
+   ArrayList<String> deliverBattle(){
+      return myBattleDb;
+    };
 //    void ReadBattleDB() {
 //        battleValueEventListener = new ValueEventListener() {
 //            @Override

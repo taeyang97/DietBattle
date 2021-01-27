@@ -110,7 +110,7 @@ public class MatchingRoom extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 if (master == true) {
-                    long t = System.currentTimeMillis();
+                    long t = System.currentTimeMillis()/1000;
                     onBattle=true;
                     battle = new Battle(
                             title,
@@ -205,8 +205,8 @@ public class MatchingRoom extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (master == false) {
-                    Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다.", Toast.LENGTH_LONG).show();
+                if (!master && !onBattle) {
+                    Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다.", Toast.LENGTH_SHORT).show();
                 }
                 finish();
             }
