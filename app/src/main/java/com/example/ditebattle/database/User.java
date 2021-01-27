@@ -18,7 +18,9 @@ public class User {
     public Integer flag;
     public String battle;
 
-    public User() { }
+    public User() {
+
+    }
 
     public User(String id, String nickname, Integer age, Double weight , Double height,
                 Double bmi, Integer total_point, Integer current_point, String gender, Integer flag,String battle){

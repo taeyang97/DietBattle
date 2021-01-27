@@ -70,7 +70,6 @@ public class BattleFragment extends Fragment {
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(1000);
                         battle=((BattleRoom)getActivity()).deliverBattle();
                         user=((BattleRoom)getActivity()).deliverUser();
                         mHandler.post(new Runnable() {
@@ -95,9 +94,11 @@ public class BattleFragment extends Fragment {
                                 }
                                 if(totalSec<=0){
                                     Toast.makeText(getActivity().getApplicationContext(),"대결이 종료되었습니다.",Toast.LENGTH_SHORT);
+
                                 }
                             }
                         });
+                        Thread.sleep(1000);
                     }
                 } catch (InterruptedException e) {
 

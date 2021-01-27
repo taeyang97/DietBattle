@@ -55,10 +55,10 @@ public class BattleRoom extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    ValueEventListener userValueEventListener, battleValueEventListener;
 //    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
+    ArrayList<Object> secondBattle = new ArrayList<Object>();
     Boolean firstLogin = true;
     DatabaseReference ref;
 
@@ -168,6 +168,10 @@ public class BattleRoom extends AppCompatActivity {
                         battleRoomIvPoint.setBackgroundResource(R.drawable.layoutborderbuttonclick);
                         break;
                     case MotionEvent.ACTION_UP:
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                        ref.child("guestHP").setValue((int)(Math.random()*400));
+                        ref.child("masterHP").setValue((int)(Math.random()*400));
+
                         battleRoomIvPoint.setBackgroundResource(R.drawable.layoutborderbutton);
                         pointdialog = new Dialog(BattleRoom.this);
                         pointdialog.setContentView(R.layout.activity_battle_roompointdialog);
@@ -318,8 +322,6 @@ public class BattleRoom extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        databaseReference.removeEventListener(userValueEventListener);
-//        ref.removeEventListener(battleValueEventListener);
     }
 
     void firstReadDB() {
@@ -342,7 +344,7 @@ public class BattleRoom extends AppCompatActivity {
                 if(firstLogin) {
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;
-//                    readBattle();
+                    readBattle();
                 }
             }
 
@@ -358,23 +360,19 @@ public class BattleRoom extends AppCompatActivity {
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
             }
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Battle get3 = snapshot.getValue(Battle.class);
-                String[] battle_get = {get3.master, get3.guest, String.valueOf(get3.finish_time), String.valueOf(get3.masterHP), String.valueOf(get3.guestHP)};
-                for (int i = 0; i < battle_get.length; i++) {
-                    myBattleDb.add(battle_get[i]);
+                if(snapshot.getKey().equals("guestHP")){
+                    myBattleDb.set(4,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("masterHP")){
+                    myBattleDb.set(3,String.valueOf(snapshot.getValue()));
                 }
             }
-
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
