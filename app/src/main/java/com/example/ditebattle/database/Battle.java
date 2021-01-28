@@ -10,7 +10,6 @@ public class Battle {
     public Integer masterHP;
     public Integer guestHP;
 
-
     Battle(){
     }
     public Battle(String master, String guest,long finish_time, Integer masterHP, Integer guestHP){

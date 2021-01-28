@@ -20,10 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.Chating;
 import com.example.ditebattle.database.User;
+import com.example.ditebattle.misson.misson;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -340,6 +342,8 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
+                    misson missonget = snapshot.child("misson").getValue(misson.class);
+                    Log.e("test",String.valueOf(missonget.extream.chest));
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -353,6 +357,9 @@ public class BattleRoom extends AppCompatActivity {
                     myBattleDb.add(battle[i]);
                 }
                 if(firstLogin) {
+                    long t = System.currentTimeMillis() / 1000;
+                    long totalSec = Long.parseLong(myBattleDb.get(2)) - t;
+                    int currentday = (int)(totalSec/86400);
                     battleRoomPointTv.setText(myUserDb.get(7));
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;

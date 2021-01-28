@@ -118,6 +118,7 @@ public class MatchingRoom extends AppCompatActivity {
                             (t+604800),
                             500,
                             500
+
                     );
                     battleValue = battle.toMap();
                     childUpdates.put("/Battle/" +title,battleValue);
