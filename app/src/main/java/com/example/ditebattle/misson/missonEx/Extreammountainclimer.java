@@ -1,4 +1,4 @@
-package com.example.ditebattle.misson;
+package com.example.ditebattle.misson.missonEx;
 
 public class Extreammountainclimer {
     public int reps;

@@ -343,7 +343,7 @@ public class BattleRoom extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
                     misson missonget = snapshot.child("misson").getValue(misson.class);
-                    Log.e("test",String.valueOf(missonget.extream.chest));
+                    Log.e("test",String.valueOf(missonget.hard.chest));
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -475,4 +475,7 @@ public class BattleRoom extends AppCompatActivity {
 //            ref.addValueEventListener(battleValueEventListener);
 //        }
 //    }
+
+
+
 }
