@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
                         mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
                         missionDialog = new Dialog(MainActivity.this);
                         missionDialog.setContentView(R.layout.activity_main_homemissiondialog);
-
                         missionDialog.show();
                         missionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

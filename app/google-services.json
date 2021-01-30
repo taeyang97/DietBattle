@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "739798927692-a7lg85p7g09i4mbed799qgh83d8gvhae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ditebattle",
+            "certificate_hash": "252555edf87406d5727765744f497cce76b8af8c"
+          }
+        },
+        {
           "client_id": "739798927692-cro6ne8gnqou0rlcubtpntmn202gqqeg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

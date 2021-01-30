@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -24,7 +25,7 @@ import android.widget.TextView;
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.Chating;
 import com.example.ditebattle.database.User;
-import com.example.ditebattle.mission.BattleDay;
+import com.example.ditebattle.mission.DayMission;
 import com.example.ditebattle.mission.ExerciseRoutine;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,6 +39,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BattleRoom extends AppCompatActivity {
     ImageView battleRoomIvMission, battleRoomIvChat, battleRoomIvPoint,
@@ -66,13 +69,17 @@ public class BattleRoom extends AppCompatActivity {
 //    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
-    ArrayList<Object> secondBattle = new ArrayList<Object>();
+    ArrayList<String> myBattleDb2 = new ArrayList<String>();
     Boolean firstLogin = true;
     DatabaseReference ref;
     long now = System.currentTimeMillis();
     Date mDate = new Date(now);
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
+    HashMap<String, Object> childUpdates = new HashMap<>();
+    Map<String, Object> dayMissionValue = null;
+    ArrayList<String> mission= new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,15 +93,15 @@ public class BattleRoom extends AppCompatActivity {
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
         battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
         battleRoomBattleInfoFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
-
         battleRoomDateTv.setText(getTime);
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
-
         firstReadDB();
+
         // 미션 버튼 클릭 시
         battleRoomIvMission.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -106,14 +113,16 @@ public class BattleRoom extends AppCompatActivity {
                         missiondialog = new Dialog(BattleRoom.this);
                         missiondialog.setContentView(R.layout.activity_battle_roommissiondialog);
 
+                        for (int i = 0; i < myBattleDb.size(); i++) {
+                            Log.e("test",myBattleDb.get(i));
+                        }
                         for(int i=0; i<ivMissionCheckBox.length; i++){
                             ivMissionCheckBox[i] = (ImageView) missiondialog.findViewById(CheckBox[i]);
                             tvMission[i] = (TextView) missiondialog.findViewById(tv[i]);
                         }
 
                         ivMissionExit = (ImageView) missiondialog.findViewById(R.id.ivMissionExit);
-
-                        mission();
+//                        mission();
 
                         missiondialog.show();
                         missiondialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -149,11 +158,16 @@ public class BattleRoom extends AppCompatActivity {
                                 }
                             });
                         }
+                        for (int i=0 ; i<5; i++){
+                            tvMission[i].setText(myBattleDb.get(8+i));
+                        }
                         break;
                 }
                 return true;
             }
         });
+
+
 
         // 포인트 버튼 클릭 시
         battleRoomIvPoint.setOnTouchListener(new View.OnTouchListener() {
@@ -327,26 +341,65 @@ public class BattleRoom extends AppCompatActivity {
                 if (firstLogin) {
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
-                            String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
+                            String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle, };
                     for (int i=0; i < user.length; i++) {
                         myUserDb.add(user[i]);
                     }
                 }
                 Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
-                String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP)};
+                String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
+                                    ,get2.mission1, get2.mission2, get2.mission3, get2.mission4, get2.mission5};
                 for (int i = 0; i < battle.length; i++) {
                     myBattleDb.add(battle[i]);
                 }
                 if(firstLogin) {
-                    long t = System.currentTimeMillis() / 1000;
-                    long totalSec = Long.parseLong(myBattleDb.get(2)) - t;
-                    int currentday = (int)(totalSec/86400);
-                    battleRoomPointTv.setText(myUserDb.get(7));
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;
                     readBattle();
                 }
 
+                int random = (int) (Math.random() * 2);
+                long t = System.currentTimeMillis() / 1000;
+                long totalSec = Long.parseLong(myBattleDb.get(2)) - t;
+                int currentday = (int) (totalSec / 86400);
+
+                battleRoomPointTv.setText(myUserDb.get(7));
+
+                // 신체 부위 가져오기
+                String[] bodypartsStr = {"chest", "core", "fullbody", "legs"};
+                // 운동 종목 가져오기
+                String[][] Exercise = {{"declinepush", "tripush"}, {"regraise", "twistplank"},
+                        {"burpee", "mountainclimer"}, {"lunge", "squat"}};
+
+                // 일곱 번째 날
+                if (Integer.parseInt(myBattleDb.get(7)) == currentday) {
+                    Log.e("tset", "" + currentday);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("guestDay");
+                    Integer guestDay = snapshot.child("Battle").child(myUserDb.get(10)).child("guestDay").getValue(Integer.class);
+                    ref.setValue(guestDay - 1);
+                    String[] missionArray = new String[5];
+                    for (int i = 0; i < bodypartsStr.length; i++) {
+                        // 운동 갯수 가져오기
+                        ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
+                        String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                String.valueOf(routine.total), routine.name};
+                        missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                    }
+                    Log.e("test","cjhsdhbvjsdhui"+missionArray[0]);
+                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                    ref2.child("mission1").setValue(missionArray[0]);
+                    ref2.child("mission2").setValue(missionArray[1]);
+                    ref2.child("mission3").setValue(missionArray[2]);
+                    ref2.child("mission4").setValue(missionArray[3]);
+                    ref2.child("mission5").setValue("7시기상");
+                }
+//                Battle get3 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+//                String[] battle2 = {get3.master, get3.guest, String.valueOf(get3.finish_time), String.valueOf(get3.masterHP), String.valueOf(get3.guestHP),String.valueOf(get3.grade),String.valueOf(get3.masterDay),String.valueOf(get3.guestDay)
+//                        ,get3.mission1, get3.mission2, get3.mission3, get3.mission4, get3.mission5};
+//                for (int i = 0; i < battle2.length; i++) {
+//                    myBattleDb.set(i,battle2[i]);
+//                }
             }
 
             @Override
@@ -368,6 +421,16 @@ public class BattleRoom extends AppCompatActivity {
                     myBattleDb.set(4,String.valueOf(snapshot.getValue()));
                 }else if(snapshot.getKey().equals("masterHP")){
                     myBattleDb.set(3,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("mission1")){
+                    myBattleDb.set(8,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("mission2")){
+                    myBattleDb.set(9,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("mission3")){
+                    myBattleDb.set(10,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("mission4")){
+                    myBattleDb.set(11,String.valueOf(snapshot.getValue()));
+                }else if(snapshot.getKey().equals("mission5")){
+                    myBattleDb.set(12,String.valueOf(snapshot.getValue()));
                 }
             }
             @Override
@@ -444,66 +507,21 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // 배틀 정보 가져오기
-                Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
-                String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time),
-                        String.valueOf(get2.masterHP), String.valueOf(get2.guestHP), get2.grade};
-
-                BattleDay battleDay = snapshot.child("Battle").child(myUserDb.get(10)).child("days").getValue(BattleDay.class);
-                String[] days = {battleDay.firstday, battleDay.twoday, battleDay.threeday, battleDay.fourday,
-                        battleDay.fiveday, battleDay.sixday, battleDay.lastday};
-
-                long t = System.currentTimeMillis()/1000 + 604800; // 대결 끝나는 시간
-                long firstday = Long.parseLong(battle[2])-604800;
-                long twoday = Long.parseLong(battle[2])-518400;
-                long threeday = Long.parseLong(battle[2])-432000;
-                long fourday = Long.parseLong(battle[2])-345600;
-                long fiveday = Long.parseLong(battle[2])-259200;
-                long sixday = Long.parseLong(battle[2])-172800;
-                long lastday = Long.parseLong(battle[2])-86400;
-
-                int random = (int)(Math.random()*2);
 
 
-
-                // 신체 부위 가져오기
-                String[] bodypartsStr = {"chest", "core", "fullbody", "legs"};
-                // 운동 종목 가져오기
-                String[][] Exercise = {{"declinepush", "tripush"},{"regraise", "twistplank"},
-                        {"burpee", "mountainclimer"},{"lunge", "squat"}};
-
-                // 일곱 번째 날
-                if(t>lastday && days[6].equals("true")){
-
-                    for(int i=0; i<bodypartsStr.length; i++){
-
-                        // 운동 갯수 가져오기
-                        ExerciseRoutine routine= snapshot.child("misson").child(battle[5]).child(bodypartsStr[i])
-                                .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
-                        String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
-                                String.valueOf(routine.total), routine.name};
-
-                        tvMission[i].setText(ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0]+"개 "+ExerciseRoutineInt[1]+"셋트 하기");
-                    }
-
-                    // 여섯 번째 날
-                } else if(t>sixday){
-
-                    // 다섯 번째 날
-                } else if(t>fiveday){
-
-                    // 네 번째 날
-                } else if(t>fourday){
-
-                    // 세 번째 날
-                } else if(t>threeday){
-
-                    // 두 번째 날
-                } else if(t>twoday){
-
-                    // 첫 번째 날
-                } else if(t>firstday){
-
-                }
+//                    if (Integer.parseInt(myBattleDb.get(6)) == currentday) {
+//                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("masterDay");
+//                        Integer masterDay = snapshot.child("Battle").child(myUserDb.get(10)).child("masterDay").getValue(Integer.class);
+//                        ref.setValue(masterDay - 1);
+//                        for (int i = 0; i < bodypartsStr.length; i++) {
+//                            // 운동 갯수 가져오기
+//                            ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+//                                    .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
+//                            String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+//                                    String.valueOf(routine.total), routine.name};
+//                            tvMission[i].setText(ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기");
+//                        }
+//                    }
             }
 
             @Override

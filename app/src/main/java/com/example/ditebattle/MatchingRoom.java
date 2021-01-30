@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ditebattle.database.Battle;
-import com.example.ditebattle.database.User;
-import com.example.ditebattle.mission.BattleDay;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -71,6 +68,7 @@ public class MatchingRoom extends AppCompatActivity {
         master = intent.getBooleanExtra("master", false);
         grade = intent.getStringExtra("grade");
 
+
         readDB();
         readMaster();
         readBattle();
@@ -118,25 +116,20 @@ public class MatchingRoom extends AppCompatActivity {
                     battle = new Battle(
                             title,
                             "GuestUID",
-                            (t+604800),
+                            (t+604799),
                             500,
                             500,
-                            grade
+                            grade,
+                            6,
+                            6,
+                            "day",
+                            "day",
+                            "day",
+                            "day",
+                            "day"
                     );
                     battleValue = battle.toMap();
                     childUpdates.put("/Battle/" +title,battleValue);
-                    databaseReference.updateChildren(childUpdates);
-                    BattleDay battleDay = new BattleDay(
-                            "true",
-                            "true",
-                            "true",
-                            "true",
-                            "true",
-                            "true",
-                            "true"
-                    );
-                    battleDayValue = battleDay.toMap();
-                    childUpdates.put("/Battle/" +title+"/days",battleDayValue);
                     databaseReference.updateChildren(childUpdates);
                 } else {
                     if (!flag) {
