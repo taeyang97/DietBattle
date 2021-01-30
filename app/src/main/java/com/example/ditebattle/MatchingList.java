@@ -103,7 +103,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeTop.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade = "상";
+                        grade = "extream";
                         btnMatchingListRoomMakeTop.setSelected(true);
                         btnMatchingListRoomMakeMiddle.setSelected(false);
                         btnMatchingListRoomMakeBottom.setSelected(false);
@@ -112,7 +112,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeMiddle.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade = "중";
+                        grade = "hard";
                         btnMatchingListRoomMakeTop.setSelected(false);
                         btnMatchingListRoomMakeMiddle.setSelected(true);
                         btnMatchingListRoomMakeBottom.setSelected(false);
@@ -121,7 +121,7 @@ public class MatchingList extends AppCompatActivity {
                 btnMatchingListRoomMakeBottom.setOnClickListener(new OnSingleClickListener() {
                     @Override
                     public void onSingleClick(View v) {
-                        grade = "하";
+                        grade = "normal";
                         btnMatchingListRoomMakeTop.setSelected(false);
                         btnMatchingListRoomMakeMiddle.setSelected(false);
                         btnMatchingListRoomMakeBottom.setSelected(true);
@@ -153,6 +153,7 @@ public class MatchingList extends AppCompatActivity {
                             intent.putExtra("title", title);
                             intent.putExtra("memo", memo);
                             intent.putExtra("master", master);
+                            intent.putExtra("grade", grade);
                             i=1;
                             startActivity(intent);
                             roomMakeDialog.dismiss();

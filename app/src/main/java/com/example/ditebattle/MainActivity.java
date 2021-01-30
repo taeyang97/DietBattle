@@ -60,15 +60,14 @@ public class MainActivity extends AppCompatActivity {
 
     TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, NavTvUserID, NavTvUserLV;
     private AppBarConfiguration mAppBarConfiguration;
-    ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit, NavTvUserIcon;
+    ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit, NavTvUserIcon,home_iv_Weight_Iv;
     Dialog missionDialog,weightDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference mDBReference = FirebaseDatabase.getInstance().getReference();
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> userValue = null;
     User userInfo = null;
     String battle;
-    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv;
+    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv;
     BluetoothAdapter bluetoothAdapter;
     static final int REQUEST_ENABLE_BT=10;
     int pairedDeviceCount=0; // 연결된 장치 갯수
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     String strDelimiter="\n";
     char charDelimiter='\n';
     byte[] readBuffer;
-    int readBufferPosition;
+    int readBufferPosition, max=0;
     Button home_iv_Weight_Btn;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -192,24 +191,32 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbuttonclick);
+                        mainHomeIvCheck.setBackgroundResource(R.drawable.layoutborderbuttonclick);
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                        mainHomeIvCheck.setBackgroundResource(R.drawable.layoutborderbutton);
                         break;
                     case MotionEvent.ACTION_UP:
-                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                        mainHomeIvCheck.setBackgroundResource(R.drawable.layoutborderbutton);
                         weightDialog = new Dialog(MainActivity.this);
                         weightDialog.setContentView(R.layout.activity_main_homeweightcheck);
                         home_iv_Weight_Btn =(Button) weightDialog.findViewById(R.id.home_iv_Weight_Btn);
-
-                        missionDialog.show();
-                        missionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        home_iv_Weight_Tv = (TextView) weightDialog.findViewById(R.id.home_iv_Weight_Tv);
+                        home_iv_Weight_Iv = (ImageView)weightDialog.findViewById(R.id.home_iv_Weight_Iv);
+                        weightDialog.show();
 
                         home_iv_Weight_Btn.setOnClickListener(new OnSingleClickListener() {
                             @Override
                             public void onSingleClick(View v) {
                                 checkBluetooth();
+                            }
+                        });
+
+                        home_iv_Weight_Iv.setOnClickListener(new OnSingleClickListener() {
+                            @Override
+                            public void onSingleClick(View v) {
+                                home_iv_Weight_Iv.setImageResource(R.drawable.exit2);
+                                weightDialog.dismiss();
                             }
                         });
                         break;
@@ -241,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 String key = snapshot.getKey();
                 User get = snapshot.getValue(User.class);
                 String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender,get.battle};
-                NavTvUserID.setText(info[0]);
+                NavTvUserID.setText(info[1]);
                 NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
                 battle = get.battle;
                 main_Lv_Tv.setText("LV " +(Integer.parseInt(info[6]) / 500));
@@ -263,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
             // 방법1 => finish(); // 앱 종료
             // 방법2 => Toast로 표시
             // 방법3 => dialog로 표시
+            finish();
         }else {
             // 장치가 블루투스를 지원하는 경우
             if(!bluetoothAdapter.isEnabled()){
@@ -353,7 +361,12 @@ public class MainActivity extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             //수신된 문자열 데이터에 대한 처리 작업
-
+                                            if(max<Integer.parseInt(data)) {
+                                                max=Integer.parseInt(data);
+                                            }
+                                                home_iv_Weight_Tv.setText(max+" kg");
+                                            DatabaseReference mDBReference = FirebaseDatabase.getInstance().getReference();
+                                            mDBReference.child("User").child(user.getUid()).child("weight").setValue(max);
                                         }
                                     });
 

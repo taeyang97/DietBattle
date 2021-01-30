@@ -9,15 +9,18 @@ public class Battle {
     public long finish_time;
     public Integer masterHP;
     public Integer guestHP;
+    public String grade;
 
     Battle(){
     }
-    public Battle(String master, String guest,long finish_time, Integer masterHP, Integer guestHP){
+
+    public Battle(String master, String guest, long finish_time, Integer masterHP, Integer guestHP, String grade) {
         this.master = master;
         this.guest = guest;
         this.finish_time = finish_time;
         this.masterHP = masterHP;
         this.guestHP = guestHP;
+        this.grade = grade;
     }
 
     public Map<String, Object> toMap(){
@@ -27,6 +30,7 @@ public class Battle {
         result.put("finish_time",finish_time);
         result.put("masterHP",masterHP);
         result.put("guestHP",guestHP);
+        result.put("grade",grade);
         return result;
     }
 }

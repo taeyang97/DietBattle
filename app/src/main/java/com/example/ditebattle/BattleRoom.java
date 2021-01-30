@@ -20,12 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.Chating;
 import com.example.ditebattle.database.User;
-import com.example.ditebattle.misson.misson;
+import com.example.ditebattle.mission.BattleDay;
+import com.example.ditebattle.mission.ExerciseRoutine;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -33,20 +33,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class BattleRoom extends AppCompatActivity {
     ImageView battleRoomIvMission, battleRoomIvChat, battleRoomIvPoint,
-            ivMissionExit, ivMissionCheckBox1, ivMissionCheckBox2,
-            ivMissionCheckBox3, ivMissionCheckBox4, ivMissionCheckBox5,
-            ivPointExit, ivPointBuy1, ivPointBuy2, ivPointBuy3,
+            ivMissionExit, ivPointExit, ivPointBuy1, ivPointBuy2, ivPointBuy3,
             ivChatingExit;
+    ImageView[] ivMissionCheckBox = new ImageView[5];
+    TextView[] tvMission = new TextView[5];
+    int CheckBox[] = {R.id.ivMissionCheckBox1, R.id.ivMissionCheckBox2, R.id.ivMissionCheckBox3,
+            R.id.ivMissionCheckBox4, R.id.ivMissionCheckBox5};
+    int tv[] = {R.id.tvMission1, R.id.tvMission2, R.id.tvMission3, R.id.tvMission4, R.id.tvMission5};
     ImageView battleRoomBattleFragmentBtn2, battleRoomBattleInfoFragmentBtn2;
     //    FrameLayout battleRoomFragContainer2;
     ListView lvChating;
@@ -61,6 +62,7 @@ public class BattleRoom extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
+    ValueEventListener userValueEventListener, battleValueEventListener;
 //    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
@@ -104,12 +106,14 @@ public class BattleRoom extends AppCompatActivity {
                         missiondialog = new Dialog(BattleRoom.this);
                         missiondialog.setContentView(R.layout.activity_battle_roommissiondialog);
 
+                        for(int i=0; i<ivMissionCheckBox.length; i++){
+                            ivMissionCheckBox[i] = (ImageView) missiondialog.findViewById(CheckBox[i]);
+                            tvMission[i] = (TextView) missiondialog.findViewById(tv[i]);
+                        }
+
                         ivMissionExit = (ImageView) missiondialog.findViewById(R.id.ivMissionExit);
-                        ivMissionCheckBox1 = (ImageView) missiondialog.findViewById(R.id.ivMissionCheckBox1);
-                        ivMissionCheckBox2 = (ImageView) missiondialog.findViewById(R.id.ivMissionCheckBox2);
-                        ivMissionCheckBox3 = (ImageView) missiondialog.findViewById(R.id.ivMissionCheckBox3);
-                        ivMissionCheckBox4 = (ImageView) missiondialog.findViewById(R.id.ivMissionCheckBox4);
-                        ivMissionCheckBox5 = (ImageView) missiondialog.findViewById(R.id.ivMissionCheckBox5);
+
+                        mission();
 
                         missiondialog.show();
                         missiondialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -136,36 +140,15 @@ public class BattleRoom extends AppCompatActivity {
                                 missiondialog.dismiss();
                             }
                         });
-                        ivMissionCheckBox1.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-                                ivMissionCheckBox1.setImageResource(R.drawable.checkbox2);
-                            }
-                        });
-                        ivMissionCheckBox2.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-                                ivMissionCheckBox2.setImageResource(R.drawable.checkbox2);
-                            }
-                        });
-                        ivMissionCheckBox3.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-                                ivMissionCheckBox3.setImageResource(R.drawable.checkbox2);
-                            }
-                        });
-                        ivMissionCheckBox4.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-                                ivMissionCheckBox4.setImageResource(R.drawable.checkbox2);
-                            }
-                        });
-                        ivMissionCheckBox5.setOnClickListener(new OnSingleClickListener() {
-                            @Override
-                            public void onSingleClick(View v) {
-                                ivMissionCheckBox5.setImageResource(R.drawable.checkbox2);
-                            }
-                        });
+                        for(int i=0; i<ivMissionCheckBox.length; i++){
+                            int index = i;
+                            ivMissionCheckBox[index].setOnClickListener(new OnSingleClickListener() {
+                                @Override
+                                public void onSingleClick(View v) {
+                                    ivMissionCheckBox[index].setImageResource(R.drawable.checkbox2);
+                                }
+                            });
+                        }
                         break;
                 }
                 return true;
@@ -342,8 +325,6 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (firstLogin) {
-                    misson missonget = snapshot.child("misson").getValue(misson.class);
-                    Log.e("test",String.valueOf(missonget.hard.chest));
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
                             String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle};
@@ -393,6 +374,7 @@ public class BattleRoom extends AppCompatActivity {
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
             }
+
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
@@ -456,26 +438,78 @@ public class BattleRoom extends AppCompatActivity {
    ArrayList<String> deliverBattle(){
       return myBattleDb;
     };
-//    void ReadBattleDB() {
-//        battleValueEventListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Battle get = snapshot.getValue(Battle.class);
-//                String[] info = {get.master, get.guest, String.valueOf(get.finish_time), String.valueOf(get.masterHP), String.valueOf(get.guestHP)};
-//                for (int i = 1; i < info.length; i++) {
-//                    myBattleDb.add(info[i]);
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        };
-//        if(myUserDb.get(11)!=null) {
-//            ref = databaseReference.child("Battle").child(myUserDb.get(11));
-//            ref.addValueEventListener(battleValueEventListener);
-//        }
-//    }
+
+    protected void mission() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // 배틀 정보 가져오기
+                Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time),
+                        String.valueOf(get2.masterHP), String.valueOf(get2.guestHP), get2.grade};
+
+                BattleDay battleDay = snapshot.child("Battle").child(myUserDb.get(10)).child("days").getValue(BattleDay.class);
+                String[] days = {battleDay.firstday, battleDay.twoday, battleDay.threeday, battleDay.fourday,
+                        battleDay.fiveday, battleDay.sixday, battleDay.lastday};
+
+                long t = System.currentTimeMillis()/1000 + 604800; // 대결 끝나는 시간
+                long firstday = Long.parseLong(battle[2])-604800;
+                long twoday = Long.parseLong(battle[2])-518400;
+                long threeday = Long.parseLong(battle[2])-432000;
+                long fourday = Long.parseLong(battle[2])-345600;
+                long fiveday = Long.parseLong(battle[2])-259200;
+                long sixday = Long.parseLong(battle[2])-172800;
+                long lastday = Long.parseLong(battle[2])-86400;
+
+                int random = (int)(Math.random()*2);
 
 
 
+                // 신체 부위 가져오기
+                String[] bodypartsStr = {"chest", "core", "fullbody", "legs"};
+                // 운동 종목 가져오기
+                String[][] Exercise = {{"declinepush", "tripush"},{"regraise", "twistplank"},
+                        {"burpee", "mountainclimer"},{"lunge", "squat"}};
+
+                // 일곱 번째 날
+                if(t>lastday && days[6].equals("true")){
+
+                    for(int i=0; i<bodypartsStr.length; i++){
+
+                        // 운동 갯수 가져오기
+                        ExerciseRoutine routine= snapshot.child("misson").child(battle[5]).child(bodypartsStr[i])
+                                .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
+                        String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                String.valueOf(routine.total), routine.name};
+
+                        tvMission[i].setText(ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0]+"개 "+ExerciseRoutineInt[1]+"셋트 하기");
+                    }
+
+                    // 여섯 번째 날
+                } else if(t>sixday){
+
+                    // 다섯 번째 날
+                } else if(t>fiveday){
+
+                    // 네 번째 날
+                } else if(t>fourday){
+
+                    // 세 번째 날
+                } else if(t>threeday){
+
+                    // 두 번째 날
+                } else if(t>twoday){
+
+                    // 첫 번째 날
+                } else if(t>firstday){
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
