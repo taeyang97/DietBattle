@@ -5,19 +5,28 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ditebattle.database.Battle;
+import com.example.ditebattle.database.GuestInfo;
+import com.example.ditebattle.database.MasterInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -27,22 +36,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MatchingRoom extends AppCompatActivity {
 
-    Button matchingRoomStartBtn, matchingRoomChatBtn;
+    Button matchingRoomStartBtn, matchingRoomChatBtn, matchingRoomOtherInfo;
     EditText matchingRoomChatEdt;
-    TextView matchingRoomNum, matchingRoomTitle, matchingRoomOption;
+    TextView matchingRoomNum, matchingRoomTitle, matchingRoomOption, tvNickname, tvLevel, tvHeight, tvWeight, tvBmi;
     ListView matchingRoomChatList;
+    ImageView ivExit;
+    Dialog infoDialog;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     DatabaseReference battleRef = databaseReference.child("Battle");
     HashMap<String, Object> childUpdates = new HashMap<>();
-    Map<String, Object> battleValue = null, battleDayValue = null;
+    Map<String, Object> battleValue = null;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String number, title, memo, masterUid , guestUid, battletitle, grade;
+    String number, title, memo, masterUid , guestUid, grade, matchingMasterUID, matchingGuestUID, masterUID, guestUID;
     Boolean master,Login=true;
     Boolean flag = false , onBattle=false;
     Battle battle;
@@ -54,6 +68,7 @@ public class MatchingRoom extends AppCompatActivity {
         setContentView(R.layout.activity_matching_room);
         matchingRoomStartBtn = (Button) findViewById(R.id.matchingRoomStartBtn);
         matchingRoomChatBtn = (Button) findViewById(R.id.matchingRoomChatBtn);
+        matchingRoomOtherInfo = (Button) findViewById(R.id.matchingRoomOtherInfo);
         matchingRoomChatEdt = (EditText) findViewById(R.id.matchingRoomChatEdt);
         matchingRoomNum = (TextView) findViewById(R.id.matchingRoomNum);
         matchingRoomTitle = (TextView) findViewById(R.id.matchingRoomTitle);
@@ -67,7 +82,8 @@ public class MatchingRoom extends AppCompatActivity {
         memo = intent.getStringExtra("memo");
         master = intent.getBooleanExtra("master", false);
         grade = intent.getStringExtra("grade");
-
+        matchingMasterUID = intent.getStringExtra("masteruid");
+        matchingGuestUID = intent.getStringExtra("guest");
 
         readDB();
         readMaster();
@@ -83,11 +99,12 @@ public class MatchingRoom extends AppCompatActivity {
             RecyclerItemData roomName = new RecyclerItemData(number, title,
                     memo, flag); // RecyclerItemData를 이용하여 데이터를 묶는다.
             databaseReference.child("chat").child(title).setValue(roomName);
+            databaseReference.child("chat").child(title).child("masteruid").setValue(matchingMasterUID);
             masterUid = user.getUid();
-            battletitle = (""+title+memo+number);
             matchingRoomStartBtn.setText("시작");
             matchingRoomStartBtn.setEnabled(false);
         } else {
+            databaseReference.child("chat").child(title).child("guestuid").setValue(matchingGuestUID);
             guestUid=user.getUid();
             matchingRoomStartBtn.setText("준비대기");
         }
@@ -103,6 +120,74 @@ public class MatchingRoom extends AppCompatActivity {
                         matchingRoomChatEdt.getText().toString()); // RecyclerItemData를 이용하여 데이터를 묶는다.
                 databaseReference.child("chat").child(title).child("chating").push().setValue(chat); // 데이터 푸쉬
                 matchingRoomChatEdt.setText(""); //입력창 초기화
+            }
+        });
+
+        // 정보 확인 버튼
+        matchingRoomOtherInfo.setOnClickListener(new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                infoDialog = new Dialog(MatchingRoom.this);
+                infoDialog.setContentView(R.layout.infomationdialog);
+                tvNickname = (TextView)infoDialog.findViewById(R.id.tvNickname);
+                tvLevel = (TextView)infoDialog.findViewById(R.id.tvLevel);
+                tvHeight = (TextView)infoDialog.findViewById(R.id.tvHeight);
+                tvWeight = (TextView)infoDialog.findViewById(R.id.tvWeight);
+                tvBmi = (TextView)infoDialog.findViewById(R.id.tvBmi);
+                ivExit = (ImageView)infoDialog.findViewById(R.id.ivExit);
+
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        masterUID = snapshot.child("chat").child(title).child("masteruid").getValue(String.class);
+                        guestUID = snapshot.child("chat").child(title).child("guestuid").getValue(String.class);
+                        if(user.getUid().equals(masterUID)) {
+                            GuestInfo guestInfo = snapshot.child("User").child(guestUID).getValue(GuestInfo.class);
+
+                            int Level = guestInfo.total_point / 500;
+
+                            tvNickname.setText("닉네임 : " + guestInfo.nickname);
+                            tvLevel.setText("Level : " + Level);
+                            tvHeight.setText("키 : " + guestInfo.height);
+                            tvWeight.setText("몸무게 : " + guestInfo.weight);
+                            tvBmi.setText("BMI지수 : " + guestInfo.bmi);
+                        } else {
+                            MasterInfo masterInfo = snapshot.child("User").child(masterUID).getValue(MasterInfo.class);
+
+                            int Level = masterInfo.total_point / 500;
+
+                            tvNickname.setText("닉네임 : " + masterInfo.nickname);
+                            tvLevel.setText("Level : " + Level);
+                            tvHeight.setText("키 : " + masterInfo.height);
+                            tvWeight.setText("몸무게 : " + masterInfo.weight);
+                            tvBmi.setText("BMI지수 : " + masterInfo.bmi);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                infoDialog.show();
+                infoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                ivExit.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        switch (motionEvent.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                ivExit.setImageResource(R.drawable.exit2);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                ivExit.setImageResource(R.drawable.exit);
+                                infoDialog.dismiss();
+                                break;
+                        }
+                        return true;
+                    }
+                });
             }
         });
 

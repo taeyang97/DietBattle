@@ -52,7 +52,6 @@ public class BattleRoom extends AppCompatActivity {
             R.id.ivMissionCheckBox4, R.id.ivMissionCheckBox5};
     int tv[] = {R.id.tvMission1, R.id.tvMission2, R.id.tvMission3, R.id.tvMission4, R.id.tvMission5};
     ImageView battleRoomBattleFragmentBtn2, battleRoomBattleInfoFragmentBtn2;
-    //    FrameLayout battleRoomFragContainer2;
     ListView lvChating;
     EditText edtChating;
     TextView battleRoomPointTv, battleRoomDateTv;
@@ -65,20 +64,13 @@ public class BattleRoom extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
-    ValueEventListener userValueEventListener, battleValueEventListener;
-//    Query userbyUid = databaseReference.child("User").child(user.getUid());
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
-    ArrayList<String> myBattleDb2 = new ArrayList<String>();
     Boolean firstLogin = true;
-    DatabaseReference ref;
     long now = System.currentTimeMillis();
     Date mDate = new Date(now);
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
-    HashMap<String, Object> childUpdates = new HashMap<>();
-    Map<String, Object> dayMissionValue = null;
-    ArrayList<String> mission= new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

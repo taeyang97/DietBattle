@@ -27,6 +27,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter(ArrayList<RecyclerItemData> dates) {
         this.mData = dates;
     }
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     // onCreateViewHolder() - 아이템 뷰를 위한 뷰홀더 객체 생성하여 리턴.
     @NonNull
     @Override
@@ -96,6 +97,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                                 intent.putExtra("title",title);
                                 intent.putExtra("memo",memo);
                                 intent.putExtra("master",false);
+                                intent.putExtra("guest",user.getUid());
                                 ContextCompat.startActivity(listLayout.getContext(),intent,null);
                             }
                             break;

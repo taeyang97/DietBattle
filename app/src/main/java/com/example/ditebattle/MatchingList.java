@@ -37,7 +37,7 @@ public class MatchingList extends AppCompatActivity {
     Button btn1, btn2, btn3, btnMatchingListRoomMakeMake, btnMatchingListRoomMakeCancel,
             btnMatchingListRoomMakeMan, btnMatchingListRoomMakeGirl,
             btnMatchingListRoomMakeTop, btnMatchingListRoomMakeMiddle,
-            btnMatchingListRoomMakeBottom, testBtn, matchingRoomSerchBtn;
+            btnMatchingListRoomMakeBottom, matchingRoomSerchBtn;
     EditText etMatchingListRoomMakeTitle, etMatchingListRoomMakeWeight, matchingRoomSerchEdt;
     ArrayList<RecyclerItemData> items = new ArrayList<>();
     RecyclerView rView1;
@@ -48,6 +48,7 @@ public class MatchingList extends AppCompatActivity {
     CardView cvList;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // 파이어베이스 데이터베이스 연동
     DatabaseReference databaseReference = firebaseDatabase.getReference("chat"); // DB 테이블 연결
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     Boolean master=true;
     int i = 1;
 
@@ -60,7 +61,6 @@ public class MatchingList extends AppCompatActivity {
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
         btn3 = (Button) findViewById(R.id.btn3);
-        testBtn = (Button) findViewById(R.id.testBtn);
         cvList = (CardView) findViewById(R.id.cvList);
 
         // 방만들기 버튼
@@ -154,6 +154,7 @@ public class MatchingList extends AppCompatActivity {
                             intent.putExtra("memo", memo);
                             intent.putExtra("master", master);
                             intent.putExtra("grade", grade);
+                            intent.putExtra("masteruid", user.getUid());
                             i=1;
                             startActivity(intent);
                             roomMakeDialog.dismiss();

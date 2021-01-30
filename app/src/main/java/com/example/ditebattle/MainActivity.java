@@ -9,14 +9,17 @@ import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ditebattle.database.User;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -60,12 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, NavTvUserID, NavTvUserLV;
     private AppBarConfiguration mAppBarConfiguration;
-    ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit, NavTvUserIcon,home_iv_Weight_Iv;
-    Dialog missionDialog,weightDialog;
+    ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit,
+            NavTvUserIcon,home_iv_Weight_Iv;
+    Dialog missionDialog,weightDialog,graphDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    HashMap<String, Object> childUpdates = new HashMap<>();
-    Map<String, Object> userValue = null;
-    User userInfo = null;
     String battle;
     TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv;
     BluetoothAdapter bluetoothAdapter;
@@ -116,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
         main_Exp_Tv = (TextView)findViewById(R.id.main_Exp_Tv);
 
         readDB();
+
+        //다이어트 대결 버튼 클릭
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
             }
         });
+
+        // 로그아웃 버튼 클릭
         nav_logout.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
@@ -155,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 미션 버튼 클릭
         mainHomeIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -186,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        // 블루투스 버튼 클릭
         mainHomeIvCheck.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch (motionEvent.getAction()) {
@@ -223,6 +241,174 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        // 내 정보 버튼 클릭
+        mainHomeIvMyInfo.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        mainHomeIvMyInfo.setBackgroundResource(R.drawable.layoutborderbuttonclick);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mainHomeIvMyInfo.setBackgroundResource(R.drawable.layoutborderbutton);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mainHomeIvMyInfo.setBackgroundResource(R.drawable.layoutborderbutton);
+
+                        String[] exercise = {"스쿼트", "줄넘기", "걷기"};
+
+                        graphDialog = new Dialog(MainActivity.this);
+                        graphDialog.setContentView(R.layout.graphdialog);
+                        LineChart mainChart = (LineChart)graphDialog.findViewById(R.id.mainChart);
+                        Spinner mainSpin = (Spinner)graphDialog.findViewById(R.id.mainSpin);
+                        ImageView mainIvExit = (ImageView)graphDialog.findViewById(R.id.mainIvExit);
+
+                        //스피너 어댑터 장착
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                                R.layout.spiner_font,exercise);
+                        mainSpin.setAdapter(adapter);
+
+                        LineDataSet lineDataSet = new LineDataSet(dataValues(), "나");
+                        LineDataSet lineDataSetEnermy = new LineDataSet(dataValuesEnermy(), "적");
+
+                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                        dataSets.add(lineDataSet);
+                        dataSets.add(lineDataSetEnermy);
+
+                        // 나의 그래프 셋팅
+                        lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                        lineDataSet.setColor(Color.parseColor("#000000"));
+                        lineDataSet.setLineWidth(3);
+                        lineDataSet.setDrawCircles(false);
+                        lineDataSet.setDrawFilled(true);
+                        lineDataSet.setDrawValues(false);
+                        lineDataSet.setFillColor(Color.BLACK);
+                        lineDataSet.setValueTextColor(Color.RED);
+                        lineDataSet.setFillFormatter((dataSet, dataProvider) -> Color.RED);
+
+                        // 적의 그래프 셋팅
+                        lineDataSetEnermy.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                        lineDataSetEnermy.setColor(Color.parseColor("#ff0000"));
+                        lineDataSetEnermy.setLineWidth(3);
+                        lineDataSetEnermy.setDrawCircles(false);
+                        lineDataSetEnermy.setDrawValues(false);
+
+                        LineData lineData = new LineData(dataSets);
+                        mainChart.setData(lineData);
+
+                        //X축 설정
+                        XAxis xAxis = mainChart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        xAxis.setTextColor(Color.BLACK);
+                        xAxis.setTypeface(Typeface.DEFAULT_BOLD);
+                        xAxis.setDrawGridLines(false);
+                        xAxis.setDrawAxisLine(false);
+
+                        //Y축 왼쪽
+                        YAxis yLAxis = mainChart.getAxisLeft();
+                        yLAxis.setTextColor(Color.BLACK);
+                        yLAxis.setTypeface(Typeface.DEFAULT_BOLD);
+
+                        //Y축 오른쪽
+                        YAxis yRAxis = mainChart.getAxisRight();
+                        yRAxis.setDrawLabels(false);
+                        yRAxis.setDrawAxisLine(false);
+                        yRAxis.setDrawGridLines(false);
+
+                        // 왼쪽 하단 그래프 나타낼 목록
+                        Legend legend = mainChart.getLegend();
+                        legend.setEnabled(true);
+                        legend.setTextColor(Color.BLACK);
+                        legend.setTextSize(10);
+                        legend.setTypeface(Typeface.createFromAsset(MainActivity.this.getAssets(),"dalmoori.ttf"));
+                        legend.setForm(Legend.LegendForm.LINE);
+                        legend.setFormSize(20);
+                        legend.setXEntrySpace(20);
+
+                        int color[] = new int[] {Color.BLACK, Color.RED};
+                        String[] Name = {"나", "적"};
+
+                        // 배열을 통해 나와 적의 색을 바꿀 수 있다.
+                        LegendEntry[] legendEntry = new LegendEntry[2];
+                        for(int i=0; i<legendEntry.length; i++){
+                            LegendEntry entry = new LegendEntry();
+                            entry.formColor = color[i];
+                            entry.label = Name[i];
+                            legendEntry[i] = entry;
+                        }
+                        legend.setCustom(legendEntry);
+
+                        //오른쪽 하단 설명 글씨
+
+                        /*Description description = new Description();
+                        description.setText("스쿼트");
+                        description.setTextSize(20);
+                        description.setXOffset(20);
+                        description.setYOffset(20);
+                        description.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));*/
+
+                        //차트의 설정
+                        mainChart.setBackgroundColor(Color.parseColor("#ffffff"));
+                        mainChart.setDoubleTapToZoomEnabled(false);
+                        mainChart.setDrawGridBackground(true);
+                        //        lineChart.setDescription(description);
+                        mainChart.setNoDataText("데이터가 없습니다.");
+                        mainChart.setDrawBorders(true);
+                        mainChart.setBorderColor(Color.BLACK);
+                        mainChart.setBorderWidth(5);
+                        mainChart.setNoDataTextColor(Color.parseColor("#000000"));
+                        mainChart.animateY(1000, Easing.EasingOption.EaseInCubic);
+                        mainChart.invalidate();
+
+                        graphDialog.show();
+
+                        mainIvExit.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()){
+                                    case MotionEvent.ACTION_DOWN:
+                                        mainIvExit.setImageResource(R.drawable.exit2);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        mainIvExit.setImageResource(R.drawable.exit);
+                                        graphDialog.dismiss();
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    //나의 그래프 데이터
+    private ArrayList<Entry> dataValues() {
+        ArrayList<Entry> entries = new ArrayList<>();
+        entries.add(new Entry(1, 100));
+        entries.add(new Entry(2, 70));
+        entries.add(new Entry(3, 100));
+        entries.add(new Entry(4, 60));
+        entries.add(new Entry(5, 70));
+        entries.add(new Entry(6, 70));
+        entries.add(new Entry(7, 70));
+        return entries;
+    }
+
+    // 적의 그래프 데이터
+    private ArrayList<Entry> dataValuesEnermy() {
+        ArrayList<Entry> entriesEnermy = new ArrayList<>();
+        entriesEnermy.add(new Entry(1, 50));
+        entriesEnermy.add(new Entry(2, 100));
+        entriesEnermy.add(new Entry(3, 70));
+        entriesEnermy.add(new Entry(4, 60));
+        entriesEnermy.add(new Entry(5, 80));
+        entriesEnermy.add(new Entry(6, 100));
+        entriesEnermy.add(new Entry(7, 20));
+        return entriesEnermy;
     }
 
     @Override

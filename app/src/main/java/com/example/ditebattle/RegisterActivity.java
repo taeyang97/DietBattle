@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Double.parseDouble(weightEdt.getText().toString()),
                             Double.parseDouble(heightEdt.getText().toString()),
                             bmi,
-                            0,
+                            500,
                             0,
                             gender,
                             1,
