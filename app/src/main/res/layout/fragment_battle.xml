@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/battleFragHeadLeft"
-                    android:max="500"
+                    android:max="300"
                     android:progress="250" />
 
                 <TextView
@@ -56,7 +56,7 @@
                     android:layout_centerVertical="true"
                     android:textStyle="bold"
                     android:layout_toRightOf="@+id/battleFragHeadLeft"
-                    android:text="250/500"
+                    android:text="250/300"
                     android:textSize="15sp" />
 
                 <ImageView
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/battleFragHeadRight"
-                    android:max="500"
+                    android:max="300"
                     android:progress="250" />
 
                 <TextView
@@ -109,7 +109,7 @@
                     android:layout_centerVertical="true"
                     android:textStyle="bold"
                     android:layout_toLeftOf="@+id/battleFragHeadRight"
-                    android:text="250/500"
+                    android:text="250/300"
                     android:textSize="15sp" />
 
                 <ImageView

@@ -12,17 +12,25 @@ public class Battle {
     public String grade;
     public Integer masterDay;
     public Integer guestDay;
-    public String mission1;
-    public String mission2;
-    public String mission3;
-    public String mission4;
-    public String mission5;
+
+    public String mmission1;
+    public String mmission2;
+    public String mmission3;
+    public String mmission4;
+    public String mmission5;
+
+    public String gmission1;
+    public String gmission2;
+    public String gmission3;
+    public String gmission4;
+    public String gmission5;
 
     Battle(){
     }
 
     public Battle(String master, String guest, long finish_time, Integer masterHP, Integer guestHP, String grade, Integer masterDay, Integer guestDay
-                   , String mission1 , String mission2 , String mission3 , String mission4 , String mission5) {
+                   , String mmission1 , String mmission2 , String mmission3 , String mmission4 , String mmission5
+            , String gmission1 , String gmission2 , String gmission3 , String gmission4 , String gmission5) {
         this.master = master;
         this.guest = guest;
         this.finish_time = finish_time;
@@ -31,11 +39,18 @@ public class Battle {
         this.grade = grade;
         this.masterDay = masterDay;
         this.guestDay = guestDay;
-        this.mission1 = mission1;
-        this.mission2 = mission2;
-        this.mission3 = mission3;
-        this.mission4 = mission4;
-        this.mission5 = mission5;
+
+        this.mmission1 = mmission1;
+        this.mmission2 = mmission2;
+        this.mmission3 = mmission3;
+        this.mmission4 = mmission4;
+        this.mmission5 = mmission5;
+
+        this.gmission1 = gmission1;
+        this.gmission2 = gmission2;
+        this.gmission3 = gmission3;
+        this.gmission4 = gmission4;
+        this.gmission5 = gmission5;
     }
 
     public Map<String, Object> toMap(){
@@ -48,11 +63,18 @@ public class Battle {
         result.put("grade",grade);
         result.put("masterDay",masterDay);
         result.put("guestDay",guestDay);
-        result.put("mission1",mission1);
-        result.put("mission2",mission2);
-        result.put("mission3",mission3);
-        result.put("mission4",mission4);
-        result.put("mission5",mission5);
+
+        result.put("mmission1",mmission1);
+        result.put("mmission2",mmission2);
+        result.put("mmission3",mmission3);
+        result.put("mmission4",mmission4);
+        result.put("mmission5",mmission5);
+
+        result.put("gmission1",gmission1);
+        result.put("gmission2",gmission2);
+        result.put("gmission3",gmission3);
+        result.put("gmission4",gmission4);
+        result.put("gmission5",gmission5);
         return result;
     }
 }

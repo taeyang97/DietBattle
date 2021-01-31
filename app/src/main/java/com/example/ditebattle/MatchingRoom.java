@@ -216,11 +216,16 @@ public class MatchingRoom extends AppCompatActivity {
                             title,
                             "GuestUID",
                             (t + 604799),
-                            500,
-                            500,
+                            300,
+                            300,
                             grade,
                             6,
                             6,
+                            "day",
+                            "day",
+                            "day",
+                            "day",
+                            "day",
                             "day",
                             "day",
                             "day",
@@ -315,6 +320,8 @@ public class MatchingRoom extends AppCompatActivity {
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                     ref2.child("guestOut").removeValue();
                     guestOut=true;
+                }else if(snapshot.getKey().equals("battleStart")){
+                    onBattle=true;
                 }
             }
 
@@ -325,34 +332,37 @@ public class MatchingRoom extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if(masterOut){
-                    if (!master) {
-                        masterOut=false;
-                        guestOut=true;
-                        Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        finish();
-                    }
-                }
-                else if(snapshot.getKey().equals("guestuid")){
-                    if(master){
-                        matchingRoomOtherImg.setVisibility(View.INVISIBLE);
-                        if(guestOut){
-                            Toast.makeText(getApplicationContext(),"상대방이 나갔습니다",Toast.LENGTH_SHORT).show();
-                            matchingRoomOtherInfo.setEnabled(false);
-                            guestOut=false;
-                        }else {
-                            matchingRoomOtherInfo.setEnabled(false);
-                            Toast.makeText(getApplicationContext(), "상대방을 강퇴했습니다.", Toast.LENGTH_SHORT).show();
+                if(onBattle){
+                    Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
+                }else {
+                    if (masterOut) {
+                        if (!master) {
+                            masterOut = false;
+                            guestOut = true;
+                            Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            finish();
                         }
-                    }else{
-                        if(guestOut) {
-                            guestOut=false;
-                            finish();
-                        }else{
-                            Toast.makeText(getApplicationContext(), "강퇴당하셨습니다.", Toast.LENGTH_SHORT).show();
-                            finish();
+                    } else if (snapshot.getKey().equals("guestuid")) {
+                        if (master) {
+                            matchingRoomOtherImg.setVisibility(View.INVISIBLE);
+                            if (guestOut) {
+                                Toast.makeText(getApplicationContext(), "상대방이 나갔습니다", Toast.LENGTH_SHORT).show();
+                                matchingRoomOtherInfo.setEnabled(false);
+                                guestOut = false;
+                            } else {
+                                matchingRoomOtherInfo.setEnabled(false);
+                                Toast.makeText(getApplicationContext(), "상대방을 강퇴했습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            if (guestOut) {
+                                guestOut = false;
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "강퇴당하셨습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
                     }
                 }
@@ -383,9 +393,10 @@ public class MatchingRoom extends AppCompatActivity {
                     }
                     if (Login) {
                         Login = false;
+                        databaseReference.child("chat").child(title).child("battleStart").setValue("true");
+
                         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                         ref3.removeValue();
-                        Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
                         startActivity(intent);
                         finish();

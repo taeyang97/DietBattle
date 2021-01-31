@@ -35,6 +35,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.User;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     Dialog missionDialog,weightDialog,graphDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String battle;
-    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv;
+    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv, home_mission_dialog_1,home_mission_dialog_2,
+            home_mission_dialog_3,home_mission_dialog_4,home_mission_dialog_5;
     BluetoothAdapter bluetoothAdapter;
     static final int REQUEST_ENABLE_BT=10;
     int pairedDeviceCount=0; // 연결된 장치 갯수
@@ -93,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
     byte[] readBuffer;
     int readBufferPosition, max=0;
     Button home_iv_Weight_Btn;
-
+    ArrayList<String> myUserDb = new ArrayList<String>();
+    ArrayList<String> myBattleDb = new ArrayList<String>();
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         main_Point_Tv = (TextView)findViewById(R.id.main_Point_Tv);
         main_Exp_Tv = (TextView)findViewById(R.id.main_Exp_Tv);
 
-        readDB();
+        readUserDB();
 
         //다이어트 대결 버튼 클릭
         main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
@@ -146,8 +149,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User/" + user.getUid());
-                ref.child("current_point").setValue(500);
-                ref.child("total_point").setValue(500);
+
             }
         });
         main_nav_btn_board.setOnClickListener(new View.OnClickListener() {
@@ -182,22 +184,45 @@ public class MainActivity extends AppCompatActivity {
                         mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
                         break;
                     case MotionEvent.ACTION_UP:
-                        mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
-                        missionDialog = new Dialog(MainActivity.this);
-                        missionDialog.setContentView(R.layout.activity_main_homemissiondialog);
-                        missionDialog.show();
-                        missionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-
-                        home_iv_Mission_Exit = (ImageView) missionDialog.findViewById(R.id.home_iv_Mission_Exit);
-
-                        home_iv_Mission_Exit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                missionDialog.dismiss();
+                        if (battle.equals("false")) {
+                            Toast.makeText(getApplicationContext(),"배틀을 진행중이지않습니다",Toast.LENGTH_SHORT).show();
+                            mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                        } else {
+                            mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
+                            missionDialog = new Dialog(MainActivity.this);
+                            missionDialog.setContentView(R.layout.activity_main_homemissiondialog);
+                            home_mission_dialog_1 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_1);
+                            home_mission_dialog_2 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_2);
+                            home_mission_dialog_3 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_3);
+                            home_mission_dialog_4 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_4);
+                            home_mission_dialog_5 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_5);
+                            if(myBattleDb.get(1).equals(user.getUid())){
+                                home_mission_dialog_1.setText(myBattleDb.get(13));
+                                home_mission_dialog_2.setText(myBattleDb.get(14));
+                                home_mission_dialog_3.setText(myBattleDb.get(15));
+                                home_mission_dialog_4.setText(myBattleDb.get(16));
+                                home_mission_dialog_5.setText(myBattleDb.get(17));
+                            }else {
+                                home_mission_dialog_1.setText(myBattleDb.get(8));
+                                home_mission_dialog_2.setText(myBattleDb.get(9));
+                                home_mission_dialog_3.setText(myBattleDb.get(10));
+                                home_mission_dialog_4.setText(myBattleDb.get(11));
+                                home_mission_dialog_5.setText(myBattleDb.get(12));
                             }
-                        });
-                        break;
+                            missionDialog.show();
+                            missionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+                            home_iv_Mission_Exit = (ImageView) missionDialog.findViewById(R.id.home_iv_Mission_Exit);
+
+                            home_iv_Mission_Exit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    missionDialog.dismiss();
+                                }
+                            });
+                            break;
+                        }
                 }
                 return true;
             }
@@ -418,10 +443,10 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void readDB() {
+    private void readUserDB() {
         String sort_column_name = "age";
-        Query sortbyUid = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
-        sortbyUid.addValueEventListener(new ValueEventListener() {
+        Query sortbyUid = FirebaseDatabase.getInstance().getReference();
+        sortbyUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
@@ -431,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
 //                    NavTvUserID.setText(info[1]);
 //                }
                 String key = snapshot.getKey();
-                User get = snapshot.getValue(User.class);
+                User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                 String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender,get.battle};
                 NavTvUserID.setText(info[1]);
                 NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
@@ -439,6 +464,17 @@ public class MainActivity extends AppCompatActivity {
                 main_Lv_Tv.setText("LV " +(Integer.parseInt(info[6]) / 500));
                 main_Exp_Tv.setText((Integer.parseInt(info[6]) % 500)+"/500");
                 main_Point_Tv.setText(info[7]);
+                for(int i=0;i<info.length;i++){
+                    myUserDb.add(info[i]);
+                }
+                if(!battle.equals("false")){
+                    Battle get2 = snapshot.child("Battle").child(battle).getValue(Battle.class);
+                    String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
+                            ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5 };
+                    for (int i = 0; i < battle.length; i++) {
+                        myBattleDb.add(battle[i]);
+                    }
+                }
             }
 
             @Override
@@ -448,6 +484,20 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+//    void readBattleDb(){
+//        Query sortbyUid = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+//        sortbyUid.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        })
+//    }
     void checkBluetooth() {
         bluetoothAdapter= BluetoothAdapter.getDefaultAdapter(); // 어댑터를 반환받는다.
         if(bluetoothAdapter==null){

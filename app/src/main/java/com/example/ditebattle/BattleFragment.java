@@ -85,8 +85,8 @@ public class BattleFragment extends Fragment {
                                 battleFragTimerTv.setText(day + "일 " + hour + "시간 " + minute + "분 " + second + "초");
                                 battleFragProgressLeft.setProgress(Integer.parseInt(battle.get(3)));
                                 battleFragProgressRight.setProgress(Integer.parseInt(battle.get(4)));
-                                battleFragHpTvMaster.setText((battle.get(3))+"/500");
-                                battleFragHpTvGuest.setText((battle.get(4))+"/500");
+                                battleFragHpTvMaster.setText((battle.get(3))+"/300");
+                                battleFragHpTvGuest.setText((battle.get(4))+"/300");
                                 if (!uid.getUid().equals(battle.get(1))) {
                                     battleFragLeftName.setText(user.get(1));
                                     battleFragRightName.setText("상대방");
