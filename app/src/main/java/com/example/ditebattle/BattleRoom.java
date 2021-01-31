@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.Chating;
@@ -34,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -85,10 +87,12 @@ public class BattleRoom extends AppCompatActivity {
         battleRoomIvPoint = (ImageView) findViewById(R.id.battleRoomIvPoint);
         battleRoomBattleFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleFragmentBtn2);
         battleRoomBattleInfoFragmentBtn2 = (ImageView) findViewById(R.id.battleRoomBattleInfoFragmentBtn2);
+
         battleRoomDateTv.setText(getTime);
         battleFragment = new BattleFragment();
         battleInfoFragment = new BattleInfoFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
+
         firstReadDB();
 
         // 미션 버튼 클릭 시
@@ -158,8 +162,6 @@ public class BattleRoom extends AppCompatActivity {
                 return true;
             }
         });
-
-
 
         // 포인트 버튼 클릭 시
         battleRoomIvPoint.setOnTouchListener(new View.OnTouchListener() {
@@ -365,7 +367,6 @@ public class BattleRoom extends AppCompatActivity {
 
                 // 일곱 번째 날
                 if (Integer.parseInt(myBattleDb.get(7)) == currentday) {
-                    Log.e("tset", "" + currentday);
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("guestDay");
                     Integer guestDay = snapshot.child("Battle").child(myUserDb.get(10)).child("guestDay").getValue(Integer.class);
                     ref.setValue(guestDay - 1);
@@ -378,7 +379,6 @@ public class BattleRoom extends AppCompatActivity {
                                 String.valueOf(routine.total), routine.name};
                         missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
                     }
-                    Log.e("test","cjhsdhbvjsdhui"+missionArray[0]);
                     DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
                     ref2.child("mission1").setValue(missionArray[0]);
                     ref2.child("mission2").setValue(missionArray[1]);
@@ -386,12 +386,6 @@ public class BattleRoom extends AppCompatActivity {
                     ref2.child("mission4").setValue(missionArray[3]);
                     ref2.child("mission5").setValue("7시기상");
                 }
-//                Battle get3 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
-//                String[] battle2 = {get3.master, get3.guest, String.valueOf(get3.finish_time), String.valueOf(get3.masterHP), String.valueOf(get3.guestHP),String.valueOf(get3.grade),String.valueOf(get3.masterDay),String.valueOf(get3.guestDay)
-//                        ,get3.mission1, get3.mission2, get3.mission3, get3.mission4, get3.mission5};
-//                for (int i = 0; i < battle2.length; i++) {
-//                    myBattleDb.set(i,battle2[i]);
-//                }
             }
 
             @Override
@@ -411,8 +405,14 @@ public class BattleRoom extends AppCompatActivity {
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if(snapshot.getKey().equals("guestHP")){
                     myBattleDb.set(4,String.valueOf(snapshot.getValue()));
+                    if(Integer.parseInt(myBattleDb.get(4))<=0){
+                        //마스터 승리
+                    }
                 }else if(snapshot.getKey().equals("masterHP")){
                     myBattleDb.set(3,String.valueOf(snapshot.getValue()));
+                    if(Integer.parseInt(myBattleDb.get(3))<=0){
+                        // 게스트 승리
+                    }
                 }else if(snapshot.getKey().equals("mission1")){
                     myBattleDb.set(8,String.valueOf(snapshot.getValue()));
                 }else if(snapshot.getKey().equals("mission2")){
@@ -494,32 +494,4 @@ public class BattleRoom extends AppCompatActivity {
       return myBattleDb;
     };
 
-    protected void mission() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // 배틀 정보 가져오기
-
-
-//                    if (Integer.parseInt(myBattleDb.get(6)) == currentday) {
-//                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("masterDay");
-//                        Integer masterDay = snapshot.child("Battle").child(myUserDb.get(10)).child("masterDay").getValue(Integer.class);
-//                        ref.setValue(masterDay - 1);
-//                        for (int i = 0; i < bodypartsStr.length; i++) {
-//                            // 운동 갯수 가져오기
-//                            ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
-//                                    .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
-//                            String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
-//                                    String.valueOf(routine.total), routine.name};
-//                            tvMission[i].setText(ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기");
-//                        }
-//                    }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 }

@@ -50,7 +50,7 @@
                 android:id="@+id/tvNickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:text="닉네임 : taeyang"
                 android:textSize="20sp"
@@ -59,7 +59,7 @@
                 android:id="@+id/tvLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:text="레벨 : 20"
                 android:textSize="20sp"
@@ -68,7 +68,7 @@
                 android:id="@+id/tvHeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:text="키 : 174"
                 android:textSize="20sp"
@@ -77,7 +77,7 @@
                 android:id="@+id/tvWeight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:text="몸무게 : 68"
                 android:textSize="20sp"
@@ -86,11 +86,20 @@
                 android:id="@+id/tvBmi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:text="BMI : 64"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/dialog_info_ban_btn"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:fontFamily="@font/font_family"
+                android:text="강퇴하기"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

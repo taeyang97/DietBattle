@@ -136,11 +136,11 @@ public class MatchingList extends AppCompatActivity {
                         weight = etMatchingListRoomMakeWeight.getText().toString();
                         if (title.getBytes().length <= 0) {
                             Toast.makeText(getApplicationContext(), "제목을 입력해주세요", Toast.LENGTH_SHORT).show();
-                        } else if (gender == null) {
+                        } else if (gender.getBytes().length <= 0) {
                             Toast.makeText(getApplicationContext(), "성별을 선택해주세요", Toast.LENGTH_SHORT).show();
                         } else if (weight.getBytes().length <= 0) {
                             Toast.makeText(getApplicationContext(), "몸무게를 입력해주세요", Toast.LENGTH_SHORT).show();
-                        } else if (grade == null) {
+                        } else if (grade.getBytes().length <= 0) {
                             Toast.makeText(getApplicationContext(), "난이도를 선택해주세요", Toast.LENGTH_SHORT).show();
                         } else {
 //                            items.add(i, new RecyclerItemData(String.valueOf(i + 1), title,

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.GuestInfo;
 import com.example.ditebattle.database.MasterInfo;
+import com.example.ditebattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -44,11 +45,11 @@ import java.util.Map;
 
 public class MatchingRoom extends AppCompatActivity {
 
-    Button matchingRoomStartBtn, matchingRoomChatBtn, matchingRoomOtherInfo;
+    Button matchingRoomStartBtn, matchingRoomChatBtn, matchingRoomOtherInfo, dialog_info_ban_btn;
     EditText matchingRoomChatEdt;
     TextView matchingRoomNum, matchingRoomTitle, matchingRoomOption, tvNickname, tvLevel, tvHeight, tvWeight, tvBmi;
     ListView matchingRoomChatList;
-    ImageView ivExit;
+    ImageView ivExit, matchingRoomOtherImg;
     Dialog infoDialog;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -56,16 +57,17 @@ public class MatchingRoom extends AppCompatActivity {
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> battleValue = null;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String number, title, memo, masterUid , guestUid, grade, matchingMasterUID, matchingGuestUID, masterUID, guestUID;
-    Boolean master,Login=true;
-    Boolean flag = false , onBattle=false;
+    String number, title, memo, masterUid, guestUid, grade, matchingMasterUID, matchingGuestUID, masterUID, guestUID;
+    Boolean master, Login = true;
+    Boolean flag = false, onBattle = false, guestOut=false, masterOut=false;
     Battle battle;
     ValueEventListener battleValueEventListener;
-
+    ArrayList<String> myUserDb = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching_room);
+        matchingRoomOtherImg = (ImageView)findViewById(R.id.matchingRoomOtherImg);
         matchingRoomStartBtn = (Button) findViewById(R.id.matchingRoomStartBtn);
         matchingRoomChatBtn = (Button) findViewById(R.id.matchingRoomChatBtn);
         matchingRoomOtherInfo = (Button) findViewById(R.id.matchingRoomOtherInfo);
@@ -84,14 +86,13 @@ public class MatchingRoom extends AppCompatActivity {
         grade = intent.getStringExtra("grade");
         matchingMasterUID = intent.getStringExtra("masteruid");
         matchingGuestUID = intent.getStringExtra("guest");
-
         readDB();
         readMaster();
         readBattle();
         matchingRoomNum.setText(number);
         matchingRoomTitle.setText(title);
         matchingRoomOption.setText(memo);
-
+        matchingRoomOtherImg.setVisibility(View.INVISIBLE);
         // 받아온 데이터 저장
 
         if (master == true) {
@@ -103,9 +104,10 @@ public class MatchingRoom extends AppCompatActivity {
             masterUid = user.getUid();
             matchingRoomStartBtn.setText("시작");
             matchingRoomStartBtn.setEnabled(false);
+            matchingRoomOtherInfo.setEnabled(false);
         } else {
             databaseReference.child("chat").child(title).child("guestuid").setValue(matchingGuestUID);
-            guestUid=user.getUid();
+            guestUid = user.getUid();
             matchingRoomStartBtn.setText("준비대기");
         }
 
@@ -129,19 +131,22 @@ public class MatchingRoom extends AppCompatActivity {
             public void onSingleClick(View v) {
                 infoDialog = new Dialog(MatchingRoom.this);
                 infoDialog.setContentView(R.layout.infomationdialog);
-                tvNickname = (TextView)infoDialog.findViewById(R.id.tvNickname);
-                tvLevel = (TextView)infoDialog.findViewById(R.id.tvLevel);
-                tvHeight = (TextView)infoDialog.findViewById(R.id.tvHeight);
-                tvWeight = (TextView)infoDialog.findViewById(R.id.tvWeight);
-                tvBmi = (TextView)infoDialog.findViewById(R.id.tvBmi);
-                ivExit = (ImageView)infoDialog.findViewById(R.id.ivExit);
-
+                tvNickname = (TextView) infoDialog.findViewById(R.id.tvNickname);
+                tvLevel = (TextView) infoDialog.findViewById(R.id.tvLevel);
+                tvHeight = (TextView) infoDialog.findViewById(R.id.tvHeight);
+                tvWeight = (TextView) infoDialog.findViewById(R.id.tvWeight);
+                tvBmi = (TextView) infoDialog.findViewById(R.id.tvBmi);
+                ivExit = (ImageView) infoDialog.findViewById(R.id.ivExit);
+                dialog_info_ban_btn = (Button) infoDialog.findViewById(R.id.dialog_info_ban_btn);
+                if(!master){
+                    dialog_info_ban_btn.setVisibility(View.INVISIBLE);
+                }
                 databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         masterUID = snapshot.child("chat").child(title).child("masteruid").getValue(String.class);
                         guestUID = snapshot.child("chat").child(title).child("guestuid").getValue(String.class);
-                        if(user.getUid().equals(masterUID)) {
+                        if (user.getUid().equals(masterUID)) {
                             GuestInfo guestInfo = snapshot.child("User").child(guestUID).getValue(GuestInfo.class);
 
                             int Level = guestInfo.total_point / 500;
@@ -170,13 +175,22 @@ public class MatchingRoom extends AppCompatActivity {
                     }
                 });
 
+
                 infoDialog.show();
                 infoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+                dialog_info_ban_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        guestOut=false;
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("guestuid");
+                        ref.removeValue();
+                    }
+                });
                 ivExit.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        switch (motionEvent.getAction()){
+                        switch (motionEvent.getAction()) {
                             case MotionEvent.ACTION_DOWN:
                                 ivExit.setImageResource(R.drawable.exit2);
                                 break;
@@ -196,12 +210,12 @@ public class MatchingRoom extends AppCompatActivity {
             @Override
             public void onSingleClick(View v) {
                 if (master == true) {
-                    long t = System.currentTimeMillis()/1000;
-                    onBattle=true;
+                    long t = System.currentTimeMillis() / 1000;
+                    onBattle = true;
                     battle = new Battle(
                             title,
                             "GuestUID",
-                            (t+604799),
+                            (t + 604799),
                             500,
                             500,
                             grade,
@@ -214,7 +228,7 @@ public class MatchingRoom extends AppCompatActivity {
                             "day"
                     );
                     battleValue = battle.toMap();
-                    childUpdates.put("/Battle/" +title,battleValue);
+                    childUpdates.put("/Battle/" + title, battleValue);
                     databaseReference.updateChildren(childUpdates);
                 } else {
                     if (!flag) {
@@ -234,7 +248,7 @@ public class MatchingRoom extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.e("test","onStop");
+        Log.e("test", "onStop");
         battleRef.removeEventListener(battleValueEventListener);
     }
 
@@ -289,7 +303,19 @@ public class MatchingRoom extends AppCompatActivity {
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                if (snapshot.getKey().equals("guestuid")) {
+                    matchingRoomOtherImg.setVisibility(View.VISIBLE);
+                    if(master) {
+                            Toast.makeText(getApplicationContext(), "상대방이 입장했습니다.", Toast.LENGTH_SHORT).show();
+                            matchingRoomOtherInfo.setEnabled(true);
+                        }
+                } else if(snapshot.getKey().equals("masterOut")){
+                    masterOut=true;
+                }else  if(snapshot.getKey().equals("guestOut")){
+                    DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+                    ref2.child("guestOut").removeValue();
+                    guestOut=true;
+                }
             }
 
             @Override
@@ -299,10 +325,37 @@ public class MatchingRoom extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                if (!master && !onBattle) {
-                    Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다.", Toast.LENGTH_SHORT).show();
+                if(masterOut){
+                    if (!master) {
+                        masterOut=false;
+                        guestOut=true;
+                        Toast.makeText(getApplicationContext(), "방장이 방을 나갔습니다", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        finish();
+                    }
                 }
-                finish();
+                else if(snapshot.getKey().equals("guestuid")){
+                    if(master){
+                        matchingRoomOtherImg.setVisibility(View.INVISIBLE);
+                        if(guestOut){
+                            Toast.makeText(getApplicationContext(),"상대방이 나갔습니다",Toast.LENGTH_SHORT).show();
+                            matchingRoomOtherInfo.setEnabled(false);
+                            guestOut=false;
+                        }else {
+                            matchingRoomOtherInfo.setEnabled(false);
+                            Toast.makeText(getApplicationContext(), "상대방을 강퇴했습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        if(guestOut) {
+                            guestOut=false;
+                            finish();
+                        }else{
+                            Toast.makeText(getApplicationContext(), "강퇴당하셨습니다.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -317,26 +370,26 @@ public class MatchingRoom extends AppCompatActivity {
         });
     }
 
-    void readBattle(){
+    void readBattle() {
         battleValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child(title).getValue()!=null){
+                if (snapshot.child(title).getValue() != null) {
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid()).child("battle");
                     ref.setValue(title);
-                    if(!master) {
+                    if (!master) {
                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(title).child("guest");
                         ref2.setValue(guestUid);
                     }
-                        if(Login) {
-                            Login=false;
-                            DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
-                            ref3.removeValue();
-                            Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
-                            startActivity(intent);
-                            finish();
-                        }
+                    if (Login) {
+                        Login = false;
+                        DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
+                        ref3.removeValue();
+                        Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
 
@@ -347,6 +400,7 @@ public class MatchingRoom extends AppCompatActivity {
         };
         battleRef.addValueEventListener(battleValueEventListener);
     }
+
     void readMaster() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("master");
         ref.addValueEventListener(new ValueEventListener() {
@@ -384,11 +438,15 @@ public class MatchingRoom extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (master == true) {
+                    databaseReference.child("chat").child(title).child("masterOut").setValue("true");
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                     ref.removeValue();
                     Toast.makeText(getApplicationContext(), "방을 나갔습니다.", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
+                    databaseReference.child("chat").child(title).child("guestOut").setValue("true");
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("chat").child(title).child("guestuid");
+                    ref.removeValue();
                     finish();
                 }
             }
