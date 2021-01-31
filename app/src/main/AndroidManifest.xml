@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <application
@@ -15,12 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiteBattle">
         <activity android:name=".RegisterActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"></activity>
         <activity android:name=".GoogleLoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,13 +31,18 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Matching" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Matching"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MatchingRoom"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BattleRoom" />
-        <activity android:name=".MatchingList" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BattleRoom"
+            android:screenOrientation="portrait" />
+        <activity android:name=".MatchingList"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

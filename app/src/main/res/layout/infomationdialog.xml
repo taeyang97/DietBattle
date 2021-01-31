@@ -52,7 +52,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
-                android:text="닉네임 : taeyang"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
             <TextView
@@ -61,7 +60,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
-                android:text="레벨 : 20"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
             <TextView
@@ -70,7 +68,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
-                android:text="키 : 174"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
             <TextView
@@ -79,7 +76,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
-                android:text="몸무게 : 68"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
             <TextView
@@ -88,7 +84,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
-                android:text="BMI : 64"
                 android:textSize="20sp"
                 android:textColor="@color/black"/>
 

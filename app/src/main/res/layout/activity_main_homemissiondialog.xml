@@ -25,7 +25,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/homeexitbtn"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,6 @@
                     android:id="@+id/home_mission_dialog_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginLeft="50dp"/>
 
@@ -60,7 +59,6 @@
                     android:id="@+id/home_mission_dialog_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginLeft="50dp"/>
 
@@ -76,7 +74,6 @@
                     android:id="@+id/home_mission_dialog_3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginLeft="50dp"/>
 
@@ -92,7 +89,6 @@
                     android:id="@+id/home_mission_dialog_4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginLeft="50dp"/>
 
@@ -108,7 +104,6 @@
                     android:id="@+id/home_mission_dialog_5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginLeft="50dp"/>
             </LinearLayout>

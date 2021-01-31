@@ -45,7 +45,6 @@
                     android:id="@+id/tvMission1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="자전거 60분이상 타기!"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"/>
                 <ImageView
@@ -66,7 +65,6 @@
                     android:id="@+id/tvMission2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="스쿼트 50개이상 하기!"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"/>
                 <ImageView
@@ -87,7 +85,6 @@
                     android:id="@+id/tvMission3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="걷기 60분이상 하기!"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"/>
                 <ImageView
@@ -108,7 +105,6 @@
                     android:id="@+id/tvMission4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="플랭크 1분 이상 하기!"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"/>
                 <ImageView
@@ -129,7 +125,6 @@
                     android:id="@+id/tvMission5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="싯업 20개 이상 하기!"
                     android:layout_weight="1"
                     android:layout_marginHorizontal="20dp"/>
                 <ImageView

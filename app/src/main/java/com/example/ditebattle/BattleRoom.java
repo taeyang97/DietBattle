@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,7 +77,7 @@ public class BattleRoom extends AppCompatActivity {
     Date mDate = new Date(now);
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
-
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,8 @@ public class BattleRoom extends AppCompatActivity {
         setContentView(R.layout.activity_battle_room);
         ActionBar ac = getSupportActionBar();
         ac.hide();
+
+        imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 
         battleRoomDateTv = (TextView) findViewById(R.id.battleRoomDateTv);
         battleRoomPointTv = (TextView) findViewById(R.id.battleRoomPointTv);
@@ -152,12 +155,12 @@ public class BattleRoom extends AppCompatActivity {
                             ivMissionCheckBox[index].setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ivMissionCheckBox[index].setImageResource(R.drawable.checkbox2);
                                     AlertDialog.Builder builder = new AlertDialog.Builder(BattleRoom.this);
                                     builder.setTitle("미션을 완료하시겠습니까?");
                                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int id) {
+                                            ivMissionCheckBox[index].setImageResource(R.drawable.checkbox2);
                                             String curMission=null;
                                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
                                             if(myBattleDb.get(1).equals(user.getUid())){
@@ -307,7 +310,6 @@ public class BattleRoom extends AppCompatActivity {
                         btnChating = (Button)chatdialog.findViewById(R.id.btnChating);
 
                         openChat();
-
                         chatdialog.show();
                         chatdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

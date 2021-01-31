@@ -9,17 +9,13 @@ import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,19 +32,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.User;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -60,25 +42,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, nav_notice, nav_cs, NavTvUserID, NavTvUserLV;
+    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board,
+            nav_logout, nav_notice, nav_cs, NavTvUserID, NavTvUserLV,
+            tvNickname, tvLevel, tvHeight, tvWeight, tvBmi;
     private AppBarConfiguration mAppBarConfiguration;
     ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit,
-            NavTvUserIcon,home_iv_Weight_Iv;
-    Dialog missionDialog,weightDialog,graphDialog;
+            NavTvUserIcon,home_iv_Weight_Iv, ivExit;
+    Button home_iv_Weight_Btn, dialog_info_ban_btn;
+    Dialog missionDialog,weightDialog,infoDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference databaseReference = firebaseDatabase.getReference();
     String battle;
     TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv, home_mission_dialog_1,home_mission_dialog_2,
             home_mission_dialog_3,home_mission_dialog_4,home_mission_dialog_5;
@@ -95,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     char charDelimiter='\n';
     byte[] readBuffer;
     int readBufferPosition, max=0;
-    Button home_iv_Weight_Btn;
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
     @SuppressLint("ClickableViewAccessibility")
@@ -343,11 +326,13 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         mainHomeIvCheck.setBackgroundResource(R.drawable.layoutborderbutton);
                         weightDialog = new Dialog(MainActivity.this);
-                        weightDialog.setContentView(R.layout.activity_main_homeweightcheck);
+                        weightDialog.setContentView(R.layout.activity_main_homebluetoothdialog);
                         home_iv_Weight_Btn =(Button) weightDialog.findViewById(R.id.home_iv_Weight_Btn);
                         home_iv_Weight_Tv = (TextView) weightDialog.findViewById(R.id.home_iv_Weight_Tv);
                         home_iv_Weight_Iv = (ImageView)weightDialog.findViewById(R.id.home_iv_Weight_Iv);
+
                         weightDialog.show();
+                        weightDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                         home_iv_Weight_Btn.setOnClickListener(new OnSingleClickListener() {
                             @Override
@@ -356,10 +341,28 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
+                        home_iv_Weight_Iv.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                switch (motionEvent.getAction()) {
+                                    case MotionEvent.ACTION_DOWN:
+                                        home_iv_Weight_Iv.setImageResource(R.drawable.exit2);
+                                        break;
+                                    case MotionEvent.ACTION_CANCEL:
+                                        home_iv_Weight_Iv.setImageResource(R.drawable.exit);
+                                        break;
+                                    case MotionEvent.ACTION_UP:
+                                        home_iv_Weight_Iv.setImageResource(R.drawable.exit);
+                                        weightDialog.dismiss();
+                                        break;
+                                }
+                                return true;
+                            }
+                        });
+
                         home_iv_Weight_Iv.setOnClickListener(new OnSingleClickListener() {
                             @Override
                             public void onSingleClick(View v) {
-                                home_iv_Weight_Iv.setImageResource(R.drawable.exit2);
                                 weightDialog.dismiss();
                             }
                         });
@@ -382,124 +385,50 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         mainHomeIvMyInfo.setBackgroundResource(R.drawable.layoutborderbutton);
+                        infoDialog = new Dialog(MainActivity.this);
+                        infoDialog.setContentView(R.layout.infomationdialog);
+                        tvNickname = (TextView) infoDialog.findViewById(R.id.tvNickname);
+                        tvLevel = (TextView) infoDialog.findViewById(R.id.tvLevel);
+                        tvHeight = (TextView) infoDialog.findViewById(R.id.tvHeight);
+                        tvWeight = (TextView) infoDialog.findViewById(R.id.tvWeight);
+                        tvBmi = (TextView) infoDialog.findViewById(R.id.tvBmi);
+                        ivExit = (ImageView) infoDialog.findViewById(R.id.ivExit);
+                        dialog_info_ban_btn = (Button) infoDialog.findViewById(R.id.dialog_info_ban_btn);
+                        dialog_info_ban_btn.setVisibility(View.INVISIBLE);
+                        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    User myInfo = snapshot.child("User").child(user.getUid()).getValue(User.class);
 
-                        String[] exercise = {"스쿼트", "줄넘기", "걷기"};
+                                    int Level = myInfo.total_point / 500;
 
-                        graphDialog = new Dialog(MainActivity.this);
-                        graphDialog.setContentView(R.layout.graphdialog);
-                        LineChart mainChart = (LineChart)graphDialog.findViewById(R.id.mainChart);
-                        Spinner mainSpin = (Spinner)graphDialog.findViewById(R.id.mainSpin);
-                        ImageView mainIvExit = (ImageView)graphDialog.findViewById(R.id.mainIvExit);
+                                    tvNickname.setText("닉네임 : " + myInfo.nickname);
+                                    tvLevel.setText("Level : " + Level);
+                                    tvHeight.setText("키 : " + myInfo.height);
+                                    tvWeight.setText("몸무게 : " + myInfo.weight);
+                                    tvBmi.setText("BMI지수 : " + myInfo.bmi);
 
-                        //스피너 어댑터 장착
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                                R.layout.spiner_font,exercise);
-                        mainSpin.setAdapter(adapter);
+                                }
 
-                        LineDataSet lineDataSet = new LineDataSet(dataValues(), "나");
-                        LineDataSet lineDataSetEnermy = new LineDataSet(dataValuesEnermy(), "적");
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-                        dataSets.add(lineDataSet);
-                        dataSets.add(lineDataSetEnermy);
+                            }
+                        });
 
-                        // 나의 그래프 셋팅
-                        lineDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                        lineDataSet.setColor(Color.parseColor("#000000"));
-                        lineDataSet.setLineWidth(3);
-                        lineDataSet.setDrawCircles(false);
-                        lineDataSet.setDrawFilled(true);
-                        lineDataSet.setDrawValues(false);
-                        lineDataSet.setFillColor(Color.BLACK);
-                        lineDataSet.setValueTextColor(Color.RED);
-                        lineDataSet.setFillFormatter((dataSet, dataProvider) -> Color.RED);
+                        infoDialog.show();
+                        infoDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                        // 적의 그래프 셋팅
-                        lineDataSetEnermy.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                        lineDataSetEnermy.setColor(Color.parseColor("#ff0000"));
-                        lineDataSetEnermy.setLineWidth(3);
-                        lineDataSetEnermy.setDrawCircles(false);
-                        lineDataSetEnermy.setDrawValues(false);
-
-                        LineData lineData = new LineData(dataSets);
-                        mainChart.setData(lineData);
-
-                        //X축 설정
-                        XAxis xAxis = mainChart.getXAxis();
-                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        xAxis.setTextColor(Color.BLACK);
-                        xAxis.setTypeface(Typeface.DEFAULT_BOLD);
-                        xAxis.setDrawGridLines(false);
-                        xAxis.setDrawAxisLine(false);
-
-                        //Y축 왼쪽
-                        YAxis yLAxis = mainChart.getAxisLeft();
-                        yLAxis.setTextColor(Color.BLACK);
-                        yLAxis.setTypeface(Typeface.DEFAULT_BOLD);
-
-                        //Y축 오른쪽
-                        YAxis yRAxis = mainChart.getAxisRight();
-                        yRAxis.setDrawLabels(false);
-                        yRAxis.setDrawAxisLine(false);
-                        yRAxis.setDrawGridLines(false);
-
-                        // 왼쪽 하단 그래프 나타낼 목록
-                        Legend legend = mainChart.getLegend();
-                        legend.setEnabled(true);
-                        legend.setTextColor(Color.BLACK);
-                        legend.setTextSize(10);
-                        legend.setTypeface(Typeface.createFromAsset(MainActivity.this.getAssets(),"dalmoori.ttf"));
-                        legend.setForm(Legend.LegendForm.LINE);
-                        legend.setFormSize(20);
-                        legend.setXEntrySpace(20);
-
-                        int color[] = new int[] {Color.BLACK, Color.RED};
-                        String[] Name = {"나", "적"};
-
-                        // 배열을 통해 나와 적의 색을 바꿀 수 있다.
-                        LegendEntry[] legendEntry = new LegendEntry[2];
-                        for(int i=0; i<legendEntry.length; i++){
-                            LegendEntry entry = new LegendEntry();
-                            entry.formColor = color[i];
-                            entry.label = Name[i];
-                            legendEntry[i] = entry;
-                        }
-                        legend.setCustom(legendEntry);
-
-                        //오른쪽 하단 설명 글씨
-
-                        /*Description description = new Description();
-                        description.setText("스쿼트");
-                        description.setTextSize(20);
-                        description.setXOffset(20);
-                        description.setYOffset(20);
-                        description.setTypeface(Typeface.createFromAsset(getActivity().getAssets(),"dalmoori.ttf"));*/
-
-                        //차트의 설정
-                        mainChart.setBackgroundColor(Color.parseColor("#ffffff"));
-                        mainChart.setDoubleTapToZoomEnabled(false);
-                        mainChart.setDrawGridBackground(true);
-                        //        lineChart.setDescription(description);
-                        mainChart.setNoDataText("데이터가 없습니다.");
-                        mainChart.setDrawBorders(true);
-                        mainChart.setBorderColor(Color.BLACK);
-                        mainChart.setBorderWidth(5);
-                        mainChart.setNoDataTextColor(Color.parseColor("#000000"));
-                        mainChart.animateY(1000, Easing.EasingOption.EaseInCubic);
-                        mainChart.invalidate();
-
-                        graphDialog.show();
-
-                        mainIvExit.setOnTouchListener(new View.OnTouchListener() {
+                        ivExit.setOnTouchListener(new View.OnTouchListener() {
                             @Override
                             public boolean onTouch(View view, MotionEvent motionEvent) {
-                                switch (motionEvent.getAction()){
+                                switch (motionEvent.getAction()) {
                                     case MotionEvent.ACTION_DOWN:
-                                        mainIvExit.setImageResource(R.drawable.exit2);
+                                        ivExit.setImageResource(R.drawable.exit2);
                                         break;
                                     case MotionEvent.ACTION_UP:
-                                        mainIvExit.setImageResource(R.drawable.exit);
-                                        graphDialog.dismiss();
+                                        ivExit.setImageResource(R.drawable.exit);
+                                        infoDialog.dismiss();
                                         break;
                                 }
                                 return true;
@@ -510,32 +439,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    //나의 그래프 데이터
-    private ArrayList<Entry> dataValues() {
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(1, 100));
-        entries.add(new Entry(2, 70));
-        entries.add(new Entry(3, 100));
-        entries.add(new Entry(4, 60));
-        entries.add(new Entry(5, 70));
-        entries.add(new Entry(6, 70));
-        entries.add(new Entry(7, 70));
-        return entries;
-    }
-
-    // 적의 그래프 데이터
-    private ArrayList<Entry> dataValuesEnermy() {
-        ArrayList<Entry> entriesEnermy = new ArrayList<>();
-        entriesEnermy.add(new Entry(1, 50));
-        entriesEnermy.add(new Entry(2, 100));
-        entriesEnermy.add(new Entry(3, 70));
-        entriesEnermy.add(new Entry(4, 60));
-        entriesEnermy.add(new Entry(5, 80));
-        entriesEnermy.add(new Entry(6, 100));
-        entriesEnermy.add(new Entry(7, 20));
-        return entriesEnermy;
     }
 
     @Override
@@ -607,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
             // 방법1 => finish(); // 앱 종료
             // 방법2 => Toast로 표시
             // 방법3 => dialog로 표시
-            finish();
+            showToast("블루투스를 지원하지 않습니다.");
         }else {
             // 장치가 블루투스를 지원하는 경우
             if(!bluetoothAdapter.isEnabled()){
@@ -735,12 +638,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         // 앱이 종료되기 전의 생명주기 메소드
         try{
+            //블루투스를 정상적으로 종료 시
             workerThread.interrupt();
             inputStream.close();
             outputStream.close();
             socket.close();
         }catch (Exception e){
-            showToast("종료");
+            //블루투스를 켜지 않았거나 비정상적 종료일 시
         }
         super.onDestroy();
     }

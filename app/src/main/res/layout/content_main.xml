@@ -59,7 +59,6 @@
                 android:layout_marginBottom="3dp"
                 android:fontFamily="@font/font_family"
                 android:layout_gravity="center_horizontal|bottom"
-                android:text="LV.2"
                 android:textColor="@color/black" />
         </FrameLayout>
 
@@ -91,7 +90,6 @@
                 android:layout_gravity="center_horizontal|bottom"
                 android:layout_marginBottom="3dp"
                 android:fontFamily="@font/font_family"
-                android:text="100"
                 android:textColor="@color/black" />
         </FrameLayout>
     </LinearLayout>
@@ -110,7 +108,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4.4"
-            android:text="EXP 0/500"
             android:textColor="#000000"
             android:gravity="center"
             android:layout_margin="10dp"/>
