@@ -42,13 +42,8 @@ public class GoogleLoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth = null;
-    private Button btn_logout;
     int firstLogin=0;
     FirebaseUser user;
-    DatabaseReference mDBReference = FirebaseDatabase.getInstance().getReference();
-    HashMap<String, Object> childUpdates = new HashMap<>();
-    Map<String, Object> userValue = null;
-    User userInfo = null;
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +68,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 switch(v.getId()){
                     case R.id.googleSignInBtn:
                         loading();
-                        loadingEnd();
                         signIn();
                 }
             }
@@ -88,7 +82,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User").child(currentUser.getUid()).child("flag");
             ref.setValue(0);
         }
-//        updateUI(currentUser);
     }
 
     public void signIn(){
@@ -100,7 +93,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if(requestCode == RC_SIGN_IN){
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try{
@@ -142,7 +134,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
     private void readUser(FirebaseUser user){
         loading();
-        loadingEnd();
         FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -185,6 +176,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
     public void loading() {
         //로딩
+        // 어디에 넣는 지가 중요하다.
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
@@ -193,15 +185,5 @@ public class GoogleLoginActivity extends AppCompatActivity {
                         progressDialog.show();
                     }
                 }, 0);
-    }
-
-    public void loadingEnd() {
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
     }
 }

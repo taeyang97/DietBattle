@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -72,7 +73,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, NavTvUserID, NavTvUserLV;
+    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board, nav_logout, nav_notice, nav_cs, NavTvUserID, NavTvUserLV;
     private AppBarConfiguration mAppBarConfiguration;
     ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit,
             NavTvUserIcon,home_iv_Weight_Iv;
@@ -119,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         main_nav_btn_kal = (TextView) headerView.findViewById(R.id.main_nav_btn_kal);
         main_nav_btn_board = (TextView) headerView.findViewById(R.id.main_nav_btn_board);
         nav_logout = (TextView) headerView.findViewById(R.id.nav_logout);
+        nav_notice = (TextView) headerView.findViewById(R.id.nav_notice);
+        nav_cs = (TextView) headerView.findViewById(R.id.nav_cs);
         NavTvUserLV = (TextView) headerView.findViewById(R.id.NavTvUserLV);
         NavTvUserID = (TextView) headerView.findViewById(R.id.NavTvUserID);
         NavTvUserIcon = (ImageView) headerView.findViewById(R.id.NavTvUserIcon);
@@ -132,43 +135,142 @@ public class MainActivity extends AppCompatActivity {
         readUserDB();
 
         //다이어트 대결 버튼 클릭
-        main_nav_btn_battle.setOnClickListener(new View.OnClickListener() {
+        main_nav_btn_battle.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent;
-                if(battle.equals("false")) {
-                    intent = new Intent(MainActivity.this, Matching.class);
-                }else{
-                    intent = new Intent(MainActivity.this, BattleRoom.class);
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        main_nav_btn_battle.setTextColor(Color.parseColor("#99ffffff"));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        main_nav_btn_battle.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        main_nav_btn_battle.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        Intent intent;
+                        if(battle.equals("false")) {
+                            intent = new Intent(MainActivity.this, Matching.class);
+                        }else{
+                            intent = new Intent(MainActivity.this, BattleRoom.class);
+                        }
+                        startActivity(intent);
+                        break;
                 }
-                startActivity(intent);
-
-            }
-        });
-        main_nav_btn_kal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("User/" + user.getUid());
-
-            }
-        });
-        main_nav_btn_board.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                return true;
             }
         });
 
-        // 로그아웃 버튼 클릭
-        nav_logout.setOnClickListener(new OnSingleClickListener() {
+        // 칼로리 계산기 버튼 클릭
+        main_nav_btn_kal.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onSingleClick(View v) {
-                nav_logout.setTextColor(Color.parseColor("#99ffffff"));
-                GoogleLoginActivity activity = new GoogleLoginActivity();
-                activity.signOut();
-                Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
-                startActivity(intent);
-                finish();
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        main_nav_btn_kal.setTextColor(Color.parseColor("#99ffffff"));
+                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        main_nav_btn_kal.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        main_nav_btn_kal.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        showToast("준비 중 입니다.");
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // 게시판 버튼 클릭
+        main_nav_btn_board.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        main_nav_btn_board.setTextColor(Color.parseColor("#99ffffff"));
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        main_nav_btn_board.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        main_nav_btn_board.setTextColor(Color.parseColor("#ffffff"));
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        showToast("준비 중 입니다.");
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // 로그아웃 텍스트 클릭
+        nav_logout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        nav_logout.setTextColor(Color.parseColor("#99ffffff"));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        nav_logout.setTextColor(Color.parseColor("#000000"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        nav_logout.setTextColor(Color.parseColor("#000000"));
+                        GoogleLoginActivity activity = new GoogleLoginActivity();
+                        activity.signOut();
+                        Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        //공지사항 텍스트 클릭
+        nav_notice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        nav_notice.setTextColor(Color.parseColor("#99ffffff"));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        nav_notice.setTextColor(Color.parseColor("#000000"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        nav_notice.setTextColor(Color.parseColor("#000000"));
+                        showToast("준비 중 입니다.");
+                        break;
+                }
+                return true;
+            }
+        });
+
+        //고객센터 텍스트 클릭
+        nav_cs.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        nav_cs.setTextColor(Color.parseColor("#99ffffff"));
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        nav_cs.setTextColor(Color.parseColor("#000000"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        nav_cs.setTextColor(Color.parseColor("#000000"));
+                        showToast("준비 중 입니다.");
+                        break;
+                }
+                return true;
             }
         });
 
@@ -638,7 +740,7 @@ public class MainActivity extends AppCompatActivity {
             outputStream.close();
             socket.close();
         }catch (Exception e){
-            showToast("종료 중에 에러 발생");
+            showToast("종료");
         }
         super.onDestroy();
     }

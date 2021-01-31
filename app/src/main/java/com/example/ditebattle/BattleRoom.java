@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -83,6 +84,7 @@ public class BattleRoom extends AppCompatActivity {
         setContentView(R.layout.activity_battle_room);
         ActionBar ac = getSupportActionBar();
         ac.hide();
+
         battleRoomDateTv = (TextView) findViewById(R.id.battleRoomDateTv);
         battleRoomPointTv = (TextView) findViewById(R.id.battleRoomPointTv);
         battleRoomIvMission = (ImageView) findViewById(R.id.battleRoomIvMission);
@@ -389,7 +391,6 @@ public class BattleRoom extends AppCompatActivity {
                 }
                 readBattle();
 
-                int random = (int) (Math.random() * 2);
                 long t = System.currentTimeMillis() / 1000;
                 long totalSec = Long.parseLong(myBattleDb.get(2)) - t;
                 int currentday = (int) (totalSec / 86400);
@@ -411,6 +412,7 @@ public class BattleRoom extends AppCompatActivity {
                         String[] missionArray = new String[5];
                         for (int i = 0; i < bodypartsStr.length; i++) {
                             // 운동 갯수 가져오기
+                            int random = (int) (Math.random() * 2);
                             ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
                                     .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
                             String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
@@ -433,6 +435,7 @@ public class BattleRoom extends AppCompatActivity {
                         String[] missionArray = new String[5];
                         for (int i = 0; i < bodypartsStr.length; i++) {
                             // 운동 갯수 가져오기
+                            int random = (int) (Math.random() * 2);
                             ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
                                     .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
                             String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
@@ -566,4 +569,11 @@ public class BattleRoom extends AppCompatActivity {
       return myBattleDb;
     };
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
+        startActivity(intent);
+    }
 }

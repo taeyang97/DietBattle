@@ -58,12 +58,11 @@ public class MatchingRoom extends AppCompatActivity {
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> battleValue = null;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String number, title, memo, masterUid, guestUid, grade, matchingMasterUID, matchingGuestUID, masterUID, guestUID;
+    String number, title, memo, masterUid, guestUid, grade, matchingMasterUID, matchingGuestUID, masterUID, guestUID, nickname;
     Boolean master, Login = true;
     Boolean flag = false, onBattle = false, guestOut=false, masterOut=false;
     Battle battle;
     ValueEventListener battleValueEventListener;
-    ArrayList<String> myUserDb = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,12 +113,25 @@ public class MatchingRoom extends AppCompatActivity {
         // 채팅 방 입장
         openChat(title);
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
+                nickname = get.nickname;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         // 채팅 글 보내기 버튼
         matchingRoomChatBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
 
-                RecyclerItemData chat = new RecyclerItemData(user.getEmail(),
+                RecyclerItemData chat = new RecyclerItemData(nickname,
                         matchingRoomChatEdt.getText().toString()); // RecyclerItemData를 이용하여 데이터를 묶는다.
                 databaseReference.child("chat").child(title).child("chating").push().setValue(chat); // 데이터 푸쉬
                 matchingRoomChatEdt.setText(""); //입력창 초기화
@@ -408,8 +420,9 @@ public class MatchingRoom extends AppCompatActivity {
                         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                         ref3.removeValue();
                         Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                         startActivity(intent);
-                        finish();
                     }
                 }
             }
