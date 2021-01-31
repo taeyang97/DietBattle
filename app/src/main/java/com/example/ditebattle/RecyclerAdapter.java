@@ -85,7 +85,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                         }
                         case MotionEvent.ACTION_UP:
                             cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
-                            int pos = getAdapterPosition() ;
+                            int pos = getAdapterPosition();
                             if (pos != RecyclerView.NO_POSITION) {
                                 // 데이터 리스트로부터 아이템 데이터 참조.
                                 String number = mData.get(pos).number;

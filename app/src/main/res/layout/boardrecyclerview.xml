@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FAECC5">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/boardCardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true">
+        <LinearLayout
+            android:id="@+id/boardlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edgeborderbtn3"
+            android:orientation="horizontal"
+            android:padding="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="3"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/boardDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2020.02.11"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/boardNickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="닉네임"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/boardTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="저랑 대결하실 분 구해요"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

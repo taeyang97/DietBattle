@@ -30,6 +30,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.ditebattle.board.Board;
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.User;
 import com.google.android.material.navigation.NavigationView;
@@ -54,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board,
             nav_logout, nav_notice, nav_cs, NavTvUserID, NavTvUserLV,
-            tvNickname, tvLevel, tvHeight, tvWeight, tvBmi;
+            tvNickname, tvLevel, tvHeight, tvWeight, tvBmi,
+            main_Point_Tv,main_Lv_Tv,main_Exp_Tv,
+            home_iv_Weight_Tv, home_mission_dialog_1,home_mission_dialog_2,
+            home_mission_dialog_3,home_mission_dialog_4,home_mission_dialog_5;
     private AppBarConfiguration mAppBarConfiguration;
     ImageView mainHomeIvCheck, mainHomeIvMission, mainHomeIvMyInfo, home_iv_Mission_Exit,
             NavTvUserIcon,home_iv_Weight_Iv, ivExit;
@@ -63,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
-    String battle;
-    TextView main_Point_Tv,main_Lv_Tv,main_Exp_Tv, home_iv_Weight_Tv, home_mission_dialog_1,home_mission_dialog_2,
-            home_mission_dialog_3,home_mission_dialog_4,home_mission_dialog_5;
     BluetoothAdapter bluetoothAdapter;
     static final int REQUEST_ENABLE_BT=10;
     int pairedDeviceCount=0; // 연결된 장치 갯수
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     OutputStream outputStream=null;
     InputStream inputStream=null;
     Thread workerThread=null;
-    String strDelimiter="\n";
+    String battle, strDelimiter="\n";
     char charDelimiter='\n';
     byte[] readBuffer;
     int readBufferPosition, max=0;
@@ -185,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         main_nav_btn_board.setTextColor(Color.parseColor("#ffffff"));
                         main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
-                        showToast("준비 중 입니다.");
+                        Intent intent = new Intent(MainActivity.this, Board.class);
+                        startActivity(intent);
                         break;
                 }
                 return true;

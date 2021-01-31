@@ -43,6 +43,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".MatchingList"
             android:screenOrientation="portrait"/>
+        <activity android:name=".board.Board"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

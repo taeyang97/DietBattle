@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="코인 100"
+                    android:text="코인 100\n\n체력10 +"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:layout_marginHorizontal="20dp"/>
@@ -75,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="코인 200"
+                    android:text="코인 200\n\n체력30 +"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:layout_marginHorizontal="20dp"/>
@@ -101,7 +101,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="코인 200"
+                    android:text="코인 300\n\n체력60 +"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:layout_marginHorizontal="20dp"/>
