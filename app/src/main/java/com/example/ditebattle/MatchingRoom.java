@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -110,7 +111,6 @@ public class MatchingRoom extends AppCompatActivity {
             guestUid = user.getUid();
             matchingRoomStartBtn.setText("준비대기");
         }
-
         // 채팅 방 입장
         openChat(title);
 
@@ -118,6 +118,7 @@ public class MatchingRoom extends AppCompatActivity {
         matchingRoomChatBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
+
                 RecyclerItemData chat = new RecyclerItemData(user.getEmail(),
                         matchingRoomChatEdt.getText().toString()); // RecyclerItemData를 이용하여 데이터를 묶는다.
                 databaseReference.child("chat").child(title).child("chating").push().setValue(chat); // 데이터 푸쉬
@@ -269,8 +270,17 @@ public class MatchingRoom extends AppCompatActivity {
 
     private void openChat(String chatName) {
         // 리스트 어댑터 생성 및 세팅
-        final ArrayAdapter<String> adapter
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1);
+        ArrayAdapter<String> adapter
+                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent)
+            {
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+                tv.setTextColor(Color.BLACK);
+                return view;
+            }
+        };
         matchingRoomChatList.setAdapter(adapter);
 
         // 데이터 받아오기 및 어댑터 데이터 추가 및 삭제 등..리스너 관리

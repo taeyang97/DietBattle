@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,10 +49,12 @@ public class GoogleLoginActivity extends AppCompatActivity {
     HashMap<String, Object> childUpdates = new HashMap<>();
     Map<String, Object> userValue = null;
     User userInfo = null;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google_login);
+
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -62,17 +65,19 @@ public class GoogleLoginActivity extends AppCompatActivity {
         googleSignInBtn = findViewById(R.id.googleSignInBtn);
         googleSignInBtn.setSize(SignInButton.SIZE_STANDARD);
         FirebaseUser onuser = FirebaseAuth.getInstance().getCurrentUser();
+
         readUser(onuser);
         googleSignInBtn.setOnClickListener(new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
                 switch(v.getId()){
                     case R.id.googleSignInBtn:
+                        loading();
+                        loadingEnd();
                         signIn();
                 }
             }
         });
-
     }
 
     @Override
@@ -131,53 +136,40 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 });
     }
 
-
-    private void updateUI(FirebaseUser account){
-        if (account !=null){
-            if(firstLogin==1){
-                jumpMain();
-            }
-            if(firstLogin==2){
-                jumpJoin();
-            }
-        } else {
-        }
-    }
-
     public void signOut(){
         FirebaseAuth.getInstance().signOut();
     }
 
     private void readUser(FirebaseUser user){
-            FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (user != null) {
-                        Log.w("MainActivity", "ValueEventListener : " + dataSnapshot.getValue());
-                        if (dataSnapshot.getValue().toString().contains(user.getEmail())) {
-                            if(firstLogin==0) {
-                                jumpMain();
-                                firstLogin = 1;
-                            }
-                        } else {
-                            if(firstLogin==0) {
-                                jumpJoin();
-                                firstLogin = 2;
-                            }
+        loading();
+        loadingEnd();
+        FirebaseDatabase.getInstance().getReference("User").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (user != null) {
+                    Log.w("MainActivity", "ValueEventListener : " + dataSnapshot.getValue());
+                    if (dataSnapshot.getValue().toString().contains(user.getEmail())) {
+                        if(firstLogin==0) {
+                            jumpMain();
+                            firstLogin = 1;
+                        }
+                    } else {
+                        if(firstLogin==0) {
+                            jumpJoin();
+                            firstLogin = 2;
                         }
                     }
                 }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
-
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
-
 
     public void jumpJoin(){
 
-        Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(GoogleLoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();
@@ -185,9 +177,31 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
     public void jumpMain(){
 
-        Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(GoogleLoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void loading() {
+        //로딩
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        progressDialog = new ProgressDialog(GoogleLoginActivity.this);
+                        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        progressDialog.show();
+                    }
+                }, 0);
+    }
+
+    public void loadingEnd() {
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
     }
 }
