@@ -133,6 +133,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
     }
 
     private void readUser(FirebaseUser user){
+        loading();
         FirebaseDatabase.getInstance().getReference("User").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -79,7 +79,6 @@ public class BattleRoom extends AppCompatActivity {
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
     InputMethodManager imm;
-    Battle get2;
     ChildEventListener maddChildEventListener;
     DatabaseReference refbattle;
 
@@ -154,26 +153,27 @@ public class BattleRoom extends AppCompatActivity {
                                 missiondialog.dismiss();
                             }
                         });
-                        if(get2.gmission1.equals("미션클리어")){
-                            ivMissionCheckBox[0].setImageResource(R.drawable.checkbox2);
-                            ivMissionCheckBox[0].setEnabled(false);
+
+
+                        if(myBattleDb.get(1).equals(user.getUid())) {
+                            for (int i = 0; i < 5; i++) {
+                                int index = i + 13;
+                                if (myBattleDb.get(index).equals("미션클리어")) {
+                                    ivMissionCheckBox[i].setImageResource(R.drawable.checkbox2);
+                                    ivMissionCheckBox[i].setEnabled(false);
+                                }
+                            }
                         }
-                        if(get2.gmission2.equals("미션클리어")){
-                            ivMissionCheckBox[1].setImageResource(R.drawable.checkbox2);
-                            ivMissionCheckBox[0].setEnabled(false);
+                        if(!myBattleDb.get(1).equals(user.getUid())) {
+                            for (int i = 0; i < 5; i++) {
+                                int index = i + 8;
+                                if (myBattleDb.get(index).equals("미션클리어")) {
+                                    ivMissionCheckBox[i].setImageResource(R.drawable.checkbox2);
+                                    ivMissionCheckBox[i].setEnabled(false);
+                                }
+                            }
                         }
-                        if(get2.gmission3.equals("미션클리어")){
-                            ivMissionCheckBox[2].setImageResource(R.drawable.checkbox2);
-                            ivMissionCheckBox[0].setEnabled(false);
-                        }
-                        if(get2.gmission4.equals("미션클리어")){
-                            ivMissionCheckBox[3].setImageResource(R.drawable.checkbox2);
-                            ivMissionCheckBox[0].setEnabled(false);
-                        }
-                        if(get2.gmission5.equals("미션클리어")){
-                            ivMissionCheckBox[4].setImageResource(R.drawable.checkbox2);
-                            ivMissionCheckBox[0].setEnabled(false);
-                        }
+
                         for(int i=0; i<ivMissionCheckBox.length; i++){
                             int index = i;
                             ivMissionCheckBox[index].setOnClickListener(new View.OnClickListener() {
@@ -194,16 +194,19 @@ public class BattleRoom extends AppCompatActivity {
                                                     ref.child("masterHP").setValue(Integer.parseInt(myBattleDb.get(3)) - 70);
                                                     ref.child(curMission).setValue("미션클리어");
                                                     tvMission[index].setText("미션클리어");
+                                                    ivMissionCheckBox[index].setImageResource(R.drawable.checkbox2);
+                                                    ivMissionCheckBox[index].setEnabled(false);
                                                 }else{
                                                     Toast.makeText(getApplicationContext(),"이미 완료한 미션입니다.",Toast.LENGTH_SHORT).show();
                                                 }
                                             }else{
-                                                int select = index+8;
                                                 if(!tvMission[index].getText().toString().equals("미션클리어")) {
                                                     curMission = "mmission" + (index+1);
                                                     ref.child("guestHP").setValue(Integer.parseInt(myBattleDb.get(4)) - 70);
                                                     ref.child(curMission).setValue("미션클리어");
                                                     tvMission[index].setText("미션클리어");
+                                                    ivMissionCheckBox[index].setImageResource(R.drawable.checkbox2);
+                                                    ivMissionCheckBox[index].setEnabled(false);
                                                 }else{
                                                     Toast.makeText(getApplicationContext(),"이미 완료한 미션입니다.",Toast.LENGTH_SHORT).show();
                                                 }
@@ -427,7 +430,7 @@ public class BattleRoom extends AppCompatActivity {
                 }
                 readExit();
 
-                get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
                 String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
                                     ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5, get2.win , get2.masterExit, get2.guestExit};
                 for (int i = 0; i < battle.length; i++) {
@@ -461,8 +464,12 @@ public class BattleRoom extends AppCompatActivity {
                 // 신체 부위 가져오기
                 String[] bodypartsStr = {"chest", "core", "fullbody", "legs"};
                 // 운동 종목 가져오기
-                String[][] Exercise = {{"declinepush", "tripush"}, {"regraise", "twistplank"},
+                String[][] ExerciseEx= {{"declinepush", "tripush"}, {"regraise", "twistplank"},
                         {"burpee", "mountainclimer"}, {"lunge", "squat"}};
+                String[][] ExerciseHard = {{"inclinepush", "pushup"}, {"palnk", "sidebend"},
+                        {"burpee", "jumpingjack"}, {"lunge", "squat"}};
+                String[][] ExerciseNormal = {{"kneepushup", "pushup"}, {"superman", "toetouch"},
+                        {"burpee", "mountainclimer"}, {"squat", "widesquat"}};
 
 
                 // 일곱 번째 날
@@ -475,11 +482,25 @@ public class BattleRoom extends AppCompatActivity {
                         for (int i = 0; i < bodypartsStr.length; i++) {
                             // 운동 갯수 가져오기
                             int random = (int) (Math.random() * 2);
-                            ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
-                                    .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
-                            String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
-                                    String.valueOf(routine.total), routine.name};
-                            missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            if(myBattleDb.get(5).equals("extream")) {
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseEx[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }else if(myBattleDb.get(5).equals("hard")){
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseHard[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }else{
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseNormal[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }
                         }
                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
                         ref2.child("gmission1").setValue(missionArray[0]);
@@ -498,11 +519,25 @@ public class BattleRoom extends AppCompatActivity {
                         for (int i = 0; i < bodypartsStr.length; i++) {
                             // 운동 갯수 가져오기
                             int random = (int) (Math.random() * 2);
-                            ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
-                                    .child(Exercise[i][random]).getValue(ExerciseRoutine.class);
-                            String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
-                                    String.valueOf(routine.total), routine.name};
-                            missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            if(myBattleDb.get(5).equals("extream")) {
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseEx[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }else if(myBattleDb.get(5).equals("hard")){
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseHard[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }else{
+                                ExerciseRoutine routine = snapshot.child("misson").child(myBattleDb.get(5)).child(bodypartsStr[i])
+                                        .child(ExerciseNormal[i][random]).getValue(ExerciseRoutine.class);
+                                String[] ExerciseRoutineInt = {String.valueOf(routine.reps), String.valueOf(routine.set),
+                                        String.valueOf(routine.total), routine.name};
+                                missionArray[i] = ExerciseRoutineInt[3] + " " + ExerciseRoutineInt[0] + "개 " + ExerciseRoutineInt[1] + "셋트 하기";
+                            }
                         }
                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
                         ref2.child("mmission1").setValue(missionArray[0]);
@@ -819,9 +854,6 @@ public class BattleRoom extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
     }
     @Override
     public void onBackPressed() {
