@@ -9,17 +9,16 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-public class SplashActivity extends AppCompatActivity {
+public class
+SplashActivity extends AppCompatActivity {
     ImageView splash_logo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash2);
         splash_logo=(ImageView)findViewById(R.id.splash_logo3);
-
         startLoading();
     }
-
     private void startLoading() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

@@ -89,7 +89,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "signIn", Toast.LENGTH_SHORT).show();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -101,7 +100,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "캐치되버림"+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            //handleSignInResult(task);
         }
     }
     private void firebaseAuthWithGoogle(String idToken) {

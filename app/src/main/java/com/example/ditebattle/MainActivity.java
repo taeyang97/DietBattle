@@ -244,7 +244,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
         //고객센터 텍스트 클릭
         nav_cs.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -264,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
         // 미션 버튼 클릭
         mainHomeIvMission.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -458,18 +456,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readUserDB() {
-        String sort_column_name = "age";
         Query sortbyUid = FirebaseDatabase.getInstance().getReference();
         sortbyUid.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-//                    String key = postSnapshot.getKey();
-//                    User get = postSnapshot.getValue(User.class);
-//                    String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender};
-//                    NavTvUserID.setText(info[1]);
-//                }
-                String key = snapshot.getKey();
                 User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                 String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender,get.battle};
                 NavTvUserID.setText(info[1]);

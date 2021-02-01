@@ -418,8 +418,6 @@ public class BattleRoom extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
                 if (firstLogin) {
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
@@ -470,7 +468,6 @@ public class BattleRoom extends AppCompatActivity {
                         {"burpee", "jumpingjack"}, {"lunge", "squat"}};
                 String[][] ExerciseNormal = {{"kneepushup", "pushup"}, {"superman", "toetouch"},
                         {"burpee", "mountainclimer"}, {"squat", "widesquat"}};
-
 
                 // 일곱 번째 날
                 if(myBattleDb.get(1).equals(user.getUid())){
@@ -566,7 +563,6 @@ public class BattleRoom extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
