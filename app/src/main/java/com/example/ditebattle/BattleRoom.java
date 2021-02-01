@@ -79,6 +79,8 @@ public class BattleRoom extends AppCompatActivity {
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
     InputMethodManager imm;
+    ChildEventListener maddChildEventListener;
+    DatabaseReference refbattle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,11 +373,15 @@ public class BattleRoom extends AppCompatActivity {
         if(!gameEnd) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
             if (myBattleDb.get(1).equals(user.getUid())) {
+                Log.e("onstopguest",myBattleDb.get(19));
                 ref.child("guestExit").setValue("true");
             } else {
+                Log.e("onstopmaster",myBattleDb.get(20));
                 ref.child("masterExit").setValue("true");
             }
         }
+        refbattle.removeEventListener(maddChildEventListener);
+
     }
 
     @Override
@@ -389,6 +395,7 @@ public class BattleRoom extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+
                 if (firstLogin) {
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
@@ -397,6 +404,7 @@ public class BattleRoom extends AppCompatActivity {
                         myUserDb.add(user[i]);
                     }
                 }
+                readExit();
 
                 Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
                 String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
@@ -404,11 +412,24 @@ public class BattleRoom extends AppCompatActivity {
                 for (int i = 0; i < battle.length; i++) {
                     myBattleDb.add(battle[i]);
                 }
+                DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                if (myBattleDb.get(1).equals(user.getUid())) {
+                    ref3.child("guestExit").setValue("false");
+                } else if(!myBattleDb.get(1).equals(user.getUid())) {
+                    ref3.child("masterExit").setValue("false");
+                }
+                Battle get3 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                String[] battle2 = {get3.master, get3.guest, String.valueOf(get3.finish_time), String.valueOf(get3.masterHP), String.valueOf(get3.guestHP),String.valueOf(get3.grade),String.valueOf(get3.masterDay),String.valueOf(get3.guestDay)
+                        ,get3.mmission1, get3.mmission2, get3.mmission3, get3.mmission4, get3.mmission5 ,get3.gmission1 ,get3.gmission2 ,get3.gmission3 ,get3.gmission4 ,get3.gmission5, get3.win , get3.masterExit, get3.guestExit};
+                for (int i = 0; i < battle2.length; i++) {
+                    myBattleDb.set(i,battle2[i]);
+                }
                 if(firstLogin) {
                     fragmentTransaction.replace(R.id.battleRoomFragContainer2, battleFragment, "myFrag").commit();
                     firstLogin = false;
                 }
                 readBattle();
+
 
                 long t = System.currentTimeMillis() / 1000;
                 long totalSec = Long.parseLong(myBattleDb.get(2)) - t;
@@ -421,6 +442,7 @@ public class BattleRoom extends AppCompatActivity {
                 // 운동 종목 가져오기
                 String[][] Exercise = {{"declinepush", "tripush"}, {"regraise", "twistplank"},
                         {"burpee", "mountainclimer"}, {"lunge", "squat"}};
+
 
                 // 일곱 번째 날
                 if(myBattleDb.get(1).equals(user.getUid())){
@@ -469,13 +491,6 @@ public class BattleRoom extends AppCompatActivity {
                         ref2.child("mmission5").setValue("7시기상");
                     }
                 }
-                DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
-                if (myBattleDb.get(1).equals(user.getUid())) {
-                    ref3.child("guestExit").setValue("false");
-                } else{
-                    ref3.child("masterExit").setValue("false");
-                }
-
                 if(snapshot.child("Battle").child(myUserDb.get(10)).child("win").getValue().equals("master")){
                     if(myBattleDb.get(1).equals(user.getUid())){
                         //진 다이얼로그
@@ -501,20 +516,14 @@ public class BattleRoom extends AppCompatActivity {
     }
 
     void readBattle(){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
-        ref.addChildEventListener(new ChildEventListener() {
+        refbattle =  FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+        maddChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                if(snapshot.getKey().equals("masterExit")){
-                    myBattleDb.set(19,snapshot.getValue(String.class));
-                }
-                if(snapshot.getKey().equals("guestExit")){
-                    myBattleDb.set(20, snapshot.getValue(String.class));
-                }
                 if(snapshot.getKey().equals("win")){
                     if(snapshot.getValue().equals("master")){
                         if(myBattleDb.get(1).equals(user.getUid())){
@@ -587,9 +596,47 @@ public class BattleRoom extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+        refbattle.addChildEventListener(maddChildEventListener);
     }
 
+    void readExit(){
+
+        refbattle =  FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+        refbattle.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if(snapshot.getKey().equals("masterExit")){
+                    String result = snapshot.getValue(String.class);
+                    Log.e("testmaster",result);
+                    myBattleDb.set(19,result);
+                } else if(snapshot.getKey().equals("guestExit")){
+                    String result = snapshot.getValue(String.class);
+                    Log.e("testguest",result);
+                    myBattleDb.set(20, result);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
     private void addMessage(DataSnapshot dataSnapshot, ArrayAdapter<String> adapter) {
         Chating chat = dataSnapshot.getValue(Chating.class);
         adapter.add(chat.getUserName() + " : " + chat.getMessage());
