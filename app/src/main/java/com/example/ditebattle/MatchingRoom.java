@@ -243,7 +243,10 @@ public class MatchingRoom extends AppCompatActivity {
                             "day",
                             "day",
                             "day",
-                            "day"
+                            "day",
+                            "false",
+                            "false",
+                            "false"
                     );
                     battleValue = battle.toMap();
                     childUpdates.put("/Battle/" + title, battleValue);
@@ -355,7 +358,6 @@ public class MatchingRoom extends AppCompatActivity {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 if(onBattle){
-                    Toast.makeText(getApplicationContext(), "배틀이 시작됩니다", Toast.LENGTH_SHORT).show();
                 }else {
                     if (masterOut) {
                         if (!master) {
@@ -420,6 +422,7 @@ public class MatchingRoom extends AppCompatActivity {
                         DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("chat").child(title);
                         ref3.removeValue();
                         Intent intent = new Intent(MatchingRoom.this, BattleRoom.class);
+                        finish();
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                         startActivity(intent);

@@ -34,8 +34,11 @@ import com.example.ditebattle.board.Board;
 import com.example.ditebattle.database.Battle;
 import com.example.ditebattle.database.User;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,11 +46,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         main_Exp_Tv = (TextView)findViewById(R.id.main_Exp_Tv);
 
         readUserDB();
-
+        changeUser();
         //다이어트 대결 버튼 클릭
         main_nav_btn_battle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -135,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         main_nav_btn_battle.setTextColor(Color.parseColor("#ffffff"));
                         main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
                         Intent intent;
-                        if(battle.equals("false")) {
+                        if(myUserDb.get(9).equals("false")) {
                             intent = new Intent(MainActivity.this, Matching.class);
                         }else{
                             intent = new Intent(MainActivity.this, BattleRoom.class);
@@ -271,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                         mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
                         break;
                     case MotionEvent.ACTION_UP:
-                        if (battle.equals("false")) {
+                        if (myUserDb.get(9).equals("false")) {
                             Toast.makeText(getApplicationContext(),"배틀을 진행중이지않습니다",Toast.LENGTH_SHORT).show();
                             mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
                         } else {
@@ -365,6 +371,7 @@ public class MainActivity extends AppCompatActivity {
                         home_iv_Weight_Iv.setOnClickListener(new OnSingleClickListener() {
                             @Override
                             public void onSingleClick(View v) {
+                                home_iv_Weight_Iv.setImageResource(R.drawable.exit2);
                                 weightDialog.dismiss();
                             }
                         });
@@ -467,17 +474,16 @@ public class MainActivity extends AppCompatActivity {
                 String[] info = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi), String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender,get.battle};
                 NavTvUserID.setText(info[1]);
                 NavTvUserLV.setText("Lv : " + Integer.parseInt(info[6]) / 500);
-                battle = get.battle;
                 main_Lv_Tv.setText("LV " +(Integer.parseInt(info[6]) / 500));
                 main_Exp_Tv.setText((Integer.parseInt(info[6]) % 500)+"/500");
                 main_Point_Tv.setText(info[7]);
                 for(int i=0;i<info.length;i++){
                     myUserDb.add(info[i]);
                 }
-                if(!battle.equals("false")){
-                    Battle get2 = snapshot.child("Battle").child(battle).getValue(Battle.class);
+                if(!myUserDb.get(9).equals("false")){
+                    Battle get2 = snapshot.child("Battle").child(myUserDb.get(9)).getValue(Battle.class);
                     String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
-                            ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5 };
+                            ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5, get2.win , get2.masterExit, get2.guestExit};
                     for (int i = 0; i < battle.length; i++) {
                         myBattleDb.add(battle[i]);
                     }
@@ -491,20 +497,40 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    void readBattleDb(){
-//        Query sortbyUid = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
-//        sortbyUid.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        })
-//    }
+    void changeUser(){
+        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+        ref1.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    if(snapshot.getKey().equals("battle")){
+                        myUserDb.set(9,snapshot.getValue(String.class));
+                    }
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
     void checkBluetooth() {
         bluetoothAdapter= BluetoothAdapter.getDefaultAdapter(); // 어댑터를 반환받는다.
         if(bluetoothAdapter==null){
@@ -640,7 +666,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         // 앱이 종료되기 전의 생명주기 메소드
         try{
-            //블루투스를 정상적으로 종료 시
             workerThread.interrupt();
             inputStream.close();
             outputStream.close();

@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -66,13 +67,13 @@ public class BattleRoom extends AppCompatActivity {
     BattleInfoFragment battleInfoFragment;
     FragmentManager fragmentManager = getSupportFragmentManager();
     FragmentTransaction fragmentTransaction;
-    Dialog missiondialog, pointdialog, chatdialog;
+    Dialog missiondialog, pointdialog, chatdialog, winDialog, loseDialog;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference();
     ArrayList<String> myUserDb = new ArrayList<String>();
     ArrayList<String> myBattleDb = new ArrayList<String>();
-    Boolean firstLogin = true;
+    Boolean firstLogin = true , gameEnd=false;
     long now = System.currentTimeMillis();
     Date mDate = new Date(now);
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -167,7 +168,7 @@ public class BattleRoom extends AppCompatActivity {
                                                 int select = index+13;
                                                 if(!tvMission[index].getText().toString().equals("미션클리어")) {
                                                     curMission = "gmission" + (index+1);
-                                                    ref.child("masterHP").setValue(Integer.parseInt(myBattleDb.get(3)) - 10);
+                                                    ref.child("masterHP").setValue(Integer.parseInt(myBattleDb.get(3)) - 70);
                                                     ref.child(curMission).setValue("미션클리어");
                                                     tvMission[index].setText("미션클리어");
                                                 }else{
@@ -177,7 +178,7 @@ public class BattleRoom extends AppCompatActivity {
                                                 int select = index+8;
                                                 if(!tvMission[index].getText().toString().equals("미션클리어")) {
                                                     curMission = "mmission" + (index+1);
-                                                    ref.child("guestHP").setValue(Integer.parseInt(myBattleDb.get(4)) - 10);
+                                                    ref.child("guestHP").setValue(Integer.parseInt(myBattleDb.get(4)) - 70);
                                                     ref.child(curMission).setValue("미션클리어");
                                                     tvMission[index].setText("미션클리어");
                                                 }else{
@@ -367,23 +368,39 @@ public class BattleRoom extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        if(!gameEnd) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+            if (myBattleDb.get(1).equals(user.getUid())) {
+                ref.child("guestExit").setValue("true");
+            } else {
+                ref.child("masterExit").setValue("true");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 
     void firstReadDB() {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if (firstLogin) {
                     User get = snapshot.child("User").child(user.getUid()).getValue(User.class);
                     String[] user = {get.email, get.nickname, String.valueOf(get.age), String.valueOf(get.weight), String.valueOf(get.height), String.valueOf(get.bmi),
-                            String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle, };
+                            String.valueOf(get.total_point), String.valueOf(get.current_point), get.gender, String.valueOf(get.flag), get.battle };
                     for (int i=0; i < user.length; i++) {
                         myUserDb.add(user[i]);
                     }
                 }
+
                 Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
                 String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
-                                    ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5 };
+                                    ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5, get2.win , get2.masterExit, get2.guestExit};
                 for (int i = 0; i < battle.length; i++) {
                     myBattleDb.add(battle[i]);
                 }
@@ -452,6 +469,28 @@ public class BattleRoom extends AppCompatActivity {
                         ref2.child("mmission5").setValue("7시기상");
                     }
                 }
+                DatabaseReference ref3 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                if (myBattleDb.get(1).equals(user.getUid())) {
+                    ref3.child("guestExit").setValue("false");
+                } else{
+                    ref3.child("masterExit").setValue("false");
+                }
+
+                if(snapshot.child("Battle").child(myUserDb.get(10)).child("win").getValue().equals("master")){
+                    if(myBattleDb.get(1).equals(user.getUid())){
+                        //진 다이얼로그
+                        poploseDial("guest");
+                    }else{
+                    }
+                }else if(snapshot.child("Battle").child(myUserDb.get(10)).child("win").getValue().equals("guest")){
+                    if(myBattleDb.get(1).equals(user.getUid())){
+                        //이긴 다이얼로그
+                    }else{
+                        //진 다이얼로그
+                        poploseDial("master");
+                    }
+                }
+
             }
 
             @Override
@@ -469,15 +508,47 @@ public class BattleRoom extends AppCompatActivity {
             }
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                if(snapshot.getKey().equals("masterExit")){
+                    myBattleDb.set(19,snapshot.getValue(String.class));
+                }
+                if(snapshot.getKey().equals("guestExit")){
+                    myBattleDb.set(20, snapshot.getValue(String.class));
+                }
+                if(snapshot.getKey().equals("win")){
+                    if(snapshot.getValue().equals("master")){
+                        if(myBattleDb.get(1).equals(user.getUid())){
+                            if(myBattleDb.get(20).equals("false")){
+                                poploseDial("guest");
+                            }
+                        }else{
+                            popWinDial("master");
+                        }
+                    }else{
+                        if(myBattleDb.get(1).equals(user.getUid())){
+                            //이긴 다이얼로그
+                            popWinDial("guest");
+                        }else{
+                            if(myBattleDb.get(19).equals("false")) {
+                                poploseDial("master");
+                            }
+                        }
+                    }
+                }
+
                 if(snapshot.getKey().equals("guestHP")){
-                    myBattleDb.set(4,String.valueOf(Integer.parseInt(myBattleDb.get(4))-10));
+                    myBattleDb.set(4,String.valueOf(Integer.parseInt(myBattleDb.get(4))-70));
                     if(Integer.parseInt(myBattleDb.get(4))<=0){
+                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("win");
+                        ref2.setValue("master");
                         //마스터 승리
                     }
                 }else if(snapshot.getKey().equals("masterHP")){
-                    myBattleDb.set(3,String.valueOf(Integer.parseInt(myBattleDb.get(3))-10));
+                    myBattleDb.set(3,String.valueOf(Integer.parseInt(myBattleDb.get(3))-70));
 //                    myBattleDb.set(3,String.valueOf(snapshot.getValue()));
                     if(Integer.parseInt(myBattleDb.get(3))<=0){
+                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)).child("win");
+                        ref2.setValue("guest");
                         // 게스트 승리
                     }
                 }else if(snapshot.getKey().equals("mmission1")){
@@ -570,7 +641,120 @@ public class BattleRoom extends AppCompatActivity {
    ArrayList<String> deliverBattle(){
       return myBattleDb;
     };
+    void popWinDial(String win){
+        gameEnd=true;
+        winDialog = new Dialog(BattleRoom.this);
+        winDialog.setContentView(R.layout.windialog);
+        TextView win_Dial_Get_Exp = (TextView)winDialog.findViewById(R.id.win_Dial_Get_Exp);
+        TextView win_Dial_Get_Point = (TextView)winDialog.findViewById(R.id.win_Dial_Get_Point);
 
+        ImageView win_Dial_Exit = (ImageView) winDialog.findViewById(R.id.win_Dial_Exit);
+        winDialog.show();
+        winDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        winDialog.setCancelable(false);
+        win_Dial_Exit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        ivMissionExit.setImageResource(R.drawable.exit2);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ivMissionExit.setImageResource(R.drawable.exit3);
+                        missiondialog.dismiss();
+                        if(win.equals("master")){
+                            if(!myBattleDb.get(1).equals(user.getUid())){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+                                ref.child("battle").setValue("false");
+                                ref.child("total_point").setValue((Integer.parseInt(myUserDb.get(6)))+500);
+                                ref.child("current_point").setValue((Integer.parseInt(myUserDb.get(7)))+500);
+                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
+                                startActivity(intent);
+                                break;
+                            }
+                        }else {
+                            if (myBattleDb.get(1).equals(user.getUid())) {
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+                                ref.child("battle").setValue("false");
+                                ref.child("total_point").setValue((Integer.parseInt(myUserDb.get(6))) + 500);
+                                ref.child("current_point").setValue((Integer.parseInt(myUserDb.get(7))) + 500);
+                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
+                                startActivity(intent);
+                                break;
+                            }
+                        }
+                }
+                return true;
+            }
+        });
+
+    }
+
+    void poploseDial(String win){
+        gameEnd=true;
+        loseDialog = new Dialog(BattleRoom.this);
+        loseDialog.setContentView(R.layout.losedialog);
+        TextView lose_Dial_Get_Exp = (TextView)loseDialog.findViewById(R.id.lose_Dial_Get_Exp);
+        TextView lose_Dial_Get_Point = (TextView)loseDialog.findViewById(R.id.lose_Dial_Get_Point);
+        ImageView lose_Dial_Exit = (ImageView) loseDialog.findViewById(R.id.lose_Dial_Exit);
+        loseDialog.show();
+        loseDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loseDialog.setCancelable(false);
+        lose_Dial_Exit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lose_Dial_Exit.setImageResource(R.drawable.exit2);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        lose_Dial_Exit.setImageResource(R.drawable.exit3);
+                        loseDialog.dismiss();
+                        if(win.equals("master")){
+                            if(myBattleDb.get(1).equals(user.getUid())){
+                            }else{
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+                                ref.child("battle").setValue("false");
+                                ref.child("total_point").setValue(Integer.parseInt(myUserDb.get(6))+100);
+                                ref.child("current_point").setValue(Integer.parseInt(myUserDb.get(7))+100);
+                                DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                                ref2.removeValue();
+                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
+                                startActivity(intent);
+                                break;
+                            }
+                        }else{
+                            if(myBattleDb.get(1).equals(user.getUid())){
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("User").child(user.getUid());
+                                ref.child("battle").setValue("false");
+                                ref.child("total_point").setValue(Integer.parseInt(myUserDb.get(6))+100);
+                                ref.child("current_point").setValue(Integer.parseInt(myUserDb.get(7))+100);
+                                DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10));
+                                ref2.removeValue();
+                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
+                                startActivity(intent);
+                                break;
+                            }else{
+
+                            }
+                        }
+
+                }
+                return true;
+            }
+        });
+
+
+
+    }
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(BattleRoom.this, MainActivity.class);

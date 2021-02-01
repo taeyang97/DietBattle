@@ -25,12 +25,15 @@ public class Battle {
     public String gmission4;
     public String gmission5;
 
+    public String win;
+    public String masterExit;
+    public String guestExit;
     Battle(){
     }
 
     public Battle(String master, String guest, long finish_time, Integer masterHP, Integer guestHP, String grade, Integer masterDay, Integer guestDay
                    , String mmission1 , String mmission2 , String mmission3 , String mmission4 , String mmission5
-            , String gmission1 , String gmission2 , String gmission3 , String gmission4 , String gmission5) {
+            , String gmission1 , String gmission2 , String gmission3 , String gmission4 , String gmission5 , String win , String masterExit , String guestExit) {
         this.master = master;
         this.guest = guest;
         this.finish_time = finish_time;
@@ -51,6 +54,10 @@ public class Battle {
         this.gmission3 = gmission3;
         this.gmission4 = gmission4;
         this.gmission5 = gmission5;
+
+        this.win = win;
+        this.masterExit = masterExit;
+        this.guestExit = guestExit;
     }
 
     public Map<String, Object> toMap(){
@@ -75,6 +82,10 @@ public class Battle {
         result.put("gmission3",gmission3);
         result.put("gmission4",gmission4);
         result.put("gmission5",gmission5);
+
+        result.put("win",win);
+        result.put("masterExit",masterExit);
+        result.put("guestExit",guestExit);
         return result;
     }
 }
