@@ -40,16 +40,6 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth:19.2.0'
 
-    //네이버 로그인
-    implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.6'   // import from jcenter
-
-    // naveridlogin dependencies
-    def android_x_version = "1.0.0"
-    implementation "androidx.appcompat:appcompat:$android_x_version"
-    implementation "androidx.legacy:legacy-support-core-utils:$android_x_version"
-    implementation "androidx.browser:browser:$android_x_version"
-    implementation "androidx.legacy:legacy-support-v4:$android_x_version"
-
     //firebase BoM
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
     //firebase auttentication library
@@ -60,12 +50,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation "androidx.percentlayout:percentlayout:1.0.0"
@@ -73,6 +57,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.2'
     implementation 'androidx.navigation:navigation-ui:2.3.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-
-
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

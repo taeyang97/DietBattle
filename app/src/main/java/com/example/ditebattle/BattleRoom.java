@@ -79,6 +79,7 @@ public class BattleRoom extends AppCompatActivity {
     SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
     String getTime = simpleDate.format(mDate);
     InputMethodManager imm;
+    Battle get2;
     ChildEventListener maddChildEventListener;
     DatabaseReference refbattle;
 
@@ -153,6 +154,26 @@ public class BattleRoom extends AppCompatActivity {
                                 missiondialog.dismiss();
                             }
                         });
+                        if(get2.gmission1.equals("미션클리어")){
+                            ivMissionCheckBox[0].setImageResource(R.drawable.checkbox2);
+                            ivMissionCheckBox[0].setEnabled(false);
+                        }
+                        if(get2.gmission2.equals("미션클리어")){
+                            ivMissionCheckBox[1].setImageResource(R.drawable.checkbox2);
+                            ivMissionCheckBox[0].setEnabled(false);
+                        }
+                        if(get2.gmission3.equals("미션클리어")){
+                            ivMissionCheckBox[2].setImageResource(R.drawable.checkbox2);
+                            ivMissionCheckBox[0].setEnabled(false);
+                        }
+                        if(get2.gmission4.equals("미션클리어")){
+                            ivMissionCheckBox[3].setImageResource(R.drawable.checkbox2);
+                            ivMissionCheckBox[0].setEnabled(false);
+                        }
+                        if(get2.gmission5.equals("미션클리어")){
+                            ivMissionCheckBox[4].setImageResource(R.drawable.checkbox2);
+                            ivMissionCheckBox[0].setEnabled(false);
+                        }
                         for(int i=0; i<ivMissionCheckBox.length; i++){
                             int index = i;
                             ivMissionCheckBox[index].setOnClickListener(new View.OnClickListener() {
@@ -406,7 +427,7 @@ public class BattleRoom extends AppCompatActivity {
                 }
                 readExit();
 
-                Battle get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
+                get2 = snapshot.child("Battle").child(myUserDb.get(10)).getValue(Battle.class);
                 String[] battle = {get2.master, get2.guest, String.valueOf(get2.finish_time), String.valueOf(get2.masterHP), String.valueOf(get2.guestHP),String.valueOf(get2.grade),String.valueOf(get2.masterDay),String.valueOf(get2.guestDay)
                                     ,get2.mmission1, get2.mmission2, get2.mmission3, get2.mmission4, get2.mmission5 ,get2.gmission1 ,get2.gmission2 ,get2.gmission3 ,get2.gmission4 ,get2.gmission5, get2.win , get2.masterExit, get2.guestExit};
                 for (int i = 0; i < battle.length; i++) {

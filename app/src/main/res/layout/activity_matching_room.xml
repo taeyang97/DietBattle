@@ -75,7 +75,6 @@
                     android:id="@+id/matchingRoomTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="초보만 들어오세요"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
             </LinearLayout>
@@ -88,7 +87,6 @@
                     android:id="@+id/matchingRoomOption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="남 / 80kg / 중수"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
