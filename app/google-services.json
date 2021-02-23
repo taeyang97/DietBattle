@@ -8,42 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:739798927692:android:f9444513ecf89e0a7a27e9",
+        "mobilesdk_app_id": "1:739798927692:android:b2556732af4043907a27e9",
         "android_client_info": {
-          "package_name": "com.example.ditebattle"
+          "package_name": "com.example.dietbattle"
         }
       },
       "oauth_client": [
         {
-          "client_id": "739798927692-a7lg85p7g09i4mbed799qgh83d8gvhae.apps.googleusercontent.com",
+          "client_id": "739798927692-ct6t25hs9ho006f2jnd3dgid975u903l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ditebattle",
-            "certificate_hash": "252555edf87406d5727765744f497cce76b8af8c"
-          }
-        },
-        {
-          "client_id": "739798927692-cro6ne8gnqou0rlcubtpntmn202gqqeg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.ditebattle",
-            "certificate_hash": "83314dfdb6c947a7f31d226ae0d59b9e3c8ee954"
-          }
-        },
-        {
-          "client_id": "739798927692-f67rsmqb1ph9dskjdldtu78ouotta9lo.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.ditebattle",
-            "certificate_hash": "733390cae7731e5a53740eb85a1dc83b16f39c66"
-          }
-        },
-        {
-          "client_id": "739798927692-pdq7u7u3rrtr2t1ngka8qgele6g4iiip.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.ditebattle",
-            "certificate_hash": "efd9d01a4827982b2d582a8fe22453c3b81620ce"
+            "package_name": "com.example.dietbattle",
+            "certificate_hash": "a673d8a21eb784522968071e09d1691b4875d326"
           }
         },
         {
