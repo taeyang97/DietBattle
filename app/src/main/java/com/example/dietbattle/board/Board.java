@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dietbattle.OnSingleClickListener;
+import com.example.dietbattle.option.OnSingleClickListener;
 import com.example.dietbattle.R;
 import com.example.dietbattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;

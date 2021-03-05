@@ -1,4 +1,4 @@
-package com.example.dietbattle;
+package com.example.dietbattle.setting;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.dietbattle.MainRoom;
+import com.example.dietbattle.R;
 import com.example.dietbattle.database.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -98,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     //메인으로 이동
                     Toast.makeText(getApplicationContext(), "successfully signed in", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    Intent intent = new Intent(RegisterActivity.this, MainRoom.class);
                     startActivity(intent);
                     finish();
                 }

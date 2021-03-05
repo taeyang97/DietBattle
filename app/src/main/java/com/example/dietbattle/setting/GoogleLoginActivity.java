@@ -1,4 +1,4 @@
-package com.example.dietbattle;
+package com.example.dietbattle.setting;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.dietbattle.MainRoom;
+import com.example.dietbattle.R;
+import com.example.dietbattle.option.OnSingleClickListener;
+import com.example.dietbattle.option.ProgressDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -95,6 +99,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "캐치되버림"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -162,7 +167,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
     public void jumpMain(){
 
         Toast.makeText(getApplicationContext(), "로그인 되었습니다.", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(GoogleLoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(GoogleLoginActivity.this, MainRoom.class);
         startActivity(intent);
         finish();
     }

@@ -29,6 +29,7 @@ import com.example.dietbattle.database.BattleEnemyDay;
 import com.example.dietbattle.database.GuestInfo;
 import com.example.dietbattle.database.MasterInfo;
 import com.example.dietbattle.database.User;
+import com.example.dietbattle.option.OnSingleClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;

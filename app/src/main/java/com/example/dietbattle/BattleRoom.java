@@ -33,6 +33,7 @@ import com.example.dietbattle.database.BattleEnemyDay;
 import com.example.dietbattle.database.Chating;
 import com.example.dietbattle.database.User;
 import com.example.dietbattle.database.ExerciseRoutine;
+import com.example.dietbattle.option.OnSingleClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -882,7 +883,7 @@ public class BattleRoom extends AppCompatActivity {
                                 ref.child("battle").setValue("false");
                                 ref.child("total_point").setValue((Integer.parseInt(myUserDb.get(6)))+500);
                                 ref.child("current_point").setValue((Integer.parseInt(myUserDb.get(7)))+500);
-                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                Intent intent = new Intent(BattleRoom.this, MainRoom.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                                 startActivity(intent);
@@ -894,7 +895,7 @@ public class BattleRoom extends AppCompatActivity {
                                 ref.child("battle").setValue("false");
                                 ref.child("total_point").setValue((Integer.parseInt(myUserDb.get(6))) + 500);
                                 ref.child("current_point").setValue((Integer.parseInt(myUserDb.get(7))) + 500);
-                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                Intent intent = new Intent(BattleRoom.this, MainRoom.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                                 startActivity(intent);
@@ -941,7 +942,7 @@ public class BattleRoom extends AppCompatActivity {
                                 graph.removeValue();
                                 enemygraph.removeValue();
 
-                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                Intent intent = new Intent(BattleRoom.this, MainRoom.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                                 startActivity(intent);
@@ -958,7 +959,7 @@ public class BattleRoom extends AppCompatActivity {
                                 graph.removeValue();
                                 enemygraph.removeValue();
 
-                                Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+                                Intent intent = new Intent(BattleRoom.this, MainRoom.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
                                 startActivity(intent);
@@ -974,6 +975,7 @@ public class BattleRoom extends AppCompatActivity {
         });
     }
 
+    // 그래프 DB 변경
     void graphDB() {
         graph  =  FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)+"day");
         enemygraph = FirebaseDatabase.getInstance().getReference().child("Battle").child(myUserDb.get(10)+"enemyday");
@@ -1038,6 +1040,7 @@ public class BattleRoom extends AppCompatActivity {
         });
     }
 
+    // 포인트 사용 DB
     void changeUser(){
         DatabaseReference ref = databaseReference.child("User").child(user.getUid());
         ref.addChildEventListener(new ChildEventListener() {
@@ -1081,7 +1084,7 @@ public class BattleRoom extends AppCompatActivity {
     /// 배틀이 진행될시 불필요한 매칭관련 액티비티들을 정리해주며 홈으로 이동하도록 오버라이딩
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(BattleRoom.this, MainActivity.class);
+        Intent intent = new Intent(BattleRoom.this, MainRoom.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전의 스택을 다 지운다.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 새로운 루트 스택을 생성해준다.
         startActivity(intent);

@@ -22,7 +22,6 @@ public class RecyclerItemData {
         this.message = message;
     }
 
-
     public Boolean getMaster() {
         return master;
     }

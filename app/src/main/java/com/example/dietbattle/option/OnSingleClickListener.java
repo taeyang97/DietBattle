@@ -1,4 +1,4 @@
-package com.example.dietbattle;
+package com.example.dietbattle.option;
 
 import android.os.SystemClock;
 import android.view.View;

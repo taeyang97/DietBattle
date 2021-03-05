@@ -33,6 +33,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.dietbattle.board.Board;
 import com.example.dietbattle.database.Battle;
 import com.example.dietbattle.database.User;
+import com.example.dietbattle.option.OnSingleClickListener;
+import com.example.dietbattle.setting.GoogleLoginActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,9 +54,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainRoom extends AppCompatActivity {
 
-    TextView main_nav_btn_kal, main_nav_btn_battle, main_nav_btn_board,
+    TextView main_nav_btn_battle, main_nav_btn_board,
             nav_logout, nav_notice, nav_cs, NavTvUserID, NavTvUserLV,
             tvNickname, tvLevel, tvHeight, tvWeight, tvBmi,
             main_Point_Tv,main_Lv_Tv,main_Exp_Tv,
@@ -102,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         navigationView.inflateHeaderView(R.layout.activity_main_drawermenubar);
         View headerView = navigationView.getHeaderView(0);
         main_nav_btn_battle = (TextView) headerView.findViewById(R.id.main_nav_btn_battle);
-        main_nav_btn_kal = (TextView) headerView.findViewById(R.id.main_nav_btn_kal);
         main_nav_btn_board = (TextView) headerView.findViewById(R.id.main_nav_btn_board);
         nav_logout = (TextView) headerView.findViewById(R.id.nav_logout);
         nav_notice = (TextView) headerView.findViewById(R.id.nav_notice);
@@ -126,47 +127,24 @@ public class MainActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         main_nav_btn_battle.setTextColor(Color.parseColor("#99ffffff"));
-                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustompress));
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         main_nav_btn_battle.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustom));
                         break;
                     case MotionEvent.ACTION_UP:
                         main_nav_btn_battle.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        main_nav_btn_battle.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustom));
                         Intent intent;
 
                         // 현재 대결 진행중일시 배틀룸으로 아닐시 매칭으로 이동
                         if(myUserDb.get(9).equals("false")) {
-                            intent = new Intent(MainActivity.this, Matching.class);
+                            intent = new Intent(MainRoom.this, MatchingList.class);
                         }else{
-                            intent = new Intent(MainActivity.this, BattleRoom.class);
+                            intent = new Intent(MainRoom.this, BattleRoom.class);
                         }
                         startActivity(intent);
-                        break;
-                }
-                return true;
-            }
-        });
-
-        // 칼로리 계산기 버튼 클릭
-        main_nav_btn_kal.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        main_nav_btn_kal.setTextColor(Color.parseColor("#99ffffff"));
-                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        main_nav_btn_kal.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        main_nav_btn_kal.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_kal.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
-                        showToast("준비 중 입니다.");
                         break;
                 }
                 return true;
@@ -180,16 +158,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         main_nav_btn_board.setTextColor(Color.parseColor("#99ffffff"));
-                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustompress));
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustompress));
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         main_nav_btn_board.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustom));
                         break;
                     case MotionEvent.ACTION_UP:
                         main_nav_btn_board.setTextColor(Color.parseColor("#ffffff"));
-                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this,R.drawable.buttoncustom));
-                        Intent intent = new Intent(MainActivity.this, Board.class);
+                        main_nav_btn_board.setBackgroundDrawable(ContextCompat.getDrawable(MainRoom.this,R.drawable.buttoncustom));
+                        Intent intent = new Intent(MainRoom.this, Board.class);
                         startActivity(intent);
                         break;
                 }
@@ -212,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
                         nav_logout.setTextColor(Color.parseColor("#000000"));
                         GoogleLoginActivity activity = new GoogleLoginActivity();
                         activity.signOut();
-                        Toast.makeText(MainActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MainActivity.this, GoogleLoginActivity.class);
+                        Toast.makeText(MainRoom.this, "로그아웃 되었습니다.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainRoom.this, GoogleLoginActivity.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -279,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                             mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
                         } else {
                             mainHomeIvMission.setBackgroundResource(R.drawable.layoutborderbutton);
-                            missionDialog = new Dialog(MainActivity.this);
+                            missionDialog = new Dialog(MainRoom.this);
                             missionDialog.setContentView(R.layout.activity_main_homemission_dialog);
                             home_mission_dialog_1 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_1);
                             home_mission_dialog_2 = (TextView)missionDialog.findViewById(R.id.home_mission_dialog_2);
@@ -330,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         mainHomeIvCheck.setBackgroundResource(R.drawable.layoutborderbutton);
-                        weightDialog = new Dialog(MainActivity.this);
+                        weightDialog = new Dialog(MainRoom.this);
                         weightDialog.setContentView(R.layout.activity_main_homebluetooth_dialog);
                         home_iv_Weight_Btn =(Button) weightDialog.findViewById(R.id.home_iv_Weight_Btn);
                         home_iv_Weight_Tv = (TextView) weightDialog.findViewById(R.id.home_iv_Weight_Tv);
@@ -391,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         mainHomeIvMyInfo.setBackgroundResource(R.drawable.layoutborderbutton);
-                        infoDialog = new Dialog(MainActivity.this);
+                        infoDialog = new Dialog(MainRoom.this);
                         infoDialog.setContentView(R.layout.activity_matching_room_infomation_dialog);
                         tvNickname = (TextView) infoDialog.findViewById(R.id.tvNickname);
                         tvLevel = (TextView) infoDialog.findViewById(R.id.tvLevel);
@@ -704,7 +682,7 @@ public class MainActivity extends AppCompatActivity {
     /// 종료 확인 팝업 생성
     @Override
     public void onBackPressed() {
-       AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+       AlertDialog.Builder builder = new AlertDialog.Builder(MainRoom.this);
         builder.setTitle("앱을 종료하시겠습니까?");
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override

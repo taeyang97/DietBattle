@@ -103,47 +103,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     return true;
                 }
             });
-//            listLayout.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent motionEvent) {
-//                    switch (motionEvent.getAction()) {
-//                        case MotionEvent.ACTION_DOWN:
-//                            cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
-//                            break;
-//                        case MotionEvent.ACTION_CANCEL:{
-//                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
-//                            break;
-//                        }
-//                        case MotionEvent.ACTION_UP:
-//                            cvList.setCardBackgroundColor(Color.parseColor("#ffffff"));
-//                            int pos = getAdapterPosition() ;
-//                            if (pos != RecyclerView.NO_POSITION) {
-//                                // 데이터 리스트로부터 아이템 데이터 참조.
-//                                RecyclerItemData item = mData.get(pos) ;
-//                                Log.i("pos", String.valueOf(item));
-//                                // TODO : use item.
-//                            }
-//
-////                            Intent intent = new Intent(listLayout.getContext(), MatchingRoom.class);
-////                            ContextCompat.startActivity(listLayout.getContext(),intent,null);
-//                            break;
-//                    }
-//                    return true;
-//                }
-//            });
-
-            // 뷰 클릭 시 실행하는 메소드
-            /*itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-
-                    // 갱신하는 과정에서 뷰홀더가 참조하는 아이템이 어댑터에서 삭제되면 getAdapterPosition() 메서드는 NO_POSITION을 리턴
-                    if (pos != RecyclerView.NO_POSITION) {
-                        cvList.setCardBackgroundColor(Color.parseColor("#99ffffff"));
-                    }
-                }
-            });*/
         }
     }
 }
